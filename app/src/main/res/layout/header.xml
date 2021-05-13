@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:keepScreenOn="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+           >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:id="@+id/headerheaeding"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.7"
+                    android:text="@string/membership"
+                    android:padding="5dp"
+                    android:contentDescription="Heading"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/nunitobold"
+                    android:textSize="25sp"/>
+
+                <ImageButton
+                    android:id="@+id/closeBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|end"
+                    android:layout_weight="0.3"
+                    android:background="@drawable/transparent_background"
+                    android:scaleType="fitEnd"
+                    android:src="@drawable/ic_home"
+                    android:contentDescription="Home" />
+            </LinearLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+    </LinearLayout>
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/shadow" />
+
+
+
+</LinearLayout>

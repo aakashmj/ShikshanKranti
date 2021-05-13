@@ -1,0 +1,67 @@
+<resources>
+
+    <style name="Widget.Theme.ShikshanKrantiSanghatna.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="Widget.Theme.ShikshanKrantiSanghatna.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">@color/black_overlay</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+    </style>
+
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/colorPrimary</item>
+        <item name="android:textColorSecondary">@color/cardview_shadow_end_color</item>
+        <item name="android:divider">@color/lightgrey</item>
+        <item name="drawerArrowStyle">@style/myTheme.DrawerArrowToggle</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <!-- You can also set colorControlNormal, colorControlActivated
+             colorControlHighlight & colorSwitchThumbNormal. -->
+    </style>
+
+    <style name="myTheme.DrawerArrowToggle" parent="Base.Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">#FFFFFF</item>
+    </style>
+
+    <style name="InvitationDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">#448AFF</item>
+        <item name="android:textColorPrimary">#FF000000</item>
+        <item name="android:background">#FFFFFFFF</item>
+    </style>
+    <!-- Backward-compatible version of ?android:attr/buttonBarStyle -->
+
+
+    <!-- Base application theme. -->
+
+    <style name="WelcomFont" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#666666</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="CustomTextAppearance" parent="@android:style/TextAppearance">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+
+    <style name="ViewStyle" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">2dip</item>
+
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <!-- Profile page. -->
+</resources>

@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">Shikshan Kranti Sanghatna</string>
+    <string name="firstname">First Name</string>
+    <string name="middlename">Middle Name</string>
+    <string name="lastname">Last Name</string>
+    <string name="language">English</string>
+    <string name="next">NEXT </string>
+    <string name="or">OR</string>
+    <string name="selectlanguage">Select Language</string>
+    <string name="previous">PREVIOUS</string>
+    <string name="welcome">Welcome!</string>
+    <string name="nameerror">Enter a valid name</string>
+    <string name="mobileerror">Enter a valid mobile</string>
+    <string name="ageerror">Enter a valid age</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="msg_sending_email">sending mail</string>
+    <string name="msg_email_sent_successfully">sent successfully</string>
+    <string name="msg_error_sending_email">error sending mail</string>
+    <string name="enterage">Enter Age</string>
+    <string name="start">START</string>
+    <string name="Version">V  2.0</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="address">Permanent Address </string>
+    <string name="district">District </string>
+    <string name="taluka">Taluka </string>
+    <string name="downloadid">Dowload ID Card</string>
+    <string name="membership">Primary Membership Form</string>
+    <string name="editprofile">Edit Profile</string>
+    <string name="pincode">Pin Code</string>
+    <string name="profiledetails">PROFILE DETAILS</string>
+    <string name="selectgender">SELECT GENDER</string>
+    <string name="title_activity_design">DesignActivity</string>
+    <string name="terms">Terms and Conditions</string>
+
+
+</resources>
