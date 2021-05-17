@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.shikshankranti.sanghatna">
+
     <queries>
         <intent>
             <action android:name="android.media.action.IMAGE_CAPTURE" />
@@ -11,9 +12,13 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- A camera with (optional) RAW capability is required to use this application -->
     <uses-feature android:name="android.hardware.camera.any" />
-    <uses-feature android:name="android.hardware.camera.raw" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.raw"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -21,10 +26,10 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_logo"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.ShikshanKrantiSanghatna"
         tools:ignore="AllowBackup">
@@ -51,7 +56,9 @@
         <activity android:name=".CaptureActivity">
 
         </activity>
-        <activity android:name=".TermsActivity"/>
+        <activity android:name=".ReportActivity" />
+        <activity android:name=".TermsActivity" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.shikshankranti.sanghatna.fileprovider"

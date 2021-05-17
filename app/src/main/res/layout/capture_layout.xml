@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
     android:keepScreenOn="true"
@@ -33,7 +32,7 @@
                 android:id="@+id/tvGendername"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="bottom|right"
+                android:gravity="bottom|end"
                 android:text="AAKASH"
                 android:textColor="@color/grey"
                 android:textSize="26sp" />
@@ -79,13 +78,13 @@
                         android:gravity="center"
                         android:layout_margin="20dp"
                         android:text="Photo For ID Card"
-                        android:textColor="@color/black"
+                        android:textColor="#f4641d"
                         android:textSize="35sp" />
 
 
                         <ImageView
                             android:id="@+id/ivPhoto"
-                            android:src="@drawable/ic_photo"
+                            android:src="@mipmap/ic_profile"
                             android:layout_gravity="center"
                             android:layout_width="400dp"
                             android:layout_height="300dp"
@@ -96,10 +95,23 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_margin="20dp"
-                        borderColor="#707070"
+                        android:layout_margin="30dp"
+                        android:background="@drawable/shapebuttons"
                         android:fontFamily="@font/nunitobold"
                         android:text="Capture"
+                        android:textColor="#fff"
+                        android:textSize="30sp" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnNext"
+                        borderColor="#707070"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="30dp"
+                        android:background="@drawable/shapebuttons"
+                        android:fontFamily="@font/nunitobold"
+                        android:shadowColor="@color/colorPrimaryDark"
+                        android:text="@string/next"
                         android:textColor="#fff"
                         android:textSize="30sp" />
                 </LinearLayout>

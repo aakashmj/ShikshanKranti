@@ -37,20 +37,19 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:layout_margin="20dp"
-                   >
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:visibility="gone"
                         android:fontFamily="@font/nunitolight"
                         android:gravity="center"
                         android:text="@string/terms"
                         android:textColor="@color/black"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -146,14 +145,17 @@
                             android:textSize="20sp"
                             tools:targetApi="o" />
                     </com.google.android.material.textfield.TextInputLayout>
+
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnSubmit"
+                        borderColor="#707070"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_margin="30dp"
-                        borderColor="#707070"
+                        android:background="@drawable/shapebuttons"
                         android:fontFamily="@font/nunitobold"
+                        android:shadowColor="@color/colorPrimaryDark"
                         android:text="SUBMIT"
                         android:textColor="#fff"
                         android:textSize="30sp" />

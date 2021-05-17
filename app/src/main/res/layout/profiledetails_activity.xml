@@ -232,7 +232,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_margin="30dp"
-                        borderColor="#707070"
+                        android:background="@drawable/shapebuttons"
                         android:fontFamily="@font/nunitobold"
                         android:text="@string/next"
                         android:textColor="#fff"

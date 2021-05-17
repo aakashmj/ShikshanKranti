@@ -39,13 +39,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="@string/terms"
-                    android:textColor="@color/greyheading"
+                    android:textColor="@color/design_default_color_on_secondary"
                     android:textSize="18sp" />
 
 
                 <CheckBox
                     android:layout_width="45dp"
                     android:layout_height="45dp"
+                    android:gravity="center"
                     android:checked="false"
                     android:layout_margin="10dp">
 
@@ -60,10 +61,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:background="@drawable/shapebuttons"
                     android:layout_margin="30dp"
                     android:fontFamily="@font/nunitobold"
-                    android:padding="30dp"
-                    android:text="@string/next"
+                     android:text="@string/next"
                     android:textColor="#fff"
                     android:textSize="30sp" />
 
@@ -90,6 +91,8 @@
                         android:id="@+id/btnGenderPrevious"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="30dp"
+                        android:background="@drawable/shapebuttons"
                         android:layout_gravity="bottom"
                         android:text="30sp"
                         />

@@ -58,8 +58,9 @@ public class CaptureActivity extends AppCompatActivity  {
     private ImageView mImageBtn;
     private final List blockedKeys = new ArrayList(Arrays.asList(KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP));
     private final Handler mHandler = new Handler();
-    MaterialButton mcapturePic;
-
+    MaterialButton mcapturePic,mbtnNext;
+    private static int SELECT_PICTURE = 2;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,17 +73,23 @@ public class CaptureActivity extends AppCompatActivity  {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setFlags(View.SYSTEM_UI_FLAG_LAYOUT_STABLE,View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-         setContentView(R.layout.capture_layout);
-        UiChangeListener();
+        setContentView(R.layout.capture_layout);
+
        /* StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());*/
         ImageButton mCloseBtn = findViewById(R.id.closeBtn);
 
         mcapturePic =  findViewById(R.id.btnCapture);
+        mbtnNext = findViewById(R.id.btnNext);
         mImageBtn = findViewById(R.id.ivPhoto);
 
         mcapturePic.setOnClickListener(view -> dispatchTakePictureIntent());
-
+        mImageBtn.setOnClickListener(view -> fetchImageFromGallery(view));
+        mbtnNext.setOnClickListener(v -> {
+            Intent reportintent = new Intent(CaptureActivity.this, ReportActivity.class);
+            startActivity(reportintent);
+            finish();
+        });
         mCloseBtn.setOnClickListener(view -> {
 
 
@@ -147,6 +154,11 @@ public class CaptureActivity extends AppCompatActivity  {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             mImageBtn.setImageBitmap(imageBitmap);*/
         }
+        if (requestCode == SELECT_PICTURE) {
+            Uri selectedImageURI = data.getData();
+            mImageBtn.setImageURI(selectedImageURI);
+        }
+
     }
 
 
@@ -173,7 +185,6 @@ public class CaptureActivity extends AppCompatActivity  {
 
 
     }
-    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private void captureImage() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -290,7 +301,7 @@ public class CaptureActivity extends AppCompatActivity  {
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
         Bitmap rotatedbmp = rotateBitmapOrientation(currentPhotoPath);
-      //  Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
+        //  Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
         mImageBtn.setImageBitmap(rotatedbmp);
     }
     @Override
@@ -327,18 +338,28 @@ public class CaptureActivity extends AppCompatActivity  {
         // Return result
         return rotatedBitmap;
     }
-    private void UiChangeListener() {
-        final View decorView = getWindow().getDecorView();
-        decorView.setOnSystemUiVisibilityChangeListener (visibility -> {
-            if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
+    void fetchImageFromGallery(View view){
+        Intent intent = new Intent();
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                ex.printStackTrace();
             }
-        });
-    }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+
+            }
+
+         }
+
+
+
 
 }

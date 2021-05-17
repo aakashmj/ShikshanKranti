@@ -1,10 +1,12 @@
 package com.shikshankranti.sanghatna;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +19,8 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
 
@@ -25,7 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class Select_language extends AppCompatActivity {
+public class Select_language extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private final List<Integer> blockedKeys = new ArrayList<>(Arrays.asList(KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP));
     public static int langselected = 0;
     private static final String Locale_Preference = "Locale Preference";
@@ -34,7 +38,8 @@ public class Select_language extends AppCompatActivity {
     private static SharedPreferences.Editor editor;
     private TextToSpeech tts;
     private String toSpeak;
-    private final Handler mHandler = new Handler();
+    private static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,13 +52,14 @@ public class Select_language extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
 
         setContentView(R.layout.activity_selectlanguage);
-        UiChangeListener();
+        checkAndRequestPermissions();
+
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
         Configuration config = getBaseContext().getResources().getConfiguration();
 
         String lang = settings.getString("LANG", "");
-        if (! "".equals(lang) && ! config.locale.getLanguage().equals(lang)) {
+        if (!"".equals(lang) && !config.locale.getLanguage().equals(lang)) {
             Locale locale = new Locale(lang);
             Locale.setDefault(locale);
             config.locale = locale;
@@ -69,15 +75,15 @@ public class Select_language extends AppCompatActivity {
         editor.clear();
         final Locale loc = new Locale("hin", "IND");
         tts = new TextToSpeech(getApplicationContext(), status -> {
-            if(status != TextToSpeech.ERROR) {
+            if (status != TextToSpeech.ERROR) {
                 tts.setLanguage(loc);
-                if(Select_language.langselected==0){
+                if (Select_language.langselected == 0) {
                     toSpeak = "Please Select Language";
-                }else {
+                } else {
                     toSpeak = "कृपया भाषा चुनिए  ";
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    tts.speak(toSpeak,TextToSpeech.QUEUE_FLUSH,null,null);
+                    tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
                 } else {
                     tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
 
@@ -89,23 +95,23 @@ public class Select_language extends AppCompatActivity {
             String lang1 = "en";//Default Language
             switch (view.getId()) {
                 case R.id.english:
-                    if (tts!=null&&tts.isSpeaking()) {
+                    if (tts != null && tts.isSpeaking()) {
                         tts.stop();
                     }
                     lang1 = "en";
                     Intent i = new Intent(Select_language.this, TermsActivity.class);
-                    langselected=0;
+                    langselected = 0;
                     startActivity(i);
                     finish();
 
                     break;
                 case R.id.hindi:
-                    if (tts!=null&&tts.isSpeaking()) {
+                    if (tts != null && tts.isSpeaking()) {
                         tts.stop();
                     }
                     lang1 = "hi";
                     Intent j = new Intent(Select_language.this, TermsActivity.class);
-                    langselected=1;
+                    langselected = 1;
                     startActivity(j);
                     finish();
 
@@ -116,40 +122,37 @@ public class Select_language extends AppCompatActivity {
             changeLocale(lang1);//Change Locale on selection basis
 
         });
-mhindi.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
-        String lang = "en";//Default Language
-        switch (view.getId()) {
-            case R.id.english:
-                if (tts!=null&&tts.isSpeaking()) {
-                    tts.stop();
-                }
-                lang = "en";
-                Intent i = new Intent(Select_language.this, TermsActivity.class);
-                langselected=0;
-                startActivity(i);
-                finish();
+        mhindi.setOnClickListener(view -> {
+            String lang12 = "en";//Default Language
+            switch (view.getId()) {
+                case R.id.english:
+                    if (tts != null && tts.isSpeaking()) {
+                        tts.stop();
+                    }
+                    lang12 = "en";
+                    Intent i = new Intent(Select_language.this, TermsActivity.class);
+                    langselected = 0;
+                    startActivity(i);
+                    finish();
 
-                break;
-            case R.id.hindi:
-                if (tts!=null&&tts.isSpeaking()) {
-                    tts.stop();
-                }
-                lang = "hi";
-                Intent j = new Intent(Select_language.this, TermsActivity.class);
-                langselected=1;
-                startActivity(j);
-                finish();
+                    break;
+                case R.id.hindi:
+                    if (tts != null && tts.isSpeaking()) {
+                        tts.stop();
+                    }
+                    lang12 = "hi";
+                    Intent j = new Intent(Select_language.this, TermsActivity.class);
+                    langselected = 1;
+                    startActivity(j);
+                    finish();
 
-                break;
+                    break;
 
-        }
+            }
 
-        changeLocale(lang);//Change Locale on selection basis
+            changeLocale(lang12);//Change Locale on selection basis
 
-    }
-});
+        });
 
 
         loadLocale();
@@ -193,33 +196,6 @@ mhindi.setOnClickListener(new View.OnClickListener() {
 
     }
 
-    private final Runnable decor_view_settings = new Runnable()
-    {
-        public void run()
-        {
-            getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        }
-    };
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
-        if(keyCode == KeyEvent.KEYCODE_BACK)
-        {
-            finish();
-        }
-        else if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)
-        {
-            mHandler.postDelayed(decor_view_settings, 500);
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
 
     @Override
     public void onBackPressed() {
@@ -241,8 +217,8 @@ mhindi.setOnClickListener(new View.OnClickListener() {
         if (!hasFocus) {
 
             Intent closeDialog = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-            sendBroadcast(closeDialog);}
-
+            sendBroadcast(closeDialog);
+        }
 
 
     }
@@ -258,7 +234,7 @@ mhindi.setOnClickListener(new View.OnClickListener() {
         Configuration config = new Configuration();//get Configuration
         config.locale = myLocale;//set config locale as selected locale
         getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());//Update the config
-     //   updateTexts();//Update texts according to locale
+        //   updateTexts();//Update texts according to locale
     }
 
     //Save locale method in preferences
@@ -273,23 +249,38 @@ mhindi.setOnClickListener(new View.OnClickListener() {
         changeLocale(language);
     }
 
-    //Update text methods
-   /* private void updateTexts() {
-        chooseText.setText(R.string.tap_text);
-        menglish.setText(R.string.english);
-        mhindi.setText(R.string.hindi);
-    }*/
-    private void UiChangeListener() {
-        final View decorView = getWindow().getDecorView();
-        decorView.setOnSystemUiVisibilityChangeListener (visibility -> {
-            if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-            }
-        });
+
+    private void checkAndRequestPermissions() {
+        int camera = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        int storage = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int readstorage = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        int loc = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+        int loc2 = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+
+        List<String> listPermissionsNeeded = new ArrayList<>();
+
+        if (camera != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.CAMERA);
+        }
+        if (storage != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        if (readstorage != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+        if (loc2 != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+        if (loc != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray
+                    (new String[0]), REQUEST_ID_MULTIPLE_PERMISSIONS);
+        }
+
+
     }
+
+
 }

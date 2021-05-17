@@ -13,10 +13,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 
 @SuppressLint("Registered")
-public class FullscreenActivity extends AppCompatActivity {
+public class FullscreenActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private Animation animBlink;
 
     @Override
@@ -32,7 +33,7 @@ public class FullscreenActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().setFlags(View.SYSTEM_UI_FLAG_LAYOUT_STABLE,View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        getWindow().setFlags(View.SYSTEM_UI_FLAG_LAYOUT_STABLE, View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         setContentView(R.layout.activity_fullscreen);
         ImageView mimageView = findViewById(R.id.img_logo);
@@ -47,18 +48,18 @@ public class FullscreenActivity extends AppCompatActivity {
         // Using handler with postDelayed called runnable run method
         new Handler().postDelayed(() -> {
             animBlink.cancel();
-            if(!status.isEmpty()){
+            if (!status.isEmpty()) {
                 Intent i = new Intent(FullscreenActivity.this, Select_language.class);
                 startActivity(i);
                 finish();
-            }else {
-                Intent i = new Intent(FullscreenActivity.this,Select_language.class);
+            } else {
+                Intent i = new Intent(FullscreenActivity.this, Select_language.class);
                 startActivity(i);
                 finish();
             }
 
 
-        }, 2*1000); // wait for 3 seconds
+        }, 2 * 1000); // wait for 3 seconds
 
     }
 

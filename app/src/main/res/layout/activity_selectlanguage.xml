@@ -17,15 +17,24 @@
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/nunitobold"
+                android:gravity="center"
+                android:text="SELECT LANGUAGE"
+                android:textColor="@color/black"
+                android:textSize="35sp" />
 
             <TextView
                 android:id="@+id/choose_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="20dp"
                 android:fontFamily="@font/nunitobold"
                 android:gravity="center"
-                android:text="@string/selectlanguage"
+                android:text="भाषा निवडा "
                 android:textColor="@color/black"
                 android:textSize="35sp" />
 
@@ -36,21 +45,28 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="30dp"
+                android:background="@drawable/shapebuttons"
                 android:fontFamily="@font/nunitobold"
                 android:padding="30dp"
+                android:shadowColor="@color/colorPrimaryDark"
                 android:text="@string/language"
                 android:textColor="#fff"
                 android:textSize="30sp" />
-
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:src="@drawable/shapedotted"
+                android:layerType="software" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/hindi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="30dp"
+                android:background="@drawable/shapebuttons"
                 android:fontFamily="@font/nunitobold"
                 android:padding="30dp"
-                android:text="  मराठी   "
+                android:text="म | मराठी   "
                 android:textColor="#fff"
                 android:textSize="30sp" />
         </LinearLayout>

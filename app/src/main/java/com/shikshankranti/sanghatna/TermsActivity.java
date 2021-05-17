@@ -19,14 +19,11 @@ import com.google.android.material.button.MaterialButton;
 
 @SuppressLint("Registered")
 public class TermsActivity extends AppCompatActivity {
-    private Animation animBlink;
-
     MaterialButton mbtnNext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences settings = getSharedPreferences("ShikshanKrani", 0);
-        final String status = settings.getString("MemberId", "");
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -38,16 +35,11 @@ public class TermsActivity extends AppCompatActivity {
         getWindow().setFlags(View.SYSTEM_UI_FLAG_LAYOUT_STABLE,View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         setContentView(R.layout.terms_activity);
-        ImageView mimageView = findViewById(R.id.img_logo);
-        TextView mTV_Welcome = findViewById(R.id.tv_welcome);
          mbtnNext = findViewById(R.id.nextButton);
-         mbtnNext.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 Intent i = new Intent(TermsActivity.this, MobileNumberActivity.class);
-                 startActivity(i);
-                 finish();
-             }
+         mbtnNext.setOnClickListener(v -> {
+             Intent i = new Intent(TermsActivity.this, MobileNumberActivity.class);
+             startActivity(i);
+             finish();
          });
 
         // Using handler with postDelayed called runnable run method
