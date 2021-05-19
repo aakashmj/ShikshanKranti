@@ -3,6 +3,8 @@ package com.shikshankranti.sanghatna;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -13,14 +15,20 @@ import android.print.PrintDocumentAdapter;
 import android.print.PrintJob;
 import android.print.PrintManager;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.zxing.WriterException;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -29,19 +37,22 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
+import androidmads.library.qrgenearator.QRGContents;
+import androidmads.library.qrgenearator.QRGEncoder;
+
 import static android.app.ProgressDialog.show;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Name;
 
 public class ReportActivity extends AppCompatActivity {
-    private boolean devconnected = false;
     private Date curDate;
     private TextToSpeech tts;
     private String toSpeak;
     private String FinalSMS = "";
 
     private String gender = "";
-    private String email;
+
     Locale loc;
+    ImageView mIVQrCode, mIVPhoto;
     private static final String Locale_Preference = "carenestsettings";
     String HtmlEmail = "<b>Dear </b>" + Name + ","
             + "<br /><b>Thanks for visiting Caremate Mini KIOSK. </b><br />"
@@ -66,6 +77,14 @@ public class ReportActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
         setContentView(R.layout.finalreport_layout);
+        mIVQrCode = findViewById(R.id.ivqrcode);
+        mIVPhoto = findViewById(R.id.ivPhoto);
+        if (PatientDetailsAbstractClass.Gallery) {
+            mIVPhoto.setImageURI(PatientDetailsAbstractClass.GalleryPhoto);
+        } else {
+            mIVPhoto.setImageBitmap(PatientDetailsAbstractClass.Photo);
+
+        }
         curDate = new Date();
         String fileName = Environment.getExternalStorageDirectory()
                 + "/CarematePi";
@@ -88,18 +107,13 @@ public class ReportActivity extends AppCompatActivity {
             }
         });
 
-        TextView mNameTextView = findViewById(R.id.tvReportName);
-        TextView mGenderAgeLabel = findViewById(R.id.txtgenderAge);
+        TextView mNameTextView = findViewById(R.id.tvMemberName);
+        TextView mTVDob = findViewById(R.id.tvDob);
         mNameTextView.setText(Name);
-        mGenderAgeLabel.setText(PatientDetailsAbstractClass.Gender + " | " + PatientDetailsAbstractClass.Age + " yrs");
+         mTVDob.setText(PatientDetailsAbstractClass.Age);
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss", Locale.US);
-        String currentDate = format.format(curDate);
-        final String strDate = mdformat.format(calendar.getTime());
-        //  private Button mConnect;
-        final ImageButton mbtnPrint = findViewById(R.id.btnPrintReport);
-        mbtnPrint.setEnabled(true);
-        ImageButton mMail = findViewById(R.id.btnEmailReport);
-        mMail.setEnabled(true);
+
+
         ImageButton mCloseBtn = findViewById(R.id.closeBtn);
         mCloseBtn.setEnabled(true);
         if (PatientDetailsAbstractClass.Gender.contains("F")) {
@@ -121,17 +135,48 @@ public class ReportActivity extends AppCompatActivity {
 
         });
         final String welcome = " " + "\n" + "\n" + "      *Welcome to Kiosk*       ";
-        mbtnPrint.setOnClickListener(v -> {
-
-        });
-//android.text.Html.fromHtml(HtmlEmail).toString();
 
     }
 
+    Bitmap bitmap;
+    QRGEncoder qrgEncoder;
 
     @Override
     protected void onStart() {
         super.onStart();
+        WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
+
+        // initializing a variable for default display.
+        Display display = manager.getDefaultDisplay();
+
+        // creating a variable for point which
+        // is to be displayed in QR Code.
+        Point point = new Point();
+        display.getSize(point);
+
+        // getting width and
+        // height of a point
+        int width = point.x;
+        int height = point.y;
+
+        // generating dimension from width and height.
+        int dimen = width < height ? width : height;
+        dimen = dimen * 3 / 4;
+
+        // setting this dimensions inside our qr code
+        // encoder to generate our qr code.
+        qrgEncoder = new QRGEncoder(Name, null, QRGContents.Type.TEXT, dimen);
+        try {
+            // getting our qrcode in the form of bitmap.
+            bitmap = qrgEncoder.encodeAsBitmap();
+            // the bitmap is set inside our image
+            // view using .setimagebitmap method.
+            mIVQrCode.setImageBitmap(bitmap);
+        } catch (WriterException e) {
+            // this method is called for
+            // exception handling.
+            Log.e("Tag", e.toString());
+        }
 /*
         showWorkingDialog();
         new Handler().postDelayed(() -> removeWorkingDialog(), 2000);
@@ -252,6 +297,7 @@ public class ReportActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
+
 
     public boolean checkInternetconn() {
 

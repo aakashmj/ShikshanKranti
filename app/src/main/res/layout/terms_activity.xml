@@ -44,6 +44,7 @@
 
 
                 <CheckBox
+                    android:id="@+id/cbagree"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:gravity="center"

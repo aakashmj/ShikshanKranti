@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:keepScreenOn="true"
@@ -13,42 +12,6 @@
 
         <include layout="@layout/header" />
 
-        <androidx.appcompat.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:background="@color/grey"
-            app:layout_collapseMode="pin">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/tvReportName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@font/nunitosemibold"
-                    android:gravity="bottom|right"
-                    android:paddingLeft="30dp"
-                    android:text="AAKASH"
-                    android:textColor="@color/black"
-                    android:textSize="25sp" />
-
-                <TextView
-                    android:id="@+id/txtgenderAge"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@font/nunitosemibold"
-                    android:gravity="right"
-                    android:paddingRight="30dp"
-                    android:text="MALE | 29"
-                    android:textColor="@color/black"
-                    android:textSize="25sp" />
-            </LinearLayout>
-
-        </androidx.appcompat.widget.Toolbar>
-
     </LinearLayout>
 
     <LinearLayout
@@ -56,64 +19,220 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
-        <LinearLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:background="@drawable/shapebuttons"
+            android:outlineAmbientShadowColor="@color/colorPrimary"
+            android:outlineSpotShadowColor="@color/colorPrimaryDark">
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.1"
-            android:gravity="bottom"
-            android:orientation="vertical">
-
-            <WebView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-
-            <com.google.android.material.appbar.AppBarLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="110px">
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="vertical"
+                android:weightSum="1">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
+                    android:layout_margin="10dp"
+                    android:background="@color/design_default_color_error">
 
-                    <ImageButton
-                        android:id="@+id/btnEmailReport"
-                        android:layout_width="60px"
-                        android:layout_height="60px"
-                        android:layout_gravity="center|end"
-                        android:layout_marginRight="50sp"
-                        android:layout_weight="0.2"
-                        android:background="@drawable/transparent_background"
-                        android:contentDescription="TODO"
-                        android:scaleType="fitEnd"
-                        android:src="@drawable/email"
-                        android:visibility="gone" />
+                    <ImageView
+                        android:id="@+id/ivlogo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/ic_launcher" />
 
-                    <ImageButton
-                        android:id="@+id/btnPrintReport"
-                        android:layout_width="60px"
-                        android:layout_height="60px"
-                        android:layout_marginRight="50sp"
-                        android:layout_weight="0.2"
-                        android:background="@drawable/transparent_background"
-                        android:contentDescription="TODO"
-                        android:scaleType="fitEnd"
-                        android:src="@drawable/ic_power_off" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Maharashtra Rajya Shikshan Kranti Sanghatna"
+                        android:textColor="#fff"
+                        android:textSize="25sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/ivPhoto"
+                            android:layout_width="180dp"
+                            android:layout_height="150dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_book" />
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.4"
+                                android:gravity="start"
+                                android:padding="5dp"
+                                android:text="Member ID :"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                android:id="@+id/tvMemberID"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.4"
+                                android:gravity="start"
+
+                                android:padding="5dp"
+                                android:text="SK12345"
+                                android:textSize="25sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.4"
+                                android:gravity="start"
+                                android:padding="5dp"
+
+                                android:text="Name :"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                android:id="@+id/tvMemberName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.4"
+                                android:padding="5dp"
+
+                                android:gravity="start"
+                                android:text="Aakash Mohan Jagtap"
+                                android:textSize="25sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.4"
+                                android:gravity="start"
+                                android:padding="5dp"
+
+                                android:text="DOB :"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                android:id="@+id/tvDob"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.4"
+                                android:padding="5dp"
+
+                                android:gravity="start"
+                                android:text="04/05/1989"
+                                android:textSize="25sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:visibility="gone"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:id="@+id/ivsign"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="start"
+                                android:layout_weight="0.4"
+                                android:src="@drawable/ic_book" />
+
+                            <ImageView
+                                android:id="@+id/ivqrcode"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
+                                android:layout_weight="0.4"
+                                android:src="@drawable/ic_book" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Maharashtra Shikshan Kranti Sanghatna"
+                            android:textSize="25sp" />
+                    </LinearLayout>
 
                 </LinearLayout>
-            </com.google.android.material.appbar.AppBarLayout>
 
-        </LinearLayout>
+
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btndownloadidcard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:background="@drawable/shapebuttons"
+            android:fontFamily="@font/nunitobold"
+            android:padding="10dp"
+            android:text="Download ID Card"
+            android:textColor="#fff"
+            android:textSize="25sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnchangedetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:background="@drawable/shapebuttons"
+            android:fontFamily="@font/nunitobold"
+            android:padding="10dp"
+            android:text="Change Card Details"
+            android:textColor="#fff"
+            android:textSize="25sp" />
 
 
     </LinearLayout>

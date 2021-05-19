@@ -114,19 +114,18 @@
                         android:paddingLeft="20dp"
                         android:paddingRight="20dp">
 
-                        <androidx.appcompat.widget.AppCompatEditText
+                        <EditText
                             android:id="@+id/etPermAddress"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shapeform"
                             android:fontFamily="@font/nunitolight"
-                            android:hint="@string/address"
+                            android:hint="@string/firstname"
                             android:imeOptions="flagNoExtractUi"
                             android:importantForAutofill="no"
-                            android:inputType="text|textMultiLine"
-                            android:maxLength="50"
-                            android:lines="2"
-                            android:scrollbars="vertical"
+                            android:inputType="text"
+                            android:maxLength="25"
+                            android:scrollHorizontally="true"
                             android:text=""
                             android:textColor="@color/black"
                             android:textSize="20sp"

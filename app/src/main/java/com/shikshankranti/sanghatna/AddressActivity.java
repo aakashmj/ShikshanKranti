@@ -1,26 +1,13 @@
 package com.shikshankranti.sanghatna;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.hardware.usb.UsbManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
 import android.speech.tts.TextToSpeech;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,30 +16,16 @@ import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.google.android.material.button.MaterialButton;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
 
 public class AddressActivity extends AppCompatActivity {
-    private EditText mNameEnterEditText;
-    private EditText mNumberEnterEditText;
+
+    private EditText mETPermAddress,mETDistrict, mETTaluka, mETPinCode;
     MaterialButton mbtnNext;
-    DatePicker mDatePickerAge;
-    ImageButton mNextButton, mPreviousButton;
     private ImageView mImageBtn;
     private TextToSpeech tts;
     private String toSpeak;
-    TextView mHeaderHeading;
     boolean Temptestcompleted = false;
     private AwesomeValidation awesomeValidation;
-    int year;
-    int month;
-    int date;
 
 
     @Override
@@ -67,19 +40,36 @@ public class AddressActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setFlags(View.SYSTEM_UI_FLAG_LAYOUT_STABLE, View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         setContentView(R.layout.address_layout);
-        UiChangeListener();
-
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
-        mbtnNext = findViewById(R.id.btnNext);
-        mbtnNext.setOnClickListener(v -> {
-            Intent i = new Intent(AddressActivity.this, CaptureActivity.class);
-            startActivity(i);
-            finish();
 
-        });
+
+
+        mETPermAddress = findViewById(R.id.etPermAddress);
+        mETDistrict = findViewById(R.id.etDistrict);
+        mETTaluka = findViewById(R.id.etTaluka);
+        mETPinCode = findViewById(R.id.etPinCode);
+        mbtnNext = findViewById(R.id.btnNext);
         ImageButton mCloseBtn = findViewById(R.id.closeBtn);
 
-        awesomeValidation.addValidation(this, R.id.etFirstName, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
+        awesomeValidation.addValidation(this, R.id.etPermAddress, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
+        awesomeValidation.addValidation(this, R.id.etDistrict, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
+        awesomeValidation.addValidation(this, R.id.etTaluka, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
+    //    awesomeValidation.addValidation(this, R.id.etPinCode, "^[+]?[0-9]{10,13}$", R.string.mobileerror);
+
+        mbtnNext.setOnClickListener(v -> {
+            if (awesomeValidation.validate()) {
+                PatientDetailsAbstractClass.Address = mETPermAddress.getText().toString();
+                PatientDetailsAbstractClass.District = mETDistrict.getText().toString();
+                PatientDetailsAbstractClass.Taluka = mETTaluka.getText().toString();
+                PatientDetailsAbstractClass.PinCode = mETPinCode.getText().toString();
+
+                Intent i = new Intent(AddressActivity.this, CaptureActivity.class);
+                startActivity(i);
+                finish();
+            }
+
+        });
+
 
 
         mCloseBtn.setOnClickListener(view -> {
@@ -98,13 +88,6 @@ public class AddressActivity extends AppCompatActivity {
         //Write your code here
         Toast.makeText(getApplicationContext(), "Back press disabled!", Toast.LENGTH_SHORT).show();
     }
-
-
-
-
-
-
-
 
 
     private void UiChangeListener() {

@@ -1,22 +1,12 @@
 package com.shikshankranti.sanghatna;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.PixelFormat;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +14,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,20 +23,14 @@ import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.google.android.material.button.MaterialButton;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Locale;
 
 
-
-public class RegisterForm extends AppCompatActivity  {
-    private EditText metFirstName,metMiddleName,metLastName;
+public class RegisterForm extends AppCompatActivity {
+    private EditText metFirstName, metMiddleName, metLastName;
     MaterialButton mbtnNext;
     TextView mETDOB;
 
@@ -56,8 +39,8 @@ public class RegisterForm extends AppCompatActivity  {
     TextView mHeaderHeading;
     Locale loc;
     private AwesomeValidation awesomeValidation;
-     int year;
-     int month ;
+    int year;
+    int month;
     int day;
     Calendar myCalendar;
 
@@ -73,32 +56,29 @@ public class RegisterForm extends AppCompatActivity  {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().setFlags(View.SYSTEM_UI_FLAG_LAYOUT_STABLE,View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        getWindow().setFlags(View.SYSTEM_UI_FLAG_LAYOUT_STABLE, View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         setContentView(R.layout.profiledetails_activity);
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
 
-        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status != TextToSpeech.ERROR) {
-                    tts.setLanguage(loc);
-                    if (Select_language.langselected == 0) {
-                        toSpeak = "Please do not stand on the Machine and fill the Register Form";
-                    } else {
-                        toSpeak = "कृपया मशीन पर खड़े न हों और रजिस्टर फॉर्म भरें";
-                    }
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
-                    } else tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+        tts = new TextToSpeech(getApplicationContext(), status -> {
+            if (status != TextToSpeech.ERROR) {
+                tts.setLanguage(loc);
+                if (Select_language.langselected == 0) {
+                    toSpeak = "Please Register the Form";
+                } else {
+                    toSpeak = "कृपया रजिस्टर फॉर्म भरा";
                 }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
+                } else tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
             }
         });
 
         metFirstName = findViewById(R.id.etFirstName);
         metMiddleName = findViewById(R.id.etMiddleName);
         metLastName = findViewById(R.id.etLastName);
-        mETDOB=findViewById(R.id.etDOB);
+        mETDOB = findViewById(R.id.etDOB);
 
         myCalendar = new GregorianCalendar();
         DatePickerDialog.OnDateSetListener date = (view, year, monthOfYear, dayOfMonth) -> {
@@ -108,7 +88,7 @@ public class RegisterForm extends AppCompatActivity  {
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             this.year = year;
             this.month = monthOfYear;
-            this.day=dayOfMonth;
+            this.day = dayOfMonth;
             updateLabel();
         };
 
@@ -116,25 +96,24 @@ public class RegisterForm extends AppCompatActivity  {
             new DatePickerDialog(RegisterForm.this, date, myCalendar
                     .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                     myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
         });
 
         mbtnNext = findViewById(R.id.btnNext);
-       // mPreviousButton=findViewById(R.id.previousButton);
-        mHeaderHeading=findViewById(R.id.headerheaeding);
-        mHeaderHeading.setText("Profile Details");
+        // mPreviousButton=findViewById(R.id.previousButton);
+        mHeaderHeading = findViewById(R.id.headerheaeding);
+        mHeaderHeading.setText(R.string.profiledetails);
 
 
-        mbtnNext.setVisibility(View.VISIBLE);
-        mbtnNext.setOnClickListener(v -> {
-
-        });
-              ImageButton mCloseBtn = findViewById(R.id.closeBtn);
+        ImageButton mCloseBtn = findViewById(R.id.closeBtn);
 
 
         awesomeValidation.addValidation(this, R.id.etFirstName, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
+        awesomeValidation.addValidation(this, R.id.etMiddleName, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
+        awesomeValidation.addValidation(this, R.id.etLastName, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
+      //  awesomeValidation.addValidation(this, R.id.etDOB, "^[+]?[0-9]{10,13}$", R.string.mobileerror);
 
 
         mbtnNext.setOnClickListener(v -> {
@@ -142,24 +121,26 @@ public class RegisterForm extends AppCompatActivity  {
                 tts.stop();
                 tts.shutdown();
             }
-            PatientDetailsAbstractClass.Name = metFirstName.getText().toString()+" "+metMiddleName.getText().toString()+" "+metLastName.getText().toString();
-            PatientDetailsAbstractClass.Age = getAge(year,month,day);
+            if(awesomeValidation.validate()) {
+                PatientDetailsAbstractClass.Name = metFirstName.getText().toString() + " " + metMiddleName.getText().toString() + " " + metLastName.getText().toString();
+                PatientDetailsAbstractClass.Age = getAge(year, month, day);
+                Intent addressintent = new Intent(RegisterForm.this, AddressActivity.class);
+                startActivity(addressintent);
+                finish();
+            }
 
-            Intent addressintent = new Intent(RegisterForm.this, AddressActivity.class);
-            startActivity(addressintent);
-            finish();
         });
-   mCloseBtn.setOnClickListener(view -> {
+        mCloseBtn.setOnClickListener(view -> {
 
-          if(tts.isSpeaking()) {
-              tts.stop();
-          }
-          Intent i = new Intent(RegisterForm.this, FullscreenActivity.class);
-          startActivity(i);
-          finish();
+            if (tts.isSpeaking()) {
+                tts.stop();
+            }
+            Intent i = new Intent(RegisterForm.this, FullscreenActivity.class);
+            startActivity(i);
+            finish();
 
 
-      });
+        });
     }
 
     @Override
@@ -168,8 +149,6 @@ public class RegisterForm extends AppCompatActivity  {
         //Write your code here
         Toast.makeText(getApplicationContext(), "Back press disabled!", Toast.LENGTH_SHORT).show();
     }
-
-
 
 
     @Override
@@ -205,8 +184,8 @@ public class RegisterForm extends AppCompatActivity  {
 
     }
 
-    private String getAge(int year, int month, int day){
-        Log.i("getAge",String.valueOf(day)+"/"+String.valueOf(month)+"/"+String.valueOf(year));
+    private String getAge(int year, int month, int day) {
+        Log.i("getAge", day + "/" + month + "/" + year);
         Calendar dob = Calendar.getInstance();
         Calendar today = Calendar.getInstance();
 
@@ -214,14 +193,14 @@ public class RegisterForm extends AppCompatActivity  {
 
         int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
 
-        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
+        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
             age--;
         }
 
-        Integer ageInt = new Integer(age);
-        String ageS = ageInt.toString();
-        return ageS;
+        int ageInt = age;
+        return Integer.toString(ageInt);
     }
+
     private void updateLabel() {
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);

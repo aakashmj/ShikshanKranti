@@ -1,44 +1,29 @@
 package com.shikshankranti.sanghatna;
 
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.PixelFormat;
-import android.hardware.usb.UsbManager;
-import android.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.StrictMode;
 import android.provider.MediaStore;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
-import com.basgeekball.awesomevalidation.AwesomeValidation;
-import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.google.android.material.button.MaterialButton;
 
 import java.io.File;
@@ -46,7 +31,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -56,10 +40,10 @@ public class CaptureActivity extends AppCompatActivity  {
     private static final String IMAGE_DIRECTORY_NAME = "Hello Camera";
     private Uri fileUri;
     private ImageView mImageBtn;
-    private final List blockedKeys = new ArrayList(Arrays.asList(KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP));
+    private final List<Integer> blockedKeys = new ArrayList<>(Arrays.asList(KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP));
     private final Handler mHandler = new Handler();
     MaterialButton mcapturePic,mbtnNext;
-    private static int SELECT_PICTURE = 2;
+    private static final int SELECT_PICTURE = 2;
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
@@ -84,7 +68,7 @@ public class CaptureActivity extends AppCompatActivity  {
         mImageBtn = findViewById(R.id.ivPhoto);
 
         mcapturePic.setOnClickListener(view -> dispatchTakePictureIntent());
-        mImageBtn.setOnClickListener(view -> fetchImageFromGallery(view));
+        mImageBtn.setOnClickListener(view -> fetchImageFromGallery());
         mbtnNext.setOnClickListener(v -> {
             Intent reportintent = new Intent(CaptureActivity.this, ReportActivity.class);
             startActivity(reportintent);
@@ -153,9 +137,12 @@ public class CaptureActivity extends AppCompatActivity  {
             /*Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             mImageBtn.setImageBitmap(imageBitmap);*/
+            PatientDetailsAbstractClass.Gallery=false;
         }
         if (requestCode == SELECT_PICTURE) {
             Uri selectedImageURI = data.getData();
+            PatientDetailsAbstractClass.Gallery=true;
+            PatientDetailsAbstractClass.GalleryPhoto=selectedImageURI;
             mImageBtn.setImageURI(selectedImageURI);
         }
 
@@ -186,16 +173,6 @@ public class CaptureActivity extends AppCompatActivity  {
 
     }
 
-    private void captureImage() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        try {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        } catch (ActivityNotFoundException e) {
-            e.printStackTrace();
-            // display error state to the user
-        }
-    }
-
     private static File getOutputMediaFile() {
 
         // External sdcard location
@@ -213,8 +190,6 @@ public class CaptureActivity extends AppCompatActivity  {
         }
 
         // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
-                Locale.getDefault()).format(new Date());
         File mediaFile;
 
         mediaFile = new File(mediaStorageDir.getPath() + File.separator
@@ -301,6 +276,9 @@ public class CaptureActivity extends AppCompatActivity  {
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
         Bitmap rotatedbmp = rotateBitmapOrientation(currentPhotoPath);
+        if(rotatedbmp!=null) {
+            PatientDetailsAbstractClass.Photo = rotatedbmp;
+        }
         //  Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
         mImageBtn.setImageBitmap(rotatedbmp);
     }
@@ -339,7 +317,7 @@ public class CaptureActivity extends AppCompatActivity  {
         return rotatedBitmap;
     }
 
-    void fetchImageFromGallery(View view){
+    void fetchImageFromGallery(){
         Intent intent = new Intent();
             // Create the File where the photo should go
             File photoFile = null;
