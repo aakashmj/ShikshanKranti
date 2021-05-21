@@ -7,10 +7,8 @@
         <intent>
             <action android:name="android.media.action.IMAGE_CAPTURE" />
         </intent>
-    </queries>
-    <!-- Permission declarations -->
-    <uses-permission android:name="android.permission.CAMERA" />
-    <!-- A camera with (optional) RAW capability is required to use this application -->
+    </queries> <!-- Permission declarations -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- A camera with (optional) RAW capability is required to use this application -->
     <uses-feature android:name="android.hardware.camera.any" />
     <uses-feature
         android:name="android.hardware.camera.raw"
@@ -33,6 +31,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ShikshanKrantiSanghatna"
         tools:ignore="AllowBackup">
+        <activity android:name=".VerificationActivity" />
+
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/provider_paths" />
@@ -41,23 +41,21 @@
         <activity
             android:name=".AddressActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name" >
-
-        </activity>
+            android:label="@string/app_name" />
         <activity
             android:name=".FullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".Select_language" />
         <activity android:name=".RegisterForm" />
-        <activity android:name=".CaptureActivity">
 
-        </activity>
+        <activity android:name=".CaptureActivity" />
         <activity android:name=".ReportActivity" />
         <activity android:name=".TermsActivity" />
 

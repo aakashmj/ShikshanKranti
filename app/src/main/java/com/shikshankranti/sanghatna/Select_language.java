@@ -161,21 +161,15 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             AlertDialog.Builder builder = new AlertDialog.Builder(Select_language.this);
             builder.setCancelable(false);
             builder.setMessage("Do you want to Close?");
-            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //if user pressed "yes", then he is allowed to exit from application
-                    Intent i = new Intent(Select_language.this, FullscreenActivity.class);
-                    startActivity(i);
-                    finish();
-                }
+            builder.setPositiveButton("Yes", (dialog, which) -> {
+                //if user pressed "yes", then he is allowed to exit from application
+                Intent i = new Intent(Select_language.this, FullscreenActivity.class);
+                startActivity(i);
+                finish();
             });
-            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //if user select "No", just cancel this dialog and continue with app
-                    dialog.cancel();
-                }
+            builder.setNegativeButton("No", (dialog, which) -> {
+                //if user select "No", just cancel this dialog and continue with app
+                dialog.cancel();
             });
             AlertDialog alert = builder.create();
             alert.show();

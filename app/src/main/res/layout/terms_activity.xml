@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
@@ -32,12 +30,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
+                android:scrollbars="vertical"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunitobold"
                     android:hint="@string/terms"
                     android:textColor="@color/design_default_color_on_secondary"
                     android:textSize="18sp" />
@@ -89,7 +89,6 @@
                     android:layout_weight="1"
                     >
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnGenderPrevious"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="30dp"

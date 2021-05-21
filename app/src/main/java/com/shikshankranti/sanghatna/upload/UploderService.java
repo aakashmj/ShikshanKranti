@@ -82,17 +82,13 @@ public class UploderService extends Service {
             throw new IllegalThreadStateException();
         String a = intent.getAction();
 
-       final Runnable loadRunnable = new Runnable(){
+       final Runnable loadRunnable = () -> {
 
-            @Override
-            public void run() {
-
-          /*      Navigation_Activity.Upload_PD.setMessage("Uploading to server.....");
-                Navigation_Activity.Upload_PD.setCancelable(true);
-                Navigation_Activity.Upload_PD.show();
+     /*      Navigation_Activity.Upload_PD.setMessage("Uploading to server.....");
+           Navigation_Activity.Upload_PD.setCancelable(true);
+           Navigation_Activity.Upload_PD.show();
 */
-            }
-        };
+       };
 
         if (a.equals(ACTION_UPLOADALL)) {
 
@@ -103,18 +99,14 @@ public class UploderService extends Service {
             if (interstatus) {
 
                 handler.post(loadRunnable);
-                new Thread(new Runnable() {
+                new Thread(() -> {
+                    UploadAll uploadAll = new UploadAll();
+                    log.info("UploadAll Function Is Started");
+                        boolean status = uploadAll.uploadALL(UploderService.this, device_name);
 
-                    @Override
-                    public void run() {
-                        UploadAll uploadAll = new UploadAll();
-                        log.info("UploadAll Function Is Started");
-                            boolean status = uploadAll.uploadALL(UploderService.this, device_name);
-
-                        log.info("UploadAll Finished");
-                        Intent intent = new Intent(ACTION_UPLOADALL_SERVER);
-                        sendBroadcast(intent);
-                    }
+                    log.info("UploadAll Finished");
+                    Intent intent1 = new Intent(ACTION_UPLOADALL_SERVER);
+                    sendBroadcast(intent1);
                 }).start();   // end of thread
 
             }

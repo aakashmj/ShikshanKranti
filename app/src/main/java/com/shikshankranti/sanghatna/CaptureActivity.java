@@ -7,10 +7,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import androidx.exifinterface.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -45,7 +47,8 @@ public class CaptureActivity extends AppCompatActivity  {
     MaterialButton mcapturePic,mbtnNext;
     private static final int SELECT_PICTURE = 2;
     static final int REQUEST_IMAGE_CAPTURE = 1;
-
+    private TextToSpeech tts;
+    private String toSpeak;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +61,23 @@ public class CaptureActivity extends AppCompatActivity  {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setFlags(View.SYSTEM_UI_FLAG_LAYOUT_STABLE,View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         setContentView(R.layout.capture_layout);
+        final Locale loc = new Locale("hin", "IND");
+        tts = new TextToSpeech(getApplicationContext(), status -> {
+            if (status != TextToSpeech.ERROR) {
+                tts.setLanguage(loc);
+                if (Select_language.langselected == 0) {
+                    toSpeak = "Please Capture or Select Photo";
+                } else {
+                    toSpeak = "कृपया फोटो कॅप्चर करा किंवा निवडा";
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
+                } else {
+                    tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+
+                }
+            }
+        });
 
        /* StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());*/
@@ -70,13 +90,20 @@ public class CaptureActivity extends AppCompatActivity  {
         mcapturePic.setOnClickListener(view -> dispatchTakePictureIntent());
         mImageBtn.setOnClickListener(view -> fetchImageFromGallery());
         mbtnNext.setOnClickListener(v -> {
+            if (tts.isSpeaking() && tts != null) {
+                tts.stop();
+                tts.shutdown();
+            }
+
             Intent reportintent = new Intent(CaptureActivity.this, ReportActivity.class);
             startActivity(reportintent);
             finish();
         });
         mCloseBtn.setOnClickListener(view -> {
-
-
+            if (tts.isSpeaking() && tts != null) {
+                tts.stop();
+                tts.shutdown();
+            }
             Intent i = new Intent(CaptureActivity.this, FullscreenActivity.class);
             startActivity(i);
             finish();
@@ -198,9 +225,6 @@ public class CaptureActivity extends AppCompatActivity  {
         return mediaFile;
     }
 
-    private Uri getOutputMediaFileUri() {
-        return Uri.fromFile(getOutputMediaFile());
-    }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -211,6 +235,11 @@ public class CaptureActivity extends AppCompatActivity  {
     }
     String currentPhotoPath;
     private void dispatchTakePictureIntent() {
+        if (tts.isSpeaking() && tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -303,6 +332,7 @@ public class CaptureActivity extends AppCompatActivity  {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        assert exif != null;
         String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
         int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
         int rotationAngle = 0;
@@ -312,12 +342,16 @@ public class CaptureActivity extends AppCompatActivity  {
         // Rotate Bitmap
         Matrix matrix = new Matrix();
         matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
-        Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
         // Return result
-        return rotatedBitmap;
+        return Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
     }
 
     void fetchImageFromGallery(){
+        if (tts.isSpeaking() && tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+
         Intent intent = new Intent();
             // Create the File where the photo should go
             File photoFile = null;

@@ -29,7 +29,6 @@
             app:layout_collapseMode="pin">
 
             <TextView
-                android:id="@+id/tvGendername"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="bottom|end"
@@ -38,7 +37,6 @@
                 android:textSize="26sp" />
 
             <TextView
-                android:id="@+id/txtgenderAge"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="right"
@@ -88,7 +86,7 @@
                             android:layout_gravity="center"
                             android:layout_width="400dp"
                             android:layout_height="300dp"
-                            />
+                            android:contentDescription="TODO" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnCapture"
@@ -103,7 +101,6 @@
                         android:textSize="30sp" />
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnNext"
-                        borderColor="#707070"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

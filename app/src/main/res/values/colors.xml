@@ -17,12 +17,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
-    <color name="lightgrey">#00897b</color>
     <color name="grey">#E0E0E0</color>
-    <color name="greyheading">#707070</color>
     <color name="nameheading">#5A9FBD</color>
-    <color name="headerblue">#E9E7E7</color>
-    <color name="darkblue">#0D47A1</color>
-    <color name="et_divider_disable">#FFFF00</color>
 
 </resources>

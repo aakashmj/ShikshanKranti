@@ -1,13 +1,13 @@
 package com.shikshankranti.sanghatna;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,17 +16,16 @@ import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.google.android.material.button.MaterialButton;
 
+import java.util.Locale;
+
 
 public class AddressActivity extends AppCompatActivity {
 
-    private EditText mETPermAddress,mETDistrict, mETTaluka, mETPinCode;
+    private EditText mETPermAddress, mETDistrict, mETTaluka, mETPinCode;
     MaterialButton mbtnNext;
-    private ImageView mImageBtn;
+    private AwesomeValidation awesomeValidation;
     private TextToSpeech tts;
     private String toSpeak;
-    boolean Temptestcompleted = false;
-    private AwesomeValidation awesomeValidation;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +42,23 @@ public class AddressActivity extends AppCompatActivity {
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
 
 
+        final Locale loc = new Locale("hin", "IND");
+        tts = new TextToSpeech(getApplicationContext(), status -> {
+            if (status != TextToSpeech.ERROR) {
+                tts.setLanguage(loc);
+                if (Select_language.langselected == 0) {
+                    toSpeak = "Please Fill Address Details";
+                } else {
+                    toSpeak = "कृपया पत्ता तपशील भरा";
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
+                } else {
+                    tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+
+                }
+            }
+        });
 
         mETPermAddress = findViewById(R.id.etPermAddress);
         mETDistrict = findViewById(R.id.etDistrict);
@@ -54,9 +70,13 @@ public class AddressActivity extends AppCompatActivity {
         awesomeValidation.addValidation(this, R.id.etPermAddress, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
         awesomeValidation.addValidation(this, R.id.etDistrict, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
         awesomeValidation.addValidation(this, R.id.etTaluka, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
-    //    awesomeValidation.addValidation(this, R.id.etPinCode, "^[+]?[0-9]{10,13}$", R.string.mobileerror);
+        //    awesomeValidation.addValidation(this, R.id.etPinCode, "^[+]?[0-9]{10,13}$", R.string.mobileerror);
 
         mbtnNext.setOnClickListener(v -> {
+            if (tts.isSpeaking() && tts != null) {
+                tts.stop();
+                tts.shutdown();
+            }
             if (awesomeValidation.validate()) {
                 PatientDetailsAbstractClass.Address = mETPermAddress.getText().toString();
                 PatientDetailsAbstractClass.District = mETDistrict.getText().toString();
@@ -71,8 +91,12 @@ public class AddressActivity extends AppCompatActivity {
         });
 
 
-
         mCloseBtn.setOnClickListener(view -> {
+            if (tts.isSpeaking() && tts != null) {
+                tts.stop();
+                tts.shutdown();
+            }
+
             Intent i = new Intent(AddressActivity.this, FullscreenActivity.class);
             startActivity(i);
             finish();
@@ -89,19 +113,5 @@ public class AddressActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "Back press disabled!", Toast.LENGTH_SHORT).show();
     }
 
-
-    private void UiChangeListener() {
-        final View decorView = getWindow().getDecorView();
-        decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
-            if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-            }
-        });
-    }
 
 }

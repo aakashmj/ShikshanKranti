@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -26,11 +27,7 @@ class Utility {
     public static void showmessage(Context context, String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(msg).setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+                .setPositiveButton("OK", (dialog, id) -> dialog.cancel());
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -61,6 +58,7 @@ class Utility {
     private static boolean deleteDir(File dir) {
         if (dir != null && dir.isDirectory()) {
             String[] children = dir.list();
+            assert children != null;
             for (String aChildren : children) {
                 boolean success = deleteDir(new File(dir, aChildren));
                 if (!success) {
@@ -76,7 +74,7 @@ class Utility {
         try {
             Calendar c = Calendar.getInstance();
             SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy  HH:mm:ss",Locale.US);
-            c.setTime(df.parse(date));
+            c.setTime(Objects.requireNonNull(df.parse(date)));
             df = new SimpleDateFormat("MMM dd,yyyy  HH:mm:ss",Locale.US);
             formattedDate = df.format(c.getTime());
         } catch (Exception e) {
@@ -103,7 +101,7 @@ class Utility {
         try {
             Calendar c = Calendar.getInstance();
             SimpleDateFormat df = new SimpleDateFormat("MMM dd,yyyy",Locale.US);
-            c.setTime(df.parse(date));
+            c.setTime(Objects.requireNonNull(df.parse(date)));
             df = new SimpleDateFormat("MM/dd/yyyy",Locale.US);
             formattedDate = df.format(c.getTime());
         } catch (Exception e) {
@@ -139,7 +137,7 @@ class Utility {
         try {
             Date ownmodi = df.parse(ownmodifieddate);
             Date servermodi = df.parse(servermodifieddate);
-            if (servermodi.after(ownmodi))
+            if (Objects.requireNonNull(servermodi).after(ownmodi))
                 return true;
 
         } catch (ParseException e) {
@@ -163,7 +161,7 @@ class Utility {
             int gmtOffset = tz.getRawOffset()
                     + (tz.inDaylightTime(date) ? tz.getDSTSavings() : 0);
 
-            date.setTime(date.getTime() + gmtOffset);
+            Objects.requireNonNull(date).setTime(date.getTime() + gmtOffset);
         } catch (ParseException ignored) {
 
         }
@@ -211,7 +209,7 @@ class Utility {
             TimeZone tz = TimeZone.getDefault();
             int gmtOffset = tz.getRawOffset()
                     + (tz.inDaylightTime(date) ? tz.getDSTSavings() : 0);
-            date.setTime(date.getTime() + gmtOffset);
+            Objects.requireNonNull(date).setTime(date.getTime() + gmtOffset);
             df = new SimpleDateFormat("HH:mm a", Locale.getDefault());
             return df.format(date);
         } catch (Exception e) {
@@ -262,7 +260,7 @@ class Utility {
         try {
             Date date1 = simpleDateFormat.parse(starttime);
             Date date2 = simpleDateFormat.parse(endtime);
-            long difference = date2.getTime() - date1.getTime();
+            long difference = Objects.requireNonNull(date2).getTime() - Objects.requireNonNull(date1).getTime();
             maxappointment = (int) (TimeUnit.MILLISECONDS.toMinutes(difference) / timeslot);
         } catch (ParseException e) {
 
@@ -279,7 +277,7 @@ class Utility {
             SimpleDateFormat df = new SimpleDateFormat("HH:mm",
                     Locale.getDefault());
             Calendar calendar = Calendar.getInstance();
-            calendar.setTime(df.parse(time));
+            calendar.setTime(Objects.requireNonNull(df.parse(time)));
             calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
 
             df.setTimeZone(TimeZone.getTimeZone("UTC"));

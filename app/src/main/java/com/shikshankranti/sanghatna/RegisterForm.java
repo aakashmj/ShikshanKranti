@@ -82,7 +82,6 @@ public class RegisterForm extends AppCompatActivity {
 
         myCalendar = new GregorianCalendar();
         DatePickerDialog.OnDateSetListener date = (view, year, monthOfYear, dayOfMonth) -> {
-            // TODO Auto-generated method stub
             myCalendar.set(Calendar.YEAR, year);
             myCalendar.set(Calendar.MONTH, monthOfYear);
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -123,7 +122,7 @@ public class RegisterForm extends AppCompatActivity {
             }
             if(awesomeValidation.validate()) {
                 PatientDetailsAbstractClass.Name = metFirstName.getText().toString() + " " + metMiddleName.getText().toString() + " " + metLastName.getText().toString();
-                PatientDetailsAbstractClass.Age = getAge(year, month, day);
+                PatientDetailsAbstractClass.DOB = mETDOB.getText().toString();
                 Intent addressintent = new Intent(RegisterForm.this, AddressActivity.class);
                 startActivity(addressintent);
                 finish();

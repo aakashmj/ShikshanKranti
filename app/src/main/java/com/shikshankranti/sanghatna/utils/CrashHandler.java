@@ -30,10 +30,6 @@ import java.util.Objects;
  */
 public class CrashHandler implements UncaughtExceptionHandler {
 
-	public static final String TAG = "CrashHandler";
-
-	public static final String PROGRAM_BROKEN_ACTION = "com.teligen.wccp.PROGRAM_BROKEN";
-
 	private UncaughtExceptionHandler mDefaultHandler;
 	private static final CrashHandler instance = new CrashHandler();
 	private Context mContext;
@@ -78,17 +74,16 @@ public class CrashHandler implements UncaughtExceptionHandler {
 		if (ex == null) {
 			return false;
 		}
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				Looper.prepare();
-				Toast.makeText(mContext.getApplicationContext(),
-						"unknown exception and exiting...Please checking logs in sd card！", Toast.LENGTH_LONG).show();
-				Looper.loop();
-			}
+		new Thread(() -> {
+			Looper.prepare();
+			Toast.makeText(mContext.getApplicationContext(),
+					"unknown exception and exiting...Please checking logs in sd card！", Toast.LENGTH_LONG).show();
+			Looper.loop();
 		}).start();
 		collectDeviceInfo(mContext.getApplicationContext());
-		logError(ex);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+			logError(ex);
+		}
 		return true;
 	}
 
@@ -146,15 +141,12 @@ public class CrashHandler implements UncaughtExceptionHandler {
 			e.printStackTrace();
 		} finally {
 			try {
+				assert fos != null;
 				fos.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	public Class<?> getMainActivityClass() {
-		return mainActivityClass;
 	}
 
 	public void setMainActivityClass(Class<?> mainActivityClass) {

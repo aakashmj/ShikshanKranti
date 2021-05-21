@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="@color/colorWhite"
     android:theme="@style/ThemeOverlay.ShikshanKrantiSanghatna.FullscreenContainer"
     tools:context=".FullscreenActivity">
@@ -13,13 +14,9 @@
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+
 
         <LinearLayout
-            android:id="@+id/fullscreen_content_controls"
             style="@style/Widget.Theme.ShikshanKrantiSanghatna.ButtonBar.Fullscreen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,6 +43,5 @@
                 android:layout_marginTop="20dp"
                 android:text="Welcome" />
         </LinearLayout>
-    </FrameLayout>
 
 </FrameLayout>

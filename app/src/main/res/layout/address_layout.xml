@@ -29,7 +29,6 @@
             app:layout_collapseMode="pin">
 
             <TextView
-                android:id="@+id/tvGendername"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="bottom|right"
@@ -38,7 +37,6 @@
                 android:textSize="26sp" />
 
             <TextView
-                android:id="@+id/txtgenderAge"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="right"
@@ -120,7 +118,7 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/shapeform"
                             android:fontFamily="@font/nunitolight"
-                            android:hint="@string/firstname"
+                            android:hint="@string/address"
                             android:imeOptions="flagNoExtractUi"
                             android:importantForAutofill="no"
                             android:inputType="text"

@@ -1,37 +1,18 @@
 <resources>
     <string name="app_name">शिक्षण क्रांती संघटना</string>
-    <string name="selectlanguage">भाषा निवडा </string>
     <string name="next">पुढे जा </string>
     <string name="firstname">आपलं नाव </string>
     <string name="middlename">आई / वडील /पतीचे नाव</string>
     <string name="lastname">आपलं आडनाव </string>
     <string name="language">E | English</string>
-    <string name="or">और </string>
-    <string name="previous">पीछे </string>
-    <string name="enterage">आयु दर्ज कीजिए </string>
-    <string name="start">प्रारंभ</string>
-    <string name="yes">हाँ</string>
-    <string name="no">नहीं</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="msg_sending_email">sending mail</string>
-    <string name="msg_email_sent_successfully">sent successfully</string>
-    <string name="msg_error_sending_email">error sending mail</string>
-    <string name="welcome">Welcome!</string>
     <string name="nameerror">Enter a valid name</string>
     <string name="mobileerror">Enter a valid mobile</string>
-    <string name="ageerror">Enter a valid age</string>
-    <string name="Version">V  2.0</string>
     <string name="profiledetails">वैयक्तिक माहिती</string>
     <string name="address">कायमचा पत्ता </string>
     <string name="district">जिल्हा</string>
     <string name="taluka">तालुका</string>
-    <string name="downloadid">ओळखपत्र डाउनलोड करा</string>
     <string name="membership">प्रार्थमिक सदस्य नोंदणी अर्ज</string>
-    <string name="editprofile">वैयक्तिक माहिती मध्ये बदल करा</string>
     <string name="pincode">पिन कोड</string>
-    <string name="selectgender">लिंग चुनें</string>
-    <string name="title_activity_design">DesignActivity</string>
-    <string name="terms">मला महाराष्ट्र राज्य शिक्षण क्रांती संघटना या संघटनेचे प्राथमिक सदस्यत्व घेण्याची इच्छा आहे.\nमी इतर कोणत्याही मान्यताप्राप्त संघटनेचा सदस्य नाही. मी महाराष्ट्र राज्य शिक्षण क्रांती संघटनेची घटना,नियम, ध्येय धोरणे व शिस्त यांचे पालन करून पक्षाशी प्रामाणिक राहण्याचे वचन देत आहे.\n शिक्षकांच्या न्याय्य हक्कांसाठी व शिक्षण हितासाठी संघटनेमार्फत उभारल्या जाणाऱ्या आंदोलनांना माझे सहकार्य राहील. सन 2021-2023 या दोन वर्षाकरिता मला महाराष्ट्र राज्य शिक्षण क्रांती संघटना या संघटनेचे प्राथमिक सदस्यत्व मिळावे ही विनंती करीत आहे.</string>
+    <string name="terms">मला महाराष्ट्र राज्य शिक्षण क्रांती संघटना या संघटनेचे प्राथमिक सदस्यत्व घेण्याची इच्छा आहे.\n\nमी इतर कोणत्याही मान्यताप्राप्त संघटनेचा सदस्य नाही. मी महाराष्ट्र राज्य शिक्षण क्रांती संघटनेची घटना,नियम, ध्येय धोरणे व शिस्त यांचे पालन करून पक्षाशी प्रामाणिक राहण्याचे वचन देत आहे.\n \nशिक्षकांच्या न्याय्य हक्कांसाठी व शिक्षण हितासाठी संघटनेमार्फत उभारल्या जाणाऱ्या आंदोलनांना माझे सहकार्य राहील. सन 2021-2023 या दोन वर्षाकरिता मला महाराष्ट्र राज्य शिक्षण क्रांती संघटना या संघटनेचे प्राथमिक सदस्यत्व मिळावे ही विनंती करीत आहे.</string>
 
 </resources>

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "163000272903",
+    "project_id": "shikshan-kranti",
+    "storage_bucket": "shikshan-kranti.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:163000272903:android:624eedeb9d8c37ba9f02a2",
+        "android_client_info": {
+          "package_name": "com.shikshankranti.sanghatna"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "163000272903-d0v1ld93ng1tu7uno3silmj90rev1qoo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shikshankranti.sanghatna",
+            "certificate_hash": "4e280bd65ea0348769eff5e72efd7006a5acdfcb"
+          }
+        },
+        {
+          "client_id": "163000272903-ot412ccortm2jpvak19cgl62p3majde4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLUiClg-N36-MnSX_yLwUoIrlwdsICriI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "163000272903-ot412ccortm2jpvak19cgl62p3majde4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

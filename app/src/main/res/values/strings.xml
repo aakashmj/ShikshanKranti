@@ -1,42 +1,22 @@
 <resources>
     <string name="app_name">Shikshan Kranti Sanghatna</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="firstname">First Name</string>
     <string name="middlename">Middle Name</string>
     <string name="lastname">Last Name</string>
     <string name="language">E | English</string>
 
-    <string name="or">OR</string>
-    <string name="selectlanguage">SELECT LANGUAGE</string>
-    <string name="previous">PREVIOUS</string>
-
-    <string name="welcome">Welcome!</string>
     <!-- TODO: Remove or change this placeholder text -->
 
     <string name="nameerror">Enter a valid name</string>
     <string name="mobileerror">Enter a valid mobile</string>
-    <string name="ageerror">Enter a valid age</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="msg_sending_email">sending mail</string>
-    <string name="msg_email_sent_successfully">sent successfully</string>
-    <string name="msg_error_sending_email">error sending mail</string>
     <string name="address">Permenant Address </string>
     <string name="district">District </string>
     <string name="taluka">Taluka </string>
-    <string name="downloadid">Dowload ID Card</string>
     <string name="membership">Primary Membership Form</string>
-    <string name="editprofile">Edit Profile</string>
     <string name="pincode">Pin Code</string>
-    <string name="terms">I would like to be a primary member of Maharashtra State Education Revolutionary Organization. \nI am not a member of any other recognized political party. \nI will continue to support the agitations for the just rights of teachers and for the benefit of education. \nFor the two years 2021-2023, I am requesting to get the primary membership of the Maharashtra State Education Revolutionary Organization.
+    <string name="terms">I would like to be a primary member of Maharashtra State Education Revolutionary Organization. \n \nI am not a member of any other recognized political party. \n \n I will continue to support the agitations for the just rights of teachers and for the benefit of education. \n\nFor the two years 2021-2023, I am requesting to get the primary membership of the Maharashtra State Education Revolutionary Organization.
 </string>
-    <string name="enterage">Enter Age</string>
-    <string name="start">START</string>
-    <string name="Version">V  2.0</string>
     <string name="next">NEXT </string>
     <string name="profiledetails">PROFILE DETAILS</string>
-    <string name="selectgender">SELECT GENDER</string>
-    <string name="title_activity_design">DesignActivity</string>
 
 </resources>

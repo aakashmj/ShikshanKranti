@@ -13,7 +13,7 @@ public class PatientDetailsAbstractClass {
 
 	public static String Name="";
 	public static String Number="";
-	public static String Age="9";
+	public static String DOB="9";
 	public static boolean Register;
 	public static String Address="";
 	public static String District="";
@@ -33,7 +33,7 @@ public class PatientDetailsAbstractClass {
 	public static void ClearAllElements() {
 		Name = "";
 		Number = "";
-		Age = "";
+		DOB = "";
 		String lang = "";
 		Gender = "Male";
 		Register = false;
