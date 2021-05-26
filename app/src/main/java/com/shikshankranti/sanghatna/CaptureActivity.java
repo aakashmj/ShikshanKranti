@@ -40,14 +40,15 @@ import java.util.Locale;
 
 public class CaptureActivity extends AppCompatActivity  {
     private Uri fileUri;
-    private ImageView mImageBtn;
+    private ImageView mGallery;
     private final List<Integer> blockedKeys = new ArrayList<>(Arrays.asList(KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP));
     private final Handler mHandler = new Handler();
-    ImageView mcapturePic,mbtnNext;
+    ImageView mcapturePic,mbtnNext,mivPhoto;
     private static final int SELECT_PICTURE = 2;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private TextToSpeech tts;
     private String toSpeak;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,10 +85,11 @@ public class CaptureActivity extends AppCompatActivity  {
 
         mcapturePic =  findViewById(R.id.btnCapture);
         mbtnNext = findViewById(R.id.btnNext);
-        mImageBtn = findViewById(R.id.ivPhoto);
+        mGallery = findViewById(R.id.ivGallery);
+        mivPhoto = findViewById(R.id.ivPhoto);
 
         mcapturePic.setOnClickListener(view -> dispatchTakePictureIntent());
-        mImageBtn.setOnClickListener(view -> fetchImageFromGallery());
+        mGallery.setOnClickListener(view -> fetchImageFromGallery());
         mbtnNext.setOnClickListener(v -> {
             if (tts.isSpeaking() && tts != null) {
                 tts.stop();
@@ -169,7 +171,7 @@ public class CaptureActivity extends AppCompatActivity  {
             Uri selectedImageURI = data.getData();
             PatientDetailsAbstractClass.Gallery=true;
             PatientDetailsAbstractClass.GalleryPhoto=selectedImageURI;
-            mImageBtn.setImageURI(selectedImageURI);
+            mivPhoto.setImageURI(selectedImageURI);
         }
 
     }
@@ -260,8 +262,8 @@ public class CaptureActivity extends AppCompatActivity  {
     }
     private void setPic() {
         // Get the dimensions of the View
-        int targetW = mImageBtn.getWidth();
-        int targetH = mImageBtn.getHeight();
+        int targetW = mivPhoto.getWidth();
+        int targetH = mivPhoto.getHeight();
 
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -284,7 +286,7 @@ public class CaptureActivity extends AppCompatActivity  {
             PatientDetailsAbstractClass.Photo = rotatedbmp;
         }
         //  Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
-        mImageBtn.setImageBitmap(rotatedbmp);
+        mivPhoto.setImageBitmap(rotatedbmp);
     }
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
