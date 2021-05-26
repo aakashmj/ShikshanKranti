@@ -1,6 +1,8 @@
 package com.shikshankranti.sanghatna;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -102,6 +104,11 @@ public class VerificationActivity extends AppCompatActivity {
             if (code != null) {
                 editText.setText(code);
                 verifyCode(code);
+                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key),MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("deviceauthstatus", "verified");
+                editor.apply();
+
             }
         }
 

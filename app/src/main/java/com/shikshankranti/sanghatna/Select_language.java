@@ -3,6 +3,7 @@ package com.shikshankranti.sanghatna;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -54,11 +55,11 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
         setContentView(R.layout.activity_selectlanguage);
         checkAndRequestPermissions();
 
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key),Context.MODE_PRIVATE);
+        String authstatus = sharedPref.getString("deviceauthstatus", "no");
         Configuration config = getBaseContext().getResources().getConfiguration();
 
-        String lang = settings.getString("LANG", "");
+        String lang = sharedPref.getString("LANG", "");
         if (!"".equals(lang) && !config.locale.getLanguage().equals(lang)) {
             Locale locale = new Locale(lang);
             Locale.setDefault(locale);
@@ -95,25 +96,37 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             String lang1 = "en";//Default Language
             switch (view.getId()) {
                 case R.id.english:
-                    if (tts != null && tts.isSpeaking()) {
-                        tts.stop();
+                    if(authstatus.contains("verified")){
+                        Intent i = new Intent(Select_language.this, RegisterForm.class);
+                        startActivity(i);
+                        finish();
+                    }else {
+                        if (tts != null && tts.isSpeaking()) {
+                            tts.stop();
+                        }
+                        lang1 = "en";
+                        Intent i = new Intent(Select_language.this, TermsActivity.class);
+                        langselected = 0;
+                        startActivity(i);
+                        finish();
                     }
-                    lang1 = "en";
-                    Intent i = new Intent(Select_language.this, TermsActivity.class);
-                    langselected = 0;
-                    startActivity(i);
-                    finish();
 
                     break;
                 case R.id.hindi:
-                    if (tts != null && tts.isSpeaking()) {
-                        tts.stop();
+                    if(authstatus.contains("verified")){
+                        Intent i = new Intent(Select_language.this, RegisterForm.class);
+                        startActivity(i);
+                        finish();
+                    }else {
+                        if (tts != null && tts.isSpeaking()) {
+                            tts.stop();
+                        }
+                        lang1 = "hi";
+                        Intent j = new Intent(Select_language.this, TermsActivity.class);
+                        langselected = 1;
+                        startActivity(j);
+                        finish();
                     }
-                    lang1 = "hi";
-                    Intent j = new Intent(Select_language.this, TermsActivity.class);
-                    langselected = 1;
-                    startActivity(j);
-                    finish();
 
                     break;
 

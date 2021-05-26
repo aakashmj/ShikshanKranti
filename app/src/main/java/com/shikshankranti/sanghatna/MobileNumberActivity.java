@@ -1,6 +1,8 @@
 package com.shikshankranti.sanghatna;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -28,6 +30,7 @@ public class MobileNumberActivity extends AppCompatActivity {
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
 
         setContentView(R.layout.activity_mobile_number);
+        Context context = getApplicationContext();
         final Locale loc = new Locale("hin", "IND");
         tts = new TextToSpeech(getApplicationContext(), status -> {
             if (status != TextToSpeech.ERROR) {

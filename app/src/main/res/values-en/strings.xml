@@ -12,6 +12,7 @@
     <string name="taluka">Taluka </string>
     <string name="membership">Primary Membership Form</string>
     <string name="pincode">Pin Code</string>
+    <string name="preference_file_key">skVerified</string>
     <string name="profiledetails">PROFILE DETAILS</string>
     <string name="terms">I would like to be a primary member of Maharashtra State Education Revolutionary Organization. \n\nI am not a member of any other recognized political party. I will continue to support the agitations for the just rights of teachers and for the benefit of education. \n \nFor the two years 2021-2023, I am requesting to get the primary membership of the Maharashtra State Education Revolutionary Organization.
 </string>
