@@ -2,6 +2,8 @@ package com.shikshankranti.sanghatna.application;
 
 import android.app.Application;
 
+import androidx.multidex.MultiDex;
+
 import com.shikshankranti.sanghatna.utils.CrashHandler;
 
 
@@ -19,5 +21,6 @@ public class MyApplication extends Application {
         super.onCreate();
         CrashHandler mCrashHandler = CrashHandler.getInstance();
         mCrashHandler.init(getApplicationContext(), getClass());
+        MultiDex.install(this);
     }
 }

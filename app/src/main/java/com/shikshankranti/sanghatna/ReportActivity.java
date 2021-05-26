@@ -2,11 +2,12 @@ package com.shikshankranti.sanghatna;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,6 +16,7 @@ import android.print.PrintDocumentAdapter;
 import android.print.PrintJob;
 import android.print.PrintManager;
 import android.speech.tts.TextToSpeech;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -27,10 +29,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
+import com.google.android.material.button.MaterialButton;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.zxing.WriterException;
+import com.shikshankranti.sanghatna.database.UsersDetails;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -39,11 +47,15 @@ import java.util.Objects;
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Address;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Name;
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Photo;
 
 public class ReportActivity extends AppCompatActivity {
     private TextToSpeech tts;
     private String toSpeak;
+    MaterialButton mbtnDownloadIDCard,mbtnChangeDetails,mbtnShareID;
+    TextView mTVLocation;
 
 
     Locale loc;
@@ -60,16 +72,32 @@ public class ReportActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
         setContentView(R.layout.finalreport_layout);
+// Write a message to the database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("UserDetails");
+
+
         mIVQrCode = findViewById(R.id.ivqrcode);
         mIVPhoto = findViewById(R.id.ivPhoto);
+        
         if (PatientDetailsAbstractClass.Gallery) {
             mIVPhoto.setImageURI(PatientDetailsAbstractClass.GalleryPhoto);
         } else {
             mIVPhoto.setImageBitmap(PatientDetailsAbstractClass.Photo);
 
         }
+        String name = Name;
+        String address = Address;
+        String pinCode = PatientDetailsAbstractClass.PinCode;
+        String dob = PatientDetailsAbstractClass.DOB;
+        String taluka = PatientDetailsAbstractClass.Taluka;
+        String district = PatientDetailsAbstractClass.District;
+        Uri gallery = PatientDetailsAbstractClass.GalleryPhoto;
+        Bitmap photo = Photo;
+
+
         String fileName = Environment.getExternalStorageDirectory()
-                + "/CarematePi";
+                + "/ShikshanKranti";
         File f = new File(fileName);
         if (!f.exists())
             f.mkdir();
@@ -93,7 +121,6 @@ public class ReportActivity extends AppCompatActivity {
         TextView mTVDob = findViewById(R.id.tvDob);
         mNameTextView.setText(Name);
         mTVDob.setText(PatientDetailsAbstractClass.DOB);
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss", Locale.US);
 
 
         ImageButton mCloseBtn = findViewById(R.id.closeBtn);
@@ -110,10 +137,14 @@ public class ReportActivity extends AppCompatActivity {
                 tts.stop();
                 tts.shutdown();
             }
+            String id = myRef.push().getKey();
+            UsersDetails usersDetails = new UsersDetails(id, name, address, dob, address, district, taluka, pinCode, gallery, photo);
 
-            Intent i = new Intent(ReportActivity.this, FullscreenActivity.class);
+            myRef.setValue(usersDetails);
+
+           /* Intent i = new Intent(ReportActivity.this, FullscreenActivity.class);
             ReportActivity.this.startActivity(i);
-            ReportActivity.this.finish();
+            ReportActivity.this.finish();*/
 
 
         });
@@ -147,7 +178,7 @@ public class ReportActivity extends AppCompatActivity {
 
         // setting this dimensions inside our qr code
         // encoder to generate our qr code.
-        qrgEncoder = new QRGEncoder("Name "+Name+" DOB"+PatientDetailsAbstractClass.DOB, null, QRGContents.Type.TEXT, dimen);
+        qrgEncoder = new QRGEncoder("Name " + Name + " DOB" + PatientDetailsAbstractClass.DOB, null, QRGContents.Type.TEXT, dimen);
         try {
             // getting our qrcode in the form of bitmap.
             bitmap = qrgEncoder.encodeAsBitmap();
@@ -167,7 +198,6 @@ public class ReportActivity extends AppCompatActivity {
     }
 
     private ProgressDialog working_dialog;
-
 
 
     @Override
@@ -208,7 +238,6 @@ public class ReportActivity extends AppCompatActivity {
         //mPrintJobs.add(printJob);
     }
 
-    private WebView mWebView;
     Calendar calendar = Calendar.getInstance();
     SimpleDateFormat mdformat = new SimpleDateFormat("yyyy / MM / dd ");
     final String strDate = mdformat.format(calendar.getTime());
@@ -225,7 +254,6 @@ public class ReportActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 createWebPrintJob(view);
-                mWebView = null;
             }
         });
         // Generate an HTML document on the fly:
@@ -238,7 +266,6 @@ public class ReportActivity extends AppCompatActivity {
 
         // Keep a reference to WebView object until you pass the PrintDocumentAdapter
         // to the PrintManager
-        mWebView = webView;
     }
 
     @Override
@@ -282,6 +309,39 @@ public class ReportActivity extends AppCompatActivity {
 
                 return true;
             }
+        }
+    }
+
+    public Bitmap loadBitmapFromView(View v) {
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        v.measure(View.MeasureSpec.makeMeasureSpec(dm.widthPixels, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(dm.heightPixels, View.MeasureSpec.EXACTLY));
+        v.layout(0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
+        Bitmap returnedBitmap = Bitmap.createBitmap(v.getMeasuredWidth(),
+                v.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(returnedBitmap);
+        v.draw(c);
+
+        return returnedBitmap;
+    }
+
+    public void loadView(CardView cardView) {
+        try {
+            cardView.setDrawingCacheEnabled(true);
+            Bitmap bitmap = loadBitmapFromView(cardView);
+            cardView.setDrawingCacheEnabled(false);
+            String mPath =
+                    Environment.getExternalStorageDirectory().toString() + "/shikshankranti.jpg";
+            File imageFile = new File(mPath);
+            FileOutputStream outputStream = new
+                    FileOutputStream(imageFile);
+            int quality = 100;
+            bitmap.compress(Bitmap.CompressFormat.PNG, quality, outputStream);
+            outputStream.flush();
+            outputStream.close();
+
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
     }
 }

@@ -39,12 +39,11 @@ import java.util.Locale;
 
 
 public class CaptureActivity extends AppCompatActivity  {
-    private static final String IMAGE_DIRECTORY_NAME = "Hello Camera";
     private Uri fileUri;
     private ImageView mImageBtn;
     private final List<Integer> blockedKeys = new ArrayList<>(Arrays.asList(KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP));
     private final Handler mHandler = new Handler();
-    MaterialButton mcapturePic,mbtnNext;
+    ImageView mcapturePic,mbtnNext;
     private static final int SELECT_PICTURE = 2;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private TextToSpeech tts;
@@ -200,30 +199,6 @@ public class CaptureActivity extends AppCompatActivity  {
 
     }
 
-    private static File getOutputMediaFile() {
-
-        // External sdcard location
-        File mediaStorageDir = new File(
-                Environment.getExternalStoragePublicDirectory(Environment.getExternalStorageDirectory()+"/ShikshanKranti"),
-                IMAGE_DIRECTORY_NAME);
-
-        // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                Log.d(IMAGE_DIRECTORY_NAME, "Oops! Failed create "
-                        + IMAGE_DIRECTORY_NAME + " directory");
-                return null;
-            }
-        }
-
-        // Create a media file name
-        File mediaFile;
-
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator
-                + "IMG_" + "aakash" + ".jpg");
-
-        return mediaFile;
-    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
