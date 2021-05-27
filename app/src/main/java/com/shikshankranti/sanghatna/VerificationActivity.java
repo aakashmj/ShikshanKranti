@@ -1,6 +1,5 @@
 package com.shikshankranti.sanghatna;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class VerificationActivity extends AppCompatActivity {
@@ -60,7 +58,7 @@ public class VerificationActivity extends AppCompatActivity {
     private void verifyCode(String code) {
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
         signInWithCredential(credential);
-    }
+         }
 
     private void signInWithCredential(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(credential)
@@ -71,7 +69,7 @@ public class VerificationActivity extends AppCompatActivity {
                         startActivity(intent);
 
                     } else {
-                        Toast.makeText(VerificationActivity.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(VerificationActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -108,7 +106,6 @@ public class VerificationActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString("deviceauthstatus", "verified");
                 editor.apply();
-
             }
         }
 

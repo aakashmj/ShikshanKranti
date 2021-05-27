@@ -20,33 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <androidx.appcompat.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:background="@color/nameheading"
-            android:visibility="gone"
-            app:layout_collapseMode="pin">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="bottom|end"
-                android:text="AAKASH"
-                android:textColor="@color/grey"
-                android:textSize="26sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="right"
-                android:paddingEnd="3dp"
-                android:text="---"
-                android:textColor="@color/white"
-                android:textSize="26sp"
-                android:visibility="gone" />
-
-        </androidx.appcompat.widget.Toolbar>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -76,16 +49,18 @@
                         android:layout_marginBottom="10dp"
                         android:fontFamily="@font/nunitobold"
                         android:gravity="center"
-                        android:text="Photo For ID Card"
+                        android:text="@string/photo_for_id_card"
                         android:textColor="#f4641d"
                         android:textSize="35sp" />
 
 
-                    <ImageView
+                    <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/ivPhoto"
                         android:layout_width="400dp"
                         android:layout_height="300dp"
                         android:layout_gravity="center"
+                        app:civ_border_width="1dp"
+                        app:civ_border_color="@color/grey"
                         android:contentDescription="TODO"
                         android:src="@mipmap/ic_profile" />
 
@@ -168,7 +143,6 @@
                         android:layout_gravity="center"
                         android:layout_margin="30dp"
                         android:fontFamily="@font/nunitobold"
-                        android:background="@drawable/common_full_open_on_phone"
                         android:shadowColor="@color/colorPrimaryDark"
                         android:text="@string/next"
                         android:textColor="#fff"

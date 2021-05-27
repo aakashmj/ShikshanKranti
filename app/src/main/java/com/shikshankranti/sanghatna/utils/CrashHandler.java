@@ -33,7 +33,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
 	private UncaughtExceptionHandler mDefaultHandler;
 	private static final CrashHandler instance = new CrashHandler();
 	private Context mContext;
-	private Class<?> mainActivityClass;
 	private final java.util.Map<String, String> infos = new HashMap<>();
 
 
@@ -150,6 +149,5 @@ public class CrashHandler implements UncaughtExceptionHandler {
 	}
 
 	public void setMainActivityClass(Class<?> mainActivityClass) {
-		this.mainActivityClass = mainActivityClass;
 	}
 }

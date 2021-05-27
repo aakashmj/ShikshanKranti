@@ -4,15 +4,12 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.view.KeyEvent;
 import android.view.View;
@@ -29,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+
+import static android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION;
 
 public class Select_language extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private final List<Integer> blockedKeys = new ArrayList<>(Arrays.asList(KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP));
@@ -99,7 +98,6 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
                     if(authstatus.contains("verified")){
                         Intent i = new Intent(Select_language.this, RegisterForm.class);
                         startActivity(i);
-                        finish();
                     }else {
                         if (tts != null && tts.isSpeaking()) {
                             tts.stop();
@@ -108,15 +106,14 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
                         Intent i = new Intent(Select_language.this, TermsActivity.class);
                         langselected = 0;
                         startActivity(i);
-                        finish();
                     }
+                    finish();
 
                     break;
                 case R.id.hindi:
                     if(authstatus.contains("verified")){
                         Intent i = new Intent(Select_language.this, RegisterForm.class);
                         startActivity(i);
-                        finish();
                     }else {
                         if (tts != null && tts.isSpeaking()) {
                             tts.stop();
@@ -125,8 +122,8 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
                         Intent j = new Intent(Select_language.this, TermsActivity.class);
                         langselected = 1;
                         startActivity(j);
-                        finish();
                     }
+                    finish();
 
                     break;
 
@@ -260,6 +257,8 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
     private void checkAndRequestPermissions() {
         int camera = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         int storage = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int managedstorage = ContextCompat.checkSelfPermission(this, ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+
         int readstorage = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
         int loc = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
         int loc2 = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
@@ -272,6 +271,10 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
         if (storage != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
+        if (managedstorage != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+        }
+
         if (readstorage != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         }

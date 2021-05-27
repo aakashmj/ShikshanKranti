@@ -9,15 +9,21 @@
 
     <string name="nameerror">Enter a valid name</string>
     <string name="mobileerror">Enter a valid mobile</string>
-    <string name="address">Permenant Address </string>
+    <string name="address">Permanent Address </string>
     <string name="district">District </string>
     <string name="taluka">Taluka </string>
     <string name="membership">Primary Membership Form</string>
+    <string name="memyear">Primary Membership 2021 To 2023</string>
+    <string name="agreecheckbox">I Agree</string>
+    <string name="preference_file_key">skVerified</string>
     <string name="pincode">Pin Code</string>
-    <string name="terms">I would like to be a primary member of Maharashtra State Education Revolutionary Organization. \n \nI am not a member of any other recognized political party. \n \n I will continue to support the agitations for the just rights of teachers and for the benefit of education. \n\nFor the two years 2021-2023, I am requesting to get the primary membership of the Maharashtra State Education Revolutionary Organization.
+    <string name="terms">I would like to be a primary member of Maharashtra State Education Revolutionary Organization. \nI will continue to support the agitations for the just rights of teachers and for the benefit of education. \nFor the two years 2021-2023, I am requesting to get the primary membership of the Maharashtra State Education Revolutionary Organization.
 </string>
     <string name="next">NEXT </string>
     <string name="profiledetails">PROFILE DETAILS</string>
-    <string name="preference_file_key">skVerified</string>
+    <string name="dob">Date Of Birth </string>
+    <string name="photo_for_id_card">Photo For ID Card</string>
+    <string name="share_id_card">Share ID Card</string>
+    <string name="change_details">Change Details</string>
 
 </resources>

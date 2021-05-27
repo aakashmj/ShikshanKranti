@@ -1,8 +1,6 @@
 package com.shikshankranti.sanghatna;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -30,15 +28,14 @@ public class MobileNumberActivity extends AppCompatActivity {
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
 
         setContentView(R.layout.activity_mobile_number);
-        Context context = getApplicationContext();
         final Locale loc = new Locale("hin", "IND");
         tts = new TextToSpeech(getApplicationContext(), status -> {
             if (status != TextToSpeech.ERROR) {
                 tts.setLanguage(loc);
                 if (Select_language.langselected == 0) {
-                    toSpeak = "Please Accept Terms and Conditions";
+                    toSpeak = "Please Enter Mobile Number";
                 } else {
-                    toSpeak = "कृपया अटी व शर्ती स्वीकारा";
+                    toSpeak = "कृपया मोबाइल नंबर भरा";
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
@@ -56,7 +53,7 @@ public class MobileNumberActivity extends AppCompatActivity {
         mbtnSubmit.setOnClickListener(v -> {
             if (awesomeValidation.validate()) {
                 PatientDetailsAbstractClass.Number = mETMobile.getText().toString();
-                Intent pintent = new Intent(MobileNumberActivity.this, VerificationActivity.class);
+                Intent pintent = new Intent(MobileNumberActivity.this, RegisterForm.class);
                 pintent.putExtra("phonenumber", PatientDetailsAbstractClass.Number);
                 MobileNumberActivity.this.startActivity(pintent);
                 MobileNumberActivity.this.finish();

@@ -48,15 +48,9 @@ public class FullscreenActivity extends AppCompatActivity implements ActivityCom
         // Using handler with postDelayed called runnable run method
         new Handler().postDelayed(() -> {
             animBlink.cancel();
-            if (!status.isEmpty()) {
-                Intent i = new Intent(FullscreenActivity.this, Select_language.class);
-                startActivity(i);
-                finish();
-            } else {
-                Intent i = new Intent(FullscreenActivity.this, Select_language.class);
-                startActivity(i);
-                finish();
-            }
+            Intent i = new Intent(FullscreenActivity.this, Select_language.class);
+            startActivity(i);
+            finish();
 
 
         }, 2 * 1000); // wait for 3 seconds

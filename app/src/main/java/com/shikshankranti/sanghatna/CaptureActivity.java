@@ -25,6 +25,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
 
+import com.google.android.material.button.MaterialButton;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -40,7 +42,8 @@ public class CaptureActivity extends AppCompatActivity  {
     private ImageView mGallery;
     private final List<Integer> blockedKeys = new ArrayList<>(Arrays.asList(KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP));
     private final Handler mHandler = new Handler();
-    ImageView mcapturePic,mbtnNext,mivPhoto;
+    ImageView mcapturePic,mivPhoto;
+    MaterialButton mbtnNext;
     private static final int SELECT_PICTURE = 2;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private TextToSpeech tts;
@@ -327,23 +330,23 @@ public class CaptureActivity extends AppCompatActivity  {
         }
 
         Intent intent = new Intent();
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-                ex.printStackTrace();
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+        // Create the File where the photo should go
+        File photoFile = null;
+        try {
+            photoFile = createImageFile();
+        } catch (IOException ex) {
+            // Error occurred while creating the File
+            ex.printStackTrace();
+        }
+        // Continue only if the File was successfully created
+        if (photoFile != null) {
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
 
-            }
+        }
 
-         }
+    }
 
 
 

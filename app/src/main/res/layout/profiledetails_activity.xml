@@ -201,7 +201,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/nunitosemibold"
                             android:gravity="center"
-                            android:text="Date Of Birth"
+                            android:text="@string/dob"
                             android:textColor="@color/black"
                             android:textSize="15sp" />
 

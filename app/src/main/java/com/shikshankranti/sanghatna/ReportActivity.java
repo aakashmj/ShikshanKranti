@@ -2,6 +2,7 @@ package com.shikshankranti.sanghatna;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Point;
@@ -11,11 +12,14 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintJob;
 import android.print.PrintManager;
+import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -32,10 +36,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.zxing.WriterException;
-import com.shikshankranti.sanghatna.database.UsersDetails;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -46,20 +47,21 @@ import java.util.Objects;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
+import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Address;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Name;
-import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Photo;
 
 public class ReportActivity extends AppCompatActivity {
     private TextToSpeech tts;
     private String toSpeak;
-    MaterialButton mbtnDownloadIDCard,mbtnChangeDetails,mbtnShareID;
-    TextView mTVLocation;
 
 
     Locale loc;
-    ImageView mIVQrCode, mIVPhoto;
+    ImageView mIVQrCode;
+    CircleImageView mIVPhoto;
+    TextView mTVLocation, mTvMemberID;
+    MaterialButton mbtnChangeDetails;
+    MaterialButton mbtnShareID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,28 +74,38 @@ public class ReportActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
         setContentView(R.layout.finalreport_layout);
-// Write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("UserDetails");
-
-
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        CardView cardView = findViewById(R.id.cvIDCard);
         mIVQrCode = findViewById(R.id.ivqrcode);
         mIVPhoto = findViewById(R.id.ivPhoto);
-        
+        mTVLocation = findViewById(R.id.tvLocation);
+        mTvMemberID = findViewById(R.id.tvMemberID);
+        //  mbtnDownloadIDCard = findViewById(R.id.btnDownloadIDCard);
+        mbtnChangeDetails = findViewById(R.id.btnChangeDetails);
+        mbtnShareID = findViewById(R.id.btnShareID);
+        String memID = Settings.Secure.ANDROID_ID;
+        mTvMemberID.setText("SK" + memID.substring(0, 5));
+        mbtnShareID.setOnClickListener(v -> {
+            // Share image
+            loadView(cardView);
+            shareImage(Uri.parse(Environment.getExternalStorageState() + "/shikshankranti.jpg"));
+        });
+    /*    mbtnDownloadIDCard.setOnClickListener(v -> {
+            loadView(cardView);
+        });*/
+        mbtnChangeDetails.setOnClickListener(v -> {
+            Intent changedetails = new Intent(ReportActivity.this, RegisterForm.class);
+            ReportActivity.this.startActivity(changedetails);
+            ReportActivity.this.finish();
+        });
+        mTVLocation.setText("Location : " + PatientDetailsAbstractClass.District.toUpperCase() + "," + PatientDetailsAbstractClass.Taluka.toUpperCase());
         if (PatientDetailsAbstractClass.Gallery) {
             mIVPhoto.setImageURI(PatientDetailsAbstractClass.GalleryPhoto);
         } else {
             mIVPhoto.setImageBitmap(PatientDetailsAbstractClass.Photo);
 
         }
-        String name = Name;
-        String address = Address;
-        String pinCode = PatientDetailsAbstractClass.PinCode;
-        String dob = PatientDetailsAbstractClass.DOB;
-        String taluka = PatientDetailsAbstractClass.Taluka;
-        String district = PatientDetailsAbstractClass.District;
-        Uri gallery = PatientDetailsAbstractClass.GalleryPhoto;
-        Bitmap photo = Photo;
 
 
         String fileName = Environment.getExternalStorageDirectory()
@@ -105,7 +117,7 @@ public class ReportActivity extends AppCompatActivity {
             if (status != TextToSpeech.ERROR) {
                 tts.setLanguage(loc);
                 if (Select_language.langselected == 0) {
-                    toSpeak = "Please View or Download ID Card";
+                    toSpeak = "Please View or Share ID Card";
                 } else {
                     toSpeak = "कृपया ओळखपत्र पहा किंवा डाउनलोड करा";
                 }
@@ -121,6 +133,7 @@ public class ReportActivity extends AppCompatActivity {
         TextView mTVDob = findViewById(R.id.tvDob);
         mNameTextView.setText(Name);
         mTVDob.setText(PatientDetailsAbstractClass.DOB);
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss", Locale.US);
 
 
         ImageButton mCloseBtn = findViewById(R.id.closeBtn);
@@ -137,19 +150,72 @@ public class ReportActivity extends AppCompatActivity {
                 tts.stop();
                 tts.shutdown();
             }
-            String id = myRef.push().getKey();
-            UsersDetails usersDetails = new UsersDetails(id, name, address, dob, address, district, taluka, pinCode, gallery, photo);
 
-            myRef.setValue(usersDetails);
-
-           /* Intent i = new Intent(ReportActivity.this, FullscreenActivity.class);
+            Intent i = new Intent(ReportActivity.this, FullscreenActivity.class);
             ReportActivity.this.startActivity(i);
-            ReportActivity.this.finish();*/
+            ReportActivity.this.finish();
 
 
         });
 
     }
+
+    public Bitmap loadBitmapFromView(View v) {
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        v.measure(View.MeasureSpec.makeMeasureSpec(dm.widthPixels, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(dm.heightPixels, View.MeasureSpec.EXACTLY));
+        v.layout(0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
+        Bitmap returnedBitmap = Bitmap.createBitmap(v.getMeasuredWidth(),
+                v.getMeasuredWidth() + 100, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(returnedBitmap);
+        v.draw(c);
+
+        return returnedBitmap;
+    }
+
+    public void loadView(CardView cardView) {
+        try {
+            cardView.setDrawingCacheEnabled(true);
+            Bitmap bitmap = loadBitmapFromView(cardView);
+            cardView.setDrawingCacheEnabled(false);
+            String mPath =
+                    Environment.getExternalStorageDirectory().toString() + "/shikshankranti.jpg";
+            File imageFile = new File(mPath);
+            FileOutputStream outputStream = new
+                    FileOutputStream(imageFile);
+            int quality = 100;
+            bitmap.compress(Bitmap.CompressFormat.PNG, quality, outputStream);
+            outputStream.flush();
+            outputStream.close();
+
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void shareImage(Uri imagePath) {
+        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        shareIntent.setType("image/*");
+//set your message
+        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, imagePath);
+
+        String imgpath = Environment.getExternalStorageDirectory() + File.separator + "shikshankranti.jpg";
+
+        File imageFileToShare = new File(imgpath);
+
+        Uri uri = Uri.fromFile(imageFileToShare);
+
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+
+        try { // should you to check Whatsapp is installed or not
+            startActivity(shareIntent);
+        }
+        catch (android.content.ActivityNotFoundException exception) {
+            exception.printStackTrace();
+        }
+       }
 
     Bitmap bitmap;
     QRGEncoder qrgEncoder;
@@ -158,10 +224,8 @@ public class ReportActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
-
         // initializing a variable for default display.
         Display display = manager.getDefaultDisplay();
-
         // creating a variable for point which
         // is to be displayed in QR Code.
         Point point = new Point();
@@ -238,6 +302,7 @@ public class ReportActivity extends AppCompatActivity {
         //mPrintJobs.add(printJob);
     }
 
+    private WebView mWebView;
     Calendar calendar = Calendar.getInstance();
     SimpleDateFormat mdformat = new SimpleDateFormat("yyyy / MM / dd ");
     final String strDate = mdformat.format(calendar.getTime());
@@ -254,6 +319,7 @@ public class ReportActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 createWebPrintJob(view);
+                mWebView = null;
             }
         });
         // Generate an HTML document on the fly:
@@ -266,6 +332,7 @@ public class ReportActivity extends AppCompatActivity {
 
         // Keep a reference to WebView object until you pass the PrintDocumentAdapter
         // to the PrintManager
+        mWebView = webView;
     }
 
     @Override
@@ -274,6 +341,24 @@ public class ReportActivity extends AppCompatActivity {
         if (hasFocus) {
             hideSystemUI();
         }
+    }
+
+    public static String getDeviceId(Context context) {
+
+        String deviceId;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            deviceId = Settings.Secure.ANDROID_ID;
+        } else {
+            final TelephonyManager mTelephony = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            if (mTelephony.getDeviceId() != null) {
+                deviceId = mTelephony.getDeviceId();
+            } else {
+                deviceId = Settings.Secure.ANDROID_ID;
+            }
+        }
+
+        return deviceId;
     }
 
     private void hideSystemUI() {
@@ -309,39 +394,6 @@ public class ReportActivity extends AppCompatActivity {
 
                 return true;
             }
-        }
-    }
-
-    public Bitmap loadBitmapFromView(View v) {
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-        v.measure(View.MeasureSpec.makeMeasureSpec(dm.widthPixels, View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.makeMeasureSpec(dm.heightPixels, View.MeasureSpec.EXACTLY));
-        v.layout(0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
-        Bitmap returnedBitmap = Bitmap.createBitmap(v.getMeasuredWidth(),
-                v.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-        Canvas c = new Canvas(returnedBitmap);
-        v.draw(c);
-
-        return returnedBitmap;
-    }
-
-    public void loadView(CardView cardView) {
-        try {
-            cardView.setDrawingCacheEnabled(true);
-            Bitmap bitmap = loadBitmapFromView(cardView);
-            cardView.setDrawingCacheEnabled(false);
-            String mPath =
-                    Environment.getExternalStorageDirectory().toString() + "/shikshankranti.jpg";
-            File imageFile = new File(mPath);
-            FileOutputStream outputStream = new
-                    FileOutputStream(imageFile);
-            int quality = 100;
-            bitmap.compress(Bitmap.CompressFormat.PNG, quality, outputStream);
-            outputStream.flush();
-            outputStream.close();
-
-        } catch (Throwable e) {
-            e.printStackTrace();
         }
     }
 }

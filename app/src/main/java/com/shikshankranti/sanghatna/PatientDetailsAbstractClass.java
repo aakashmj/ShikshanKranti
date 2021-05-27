@@ -3,22 +3,20 @@ package com.shikshankranti.sanghatna;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
-import java.net.URI;
-
 /**
  * Created by aakash on 10/13/2017.
  */
 
 public class PatientDetailsAbstractClass {
 
-	public static String Name="";
-	public static String Number="";
-	public static String DOB="9";
+	public static String Name="Aakash Jagtap";
+	public static String Number="9960201203";
+	public static String DOB="04/05/1989";
 	public static boolean Register;
-	public static String Address="";
-	public static String District="";
-	public static String Taluka="";
-	public static String PinCode="";
+	public static String Address="Swami Villa";
+	public static String District="Thane";
+	public static String Taluka="Shahapur";
+	public static String PinCode="421601";
 	public static Bitmap Photo ;
 	public static Uri GalleryPhoto;
 	public static boolean Gallery = false;

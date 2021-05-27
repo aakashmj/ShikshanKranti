@@ -1,6 +1,7 @@
 package com.shikshankranti.sanghatna;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -58,6 +60,26 @@ public class TermsActivity extends AppCompatActivity {
 
         mcbAgree = findViewById(R.id.cbagree);
         mbtnNext = findViewById(R.id.nextButton);
+        ImageButton mCloseBtn = findViewById(R.id.closeBtn);
+        mCloseBtn.setOnClickListener(v -> {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(TermsActivity.this);
+            builder.setCancelable(false);
+            builder.setMessage("Do you want to Close?");
+            builder.setPositiveButton("Yes", (dialog, which) -> {
+                //if user pressed "yes", then he is allowed to exit from application
+                Intent i = new Intent(TermsActivity.this, FullscreenActivity.class);
+                startActivity(i);
+                finish();
+            });
+            builder.setNegativeButton("No", (dialog, which) -> {
+                //if user select "No", just cancel this dialog and continue with app
+                dialog.cancel();
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        });
+
     }
 
     @Override

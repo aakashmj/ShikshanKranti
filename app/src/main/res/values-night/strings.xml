@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dob">Date Of Birth </string>
+    <string name="photo_for_id_card">Photo For ID Card</string>
+    <string name="share_id_card">Share ID Card</string>
+    <string name="change_details">Change Details</string>
+
+</resources>
