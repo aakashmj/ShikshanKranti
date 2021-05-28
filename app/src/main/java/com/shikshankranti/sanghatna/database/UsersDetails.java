@@ -1,8 +1,5 @@
 package com.shikshankranti.sanghatna.database;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
-
 public class UsersDetails {
     String Name;
     String Address;
@@ -11,21 +8,18 @@ public class UsersDetails {
     String District;
     String Taluka;
     String PinCode;
-    Uri Gallery;
-    Bitmap Photo;
+    String PhotoPath;
     String Id;
 
-    public UsersDetails(String id, String name, String address, String dob, String permenantAddress, String district, String taluka, String pinCode, Uri gallery, Bitmap photo) {
+    public UsersDetails(String id, String name, String address, String dob, String district, String taluka, String pinCode,String photopath) {
         Id = id;
         Name = name;
         Address = address;
         DOB = dob;
-        PermenantAddress = permenantAddress;
         District = district;
         Taluka = taluka;
         PinCode = pinCode;
-        Gallery = gallery;
-        Photo = photo;
+        PhotoPath = photopath;
     }
 
     public String getName() {
@@ -92,19 +86,6 @@ public class UsersDetails {
         PinCode = pinCode;
     }
 
-    public Uri getGallery() {
-        return Gallery;
-    }
 
-    public Bitmap getPhoto() {
-        return Photo;
-    }
 
-    public void setGallery(Uri gallery) {
-        Gallery = gallery;
-    }
-
-    public void setPhoto(Bitmap photo) {
-        Photo = photo;
-    }
 }

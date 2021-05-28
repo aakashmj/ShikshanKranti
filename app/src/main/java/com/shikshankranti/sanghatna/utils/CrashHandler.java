@@ -45,7 +45,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 
 	public void init(Context context, Class<?> activityClass) {
 		mContext = context;
-		this.setMainActivityClass(activityClass);
+		this.setMainActivityClass();
 		mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
 		Thread.setDefaultUncaughtExceptionHandler(this);
 	}
@@ -148,6 +148,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
 		}
 	}
 
-	public void setMainActivityClass(Class<?> mainActivityClass) {
+	public void setMainActivityClass() {
 	}
 }

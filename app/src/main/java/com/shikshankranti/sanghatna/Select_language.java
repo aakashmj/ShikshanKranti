@@ -54,7 +54,7 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
         setContentView(R.layout.activity_selectlanguage);
         checkAndRequestPermissions();
 
-        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key),Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key), Context.MODE_PRIVATE);
         String authstatus = sharedPref.getString("deviceauthstatus", "no");
         Configuration config = getBaseContext().getResources().getConfiguration();
 
@@ -95,10 +95,11 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             String lang1 = "en";//Default Language
             switch (view.getId()) {
                 case R.id.english:
-                    if(authstatus.contains("verified")){
+                    if (authstatus.contains("verified")) {
                         Intent i = new Intent(Select_language.this, RegisterForm.class);
                         startActivity(i);
-                    }else {
+
+                    } else {
                         if (tts != null && tts.isSpeaking()) {
                             tts.stop();
                         }
@@ -106,15 +107,16 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
                         Intent i = new Intent(Select_language.this, TermsActivity.class);
                         langselected = 0;
                         startActivity(i);
+
                     }
                     finish();
 
                     break;
                 case R.id.hindi:
-                    if(authstatus.contains("verified")){
+                    if (authstatus.contains("verified")) {
                         Intent i = new Intent(Select_language.this, RegisterForm.class);
                         startActivity(i);
-                    }else {
+                    } else {
                         if (tts != null && tts.isSpeaking()) {
                             tts.stop();
                         }
@@ -136,24 +138,35 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             String lang12 = "en";//Default Language
             switch (view.getId()) {
                 case R.id.english:
-                    if (tts != null && tts.isSpeaking()) {
-                        tts.stop();
+                    if (authstatus.contains("verified")) {
+                        Intent i = new Intent(Select_language.this, RegisterForm.class);
+                        startActivity(i);
+
+                    } else {
+                        if (tts != null && tts.isSpeaking()) {
+                            tts.stop();
+                        }
+                        lang12 = "en";
+                        Intent i = new Intent(Select_language.this, TermsActivity.class);
+                        langselected = 0;
+                        startActivity(i);
                     }
-                    lang12 = "en";
-                    Intent i = new Intent(Select_language.this, TermsActivity.class);
-                    langselected = 0;
-                    startActivity(i);
                     finish();
 
                     break;
                 case R.id.hindi:
-                    if (tts != null && tts.isSpeaking()) {
-                        tts.stop();
+                    if (authstatus.contains("verified")) {
+                        Intent i = new Intent(Select_language.this, RegisterForm.class);
+                        startActivity(i);
+                    } else {
+                        if (tts != null && tts.isSpeaking()) {
+                            tts.stop();
+                        }
+                        lang12 = "hi";
+                        Intent terms = new Intent(Select_language.this, TermsActivity.class);
+                        langselected = 1;
+                        startActivity(terms);
                     }
-                    lang12 = "hi";
-                    Intent j = new Intent(Select_language.this, TermsActivity.class);
-                    langselected = 1;
-                    startActivity(j);
                     finish();
 
                     break;
@@ -185,18 +198,6 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             alert.show();
         });
 
-
-
-       /* boolean net_status = checkInternetconn();
-
-        if(net_status) {
-
-            if (android.os.Build.VERSION.SDK_INT <= 26) {
-                Intent uploadintent = UploderService.newSvcIntent(Select_language.this
-                );
-                startService(uploadintent);
-            }
-        }*/
 
     }
 
@@ -257,7 +258,10 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
     private void checkAndRequestPermissions() {
         int camera = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         int storage = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int managedstorage = ContextCompat.checkSelfPermission(this, ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+        int managedstorage = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            managedstorage = ContextCompat.checkSelfPermission(this, ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+        }
 
         int readstorage = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
         int loc = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
@@ -272,7 +276,9 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
         if (managedstorage != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                listPermissionsNeeded.add(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+            }
         }
 
         if (readstorage != PackageManager.PERMISSION_GRANTED) {

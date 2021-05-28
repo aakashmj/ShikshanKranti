@@ -168,6 +168,7 @@ class Utility {
         dateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm a",
                 Locale.getDefault());
 
+        assert date != null;
         return dateFormat.format(date);
     }
 

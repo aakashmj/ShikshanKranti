@@ -60,6 +60,7 @@ public class RegisterForm extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         setContentView(R.layout.profiledetails_activity);
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
+        final Locale loc = new Locale("hin", "IND");
 
         tts = new TextToSpeech(getApplicationContext(), status -> {
             if (status != TextToSpeech.ERROR) {
@@ -121,7 +122,7 @@ public class RegisterForm extends AppCompatActivity {
                 tts.shutdown();
             }
             if(awesomeValidation.validate()) {
-                PatientDetailsAbstractClass.Name = metFirstName.getText().toString() + " " + metMiddleName.getText().toString() + " " + metLastName.getText().toString();
+                PatientDetailsAbstractClass.Name = metFirstName.getText().toString().trim() + " " + metMiddleName.getText().toString().trim() + " " + metLastName.getText().toString();
                 PatientDetailsAbstractClass.DOB = mETDOB.getText().toString();
                 Intent addressintent = new Intent(RegisterForm.this, AddressActivity.class);
                 startActivity(addressintent);
