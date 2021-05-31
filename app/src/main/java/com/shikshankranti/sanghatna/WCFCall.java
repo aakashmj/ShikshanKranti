@@ -19,7 +19,7 @@ public class WCFCall {
 	SharedPreferences sharedpreferences;
 	Context context;
 	JSONObject json = new JSONObject();
-	org.apache.log4j.Logger log = Log4jHelper.getLogger("WCFCall");
+	final org.apache.log4j.Logger log = Log4jHelper.getLogger("WCFCall");
 	boolean  resp = false;
   	public boolean InsertEcgData2(String Name, String Mobile,
 								  String Age, String Gender, String Datetime, String Height,

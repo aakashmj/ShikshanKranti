@@ -20,7 +20,7 @@ import java.util.Date;
 
 public class UploadAll {
     int actualframcount = 0;
-    org.apache.log4j.Logger log = Log4jHelper.getLogger("UploadALL");
+    final org.apache.log4j.Logger log = Log4jHelper.getLogger("UploadALL");
     SharedPreferences sharedpreferences;
     public final static String ACTION_MESSAGE_UPLOADALL = "metsl.unowifi.upload.UPLOADALL";
     public static final String MyPREFERENCES = "Caremate Mini";
@@ -83,8 +83,8 @@ public class UploadAll {
                                           }
 
                     local_devicesID = records.get(i).DEVICEID;
-                    boolean result = Uplaodto24X7(context, records.get(i).ECGFILE,date_rec,
-                            5 + 5);   // deviceid
+                    boolean result = Uplaodto24X7(context, records.get(i).ECGFILE,date_rec
+                    );   // deviceid
                     Log.i("upload","Uploadto24x7 done result is "+result);
 
                     if (result) {
@@ -111,7 +111,7 @@ public class UploadAll {
         return false;
     }
 
-    private boolean Uplaodto24X7(Context context, String filename1, String record_dt, int totalseconds) {
+    private boolean Uplaodto24X7(Context context, String filename1, String record_dt) {
 
      /*   if (deviceId != null) {
             DevicesDbAdapter adapter = new DevicesDbAdapter(context);

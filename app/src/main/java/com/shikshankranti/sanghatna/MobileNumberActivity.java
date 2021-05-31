@@ -53,7 +53,7 @@ public class MobileNumberActivity extends AppCompatActivity {
         mbtnSubmit.setOnClickListener(v -> {
             if (awesomeValidation.validate()) {
                 PatientDetailsAbstractClass.Number = mETMobile.getText().toString();
-                Intent pintent = new Intent(MobileNumberActivity.this, RegisterForm.class);
+                Intent pintent = new Intent(MobileNumberActivity.this, VerificationActivity.class);
                 pintent.putExtra("phonenumber", PatientDetailsAbstractClass.Number);
                 MobileNumberActivity.this.startActivity(pintent);
                 MobileNumberActivity.this.finish();

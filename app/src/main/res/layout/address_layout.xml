@@ -7,218 +7,205 @@
     android:keepScreenOn="true"
     android:orientation="vertical">
 
+    <include
+        layout="@layout/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
 
 
-
-
-        <include
-            layout="@layout/header"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            app:hintTextAppearance="@style/CustomTextAppearance">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:scrollbars="vertical"
-                android:layout_weight="1"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunitosemibold"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:text="@string/address"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <EditText
+                android:id="@+id/etPermAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shapeform"
+                android:fontFamily="@font/nunitolight"
+                android:hint="@string/address"
+                android:imeOptions="flagNoExtractUi"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:maxLength="100"
+                android:scrollbars="vertical"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                tools:targetApi="o" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            app:hintTextAppearance="@style/CustomTextAppearance">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunitosemibold"
+                android:gravity="center"
+                android:text="@string/district"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <EditText
+                android:id="@+id/etDistrict"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shapeform"
+                android:fontFamily="@font/nunitolight"
+                android:hint="@string/district"
+                android:imeOptions="flagNoExtractUi"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:isScrollContainer="true"
+                android:maxLength="15"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                tools:targetApi="o" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            app:hintTextAppearance="@style/CustomTextAppearance">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunitosemibold"
+                android:gravity="center"
+                android:text="@string/taluka"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <EditText
+                android:id="@+id/etTaluka"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shapeform"
+                android:fontFamily="@font/nunitolight"
+                android:hint="@string/taluka"
+                android:imeOptions="flagNoExtractUi"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:isScrollContainer="true"
+                android:maxLength="15"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                tools:targetApi="o" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            app:hintTextAppearance="@style/CustomTextAppearance">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunitosemibold"
+                android:gravity="center"
+                android:text="@string/pincode"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <EditText
+                android:id="@+id/etPinCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shapeform"
+                android:fontFamily="@font/nunitolight"
+                android:hint="@string/pincode"
+                android:imeOptions="flagNoExtractUi"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:isScrollContainer="true"
+                android:maxLength="6"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                tools:targetApi="o" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="30dp"
+            android:background="@drawable/shapebuttons"
+            android:fontFamily="@font/nunitobold"
+            android:text="@string/next"
+            android:textColor="#fff"
+            android:textSize="30sp" />
 
 
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        app:hintTextAppearance="@style/CustomTextAppearance">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/nunitosemibold"
-                            android:gravity="center"
-                            android:text="@string/address"
-                            android:textColor="@color/black"
-                            android:textSize="15sp" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp">
-
-                        <EditText
-                            android:id="@+id/etPermAddress"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shapeform"
-                            android:fontFamily="@font/nunitolight"
-                            android:hint="@string/address"
-                            android:imeOptions="flagNoExtractUi"
-                            android:importantForAutofill="no"
-                            android:inputType="text"
-                            android:maxLength="100"
-                            android:scrollbars="vertical"
-                            android:text=""
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            tools:targetApi="o" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        app:hintTextAppearance="@style/CustomTextAppearance">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/nunitosemibold"
-                            android:gravity="center"
-                            android:text="@string/district"
-                            android:textColor="@color/black"
-                            android:textSize="15sp" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp">
-
-                        <EditText
-                            android:id="@+id/etDistrict"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shapeform"
-                            android:fontFamily="@font/nunitolight"
-                            android:hint="@string/district"
-                            android:imeOptions="flagNoExtractUi"
-                            android:importantForAutofill="no"
-                            android:inputType="text"
-                            android:isScrollContainer="true"
-                            android:maxLength="15"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            tools:targetApi="o" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        app:hintTextAppearance="@style/CustomTextAppearance">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/nunitosemibold"
-                            android:gravity="center"
-                            android:text="@string/taluka"
-                            android:textColor="@color/black"
-                            android:textSize="15sp" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp">
-
-                        <EditText
-                            android:id="@+id/etTaluka"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shapeform"
-                            android:fontFamily="@font/nunitolight"
-                            android:hint="@string/taluka"
-                            android:imeOptions="flagNoExtractUi"
-                            android:importantForAutofill="no"
-                            android:inputType="text"
-                            android:isScrollContainer="true"
-                            android:maxLength="15"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            tools:targetApi="o" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        app:hintTextAppearance="@style/CustomTextAppearance">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/nunitosemibold"
-                            android:gravity="center"
-                            android:text="@string/pincode"
-                            android:textColor="@color/black"
-                            android:textSize="15sp" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp">
-
-                        <EditText
-                            android:id="@+id/etPinCode"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shapeform"
-                            android:fontFamily="@font/nunitolight"
-                            android:hint="@string/pincode"
-                            android:imeOptions="flagNoExtractUi"
-                            android:importantForAutofill="no"
-                            android:inputType="number"
-                            android:isScrollContainer="true"
-                            android:maxLength="6"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            tools:targetApi="o" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnNext"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="30dp"
-                        android:background="@drawable/shapebuttons"
-                        android:fontFamily="@font/nunitobold"
-                        android:text="@string/next"
-                        android:textColor="#fff"
-                        android:textSize="30sp" />
-            </LinearLayout>
-
-        </LinearLayout>
+    </LinearLayout>
 
 
 </LinearLayout>

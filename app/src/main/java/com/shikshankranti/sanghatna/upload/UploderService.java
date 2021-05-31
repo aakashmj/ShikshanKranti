@@ -40,10 +40,10 @@ public class UploderService extends Service {
     // about some events
     public static boolean IsRunning = false;
     public static UploderService uploderService;
-    org.apache.log4j.Logger log = Log4jHelper.getLogger("UploaderService");
+    final org.apache.log4j.Logger log = Log4jHelper.getLogger("UploaderService");
 
     String device_name;
-    Handler handler = new Handler();
+    final Handler handler = new Handler();
 
 
     private final class ServiceHandler extends Handler {

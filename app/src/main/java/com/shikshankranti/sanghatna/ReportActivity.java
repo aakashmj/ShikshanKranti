@@ -41,9 +41,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Address;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.DOB;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.District;
-import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.GalleryPhoto;
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.MemberID;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Name;
-import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Photo;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.PhotoPath;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.PinCode;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Taluka;
@@ -146,7 +145,7 @@ public class ReportActivity extends AppCompatActivity {
                 tts.shutdown();
             }
                 mDatabase = FirebaseDatabase.getInstance().getReference();
-            writeNewUser(PatientDetailsAbstractClass.Number,Name,Address,DOB,District,Taluka,PinCode,PhotoPath);
+            writeNewUser(PatientDetailsAbstractClass.Number,MemberID,Name,PatientDetailsAbstractClass.Number,Address,DOB,District,Taluka,PinCode,PhotoPath);
 
             Intent i = new Intent(ReportActivity.this, FullscreenActivity.class);
             ReportActivity.this.startActivity(i);
@@ -265,8 +264,8 @@ public class ReportActivity extends AppCompatActivity {
     final SimpleDateFormat mdformat = new SimpleDateFormat("yyyy / MM / dd ");
     final String strDate = mdformat.format(calendar.getTime());
 
-    public void writeNewUser(String userId, String name, String Address,String dob,String dist,String tal,String pincode,String photopath) {
-        UsersDetails user = new UsersDetails(userId, name, Address,dob,  dist, tal, pincode, photopath);
+    public void writeNewUser(String userId,String memberid,String name,String number, String Address,String dob,String dist,String tal,String pincode,String photopath) {
+        UsersDetails user = new UsersDetails(userId,memberid,name,number, Address,dob,  dist, tal, pincode, photopath);
 
         mDatabase.child("users").child(userId).setValue(user);
     }

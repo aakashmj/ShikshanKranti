@@ -158,6 +158,7 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
                     if (authstatus.contains("verified")) {
                         Intent i = new Intent(Select_language.this, RegisterForm.class);
                         startActivity(i);
+                        finish();
                     } else {
                         if (tts != null && tts.isSpeaking()) {
                             tts.stop();
@@ -276,9 +277,7 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
         if (managedstorage != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                listPermissionsNeeded.add(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-            }
+            listPermissionsNeeded.add(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
         }
 
         if (readstorage != PackageManager.PERMISSION_GRANTED) {

@@ -20,5 +20,6 @@
     <string name="photo_for_id_card">ओळखपत्रा साठी छायाचित्र </string>
     <string name="share_id_card">आयडी कार्ड सामायिक करा</string>
     <string name="change_details">तपशील बदला</string>
+    <string name="welcome">Welcome</string>
 
 </resources>

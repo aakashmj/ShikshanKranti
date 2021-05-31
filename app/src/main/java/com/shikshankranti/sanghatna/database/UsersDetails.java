@@ -10,11 +10,15 @@ public class UsersDetails {
     String PinCode;
     String PhotoPath;
     String Id;
+    String Number;
+    String MemberID;
 
-    public UsersDetails(String id, String name, String address, String dob, String district, String taluka, String pinCode,String photopath) {
+    public UsersDetails(String id,String memberID, String name,String number, String address, String dob, String district, String taluka, String pinCode,String photopath) {
         Id = id;
+        MemberID = memberID;
         Name = name;
         Address = address;
+        Number = number;
         DOB = dob;
         District = district;
         Taluka = taluka;
@@ -86,6 +90,27 @@ public class UsersDetails {
         PinCode = pinCode;
     }
 
+    public String getPhotoPath() {
+        return PhotoPath;
+    }
 
+    public void setPhotoPath(String photoPath) {
+        PhotoPath = photoPath;
+    }
 
+    public String getNumber() {
+        return Number;
+    }
+
+    public void setNumber(String number) {
+        Number = number;
+    }
+
+    public String getMemberID() {
+        return MemberID;
+    }
+
+    public void setMemberID(String memberID) {
+        MemberID = memberID;
+    }
 }

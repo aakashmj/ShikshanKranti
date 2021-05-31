@@ -8,210 +8,200 @@
     android:orientation="vertical">
 
 
+    <include
+        layout="@layout/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
 
 
-        <include
-            layout="@layout/header"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            app:hintTextAppearance="@style/CustomTextAppearance">
 
-        <LinearLayout
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunitosemibold"
+                android:gravity="center"
+                android:text="@string/firstname"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
+            <EditText
+                android:id="@+id/etFirstName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shapeform"
+                android:fontFamily="@font/nunitolight"
+                android:hint="@string/firstname"
+                android:imeOptions="flagNoExtractUi"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:maxLength="25"
+                android:scrollHorizontally="true"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                tools:targetApi="o" />
+        </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            app:hintTextAppearance="@style/CustomTextAppearance">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="2dp"
-                    android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunitosemibold"
+                android:gravity="center"
+                android:text="@string/middlename"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        app:hintTextAppearance="@style/CustomTextAppearance">
+        </com.google.android.material.textfield.TextInputLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/nunitosemibold"
-                            android:gravity="center"
-                            android:text="@string/firstname"
-                            android:textColor="@color/black"
-                            android:textSize="15sp" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
-                    </com.google.android.material.textfield.TextInputLayout>
+            <EditText
+                android:id="@+id/etMiddleName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shapeform"
+                android:fontFamily="@font/nunitolight"
+                android:hint="@string/middlename"
+                android:imeOptions="flagNoExtractUi"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:isScrollContainer="true"
+                android:maxLength="25"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                tools:targetApi="o" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp">
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            app:hintTextAppearance="@style/CustomTextAppearance">
 
-                        <EditText
-                            android:id="@+id/etFirstName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shapeform"
-                            android:fontFamily="@font/nunitolight"
-                            android:hint="@string/firstname"
-                            android:imeOptions="flagNoExtractUi"
-                            android:importantForAutofill="no"
-                            android:inputType="text"
-                            android:maxLength="25"
-                            android:scrollHorizontally="true"
-                            android:text=""
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            tools:targetApi="o" />
-                    </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunitosemibold"
+                android:gravity="center"
+                android:text="@string/lastname"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        app:hintTextAppearance="@style/CustomTextAppearance">
+        </com.google.android.material.textfield.TextInputLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/nunitosemibold"
-                            android:gravity="center"
-                            android:text="@string/middlename"
-                            android:textColor="@color/black"
-                            android:textSize="15sp" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
-                    </com.google.android.material.textfield.TextInputLayout>
+            <EditText
+                android:id="@+id/etLastName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shapeform"
+                android:fontFamily="@font/nunitolight"
+                android:hint="@string/lastname"
+                android:imeOptions="flagNoExtractUi"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:isScrollContainer="true"
+                android:maxLength="25"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                tools:targetApi="o" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp">
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            app:hintTextAppearance="@style/CustomTextAppearance">
 
-                        <EditText
-                            android:id="@+id/etMiddleName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shapeform"
-                            android:fontFamily="@font/nunitolight"
-                            android:hint="@string/middlename"
-                            android:imeOptions="flagNoExtractUi"
-                            android:importantForAutofill="no"
-                            android:inputType="text"
-                            android:isScrollContainer="true"
-                            android:maxLength="25"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            tools:targetApi="o" />
-                    </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunitosemibold"
+                android:gravity="center"
+                android:text="@string/dob"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        app:hintTextAppearance="@style/CustomTextAppearance">
+        </com.google.android.material.textfield.TextInputLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/nunitosemibold"
-                            android:gravity="center"
-                            android:text="@string/lastname"
-                            android:textColor="@color/black"
-                            android:textSize="15sp" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
-                    </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:id="@+id/etDOB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shapeform"
+                android:fontFamily="@font/nunitolight"
+                android:hint="Please Select Date"
+                android:textSize="30sp"
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp">
+                />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                        <EditText
-                            android:id="@+id/etLastName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shapeform"
-                            android:fontFamily="@font/nunitolight"
-                            android:hint="@string/lastname"
-                            android:imeOptions="flagNoExtractUi"
-                            android:importantForAutofill="no"
-                            android:inputType="text"
-                            android:isScrollContainer="true"
-                            android:maxLength="25"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            tools:targetApi="o" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        app:hintTextAppearance="@style/CustomTextAppearance">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/nunitosemibold"
-                            android:gravity="center"
-                            android:text="@string/dob"
-                            android:textColor="@color/black"
-                            android:textSize="15sp" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp">
-
-                        <TextView
-                            android:id="@+id/etDOB"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shapeform"
-                            android:fontFamily="@font/nunitolight"
-                            android:hint="Please Select Date"
-                            android:textSize="30sp"
-
-                           />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnNext"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="30dp"
-                        android:background="@drawable/shapebuttons"
-                        android:fontFamily="@font/nunitobold"
-                        android:text="@string/next"
-                        android:textColor="#fff"
-                        android:textSize="30sp" />
-                </LinearLayout>
-
-
-        </LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="30dp"
+            android:background="@drawable/shapebuttons"
+            android:fontFamily="@font/nunitobold"
+            android:text="@string/next"
+            android:textColor="#fff"
+            android:textSize="30sp" />
+    </LinearLayout>
 
 
 </LinearLayout>
+
+

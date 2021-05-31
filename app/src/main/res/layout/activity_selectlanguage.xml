@@ -51,7 +51,7 @@
                 android:layout_height="5dp"
                 android:src="@drawable/shapedotted"
                 android:layerType="software"
-                android:contentDescription="TODO" />
+                android:contentDescription="Divider Line" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/hindi"
                 android:layout_width="wrap_content"

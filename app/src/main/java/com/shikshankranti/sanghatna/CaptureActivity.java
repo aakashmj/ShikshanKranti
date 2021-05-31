@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -99,8 +100,8 @@ public class CaptureActivity extends AppCompatActivity {
             }
         });
 
-       /* StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());*/
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
         ImageButton mCloseBtn = findViewById(R.id.closeBtn);
 
         mcapturePic = findViewById(R.id.btnCapture);
@@ -192,28 +193,19 @@ public class CaptureActivity extends AppCompatActivity {
             uploadTask = riversRef.putFile(selectedImageURI);
 
 // Register observers to listen for when the download is done or if it fails
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle unsuccessful uploads
-                    Toast.makeText(CaptureActivity.this,exception.getMessage(),Toast.LENGTH_LONG).show();
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+            uploadTask.addOnFailureListener(exception -> {
+                // Handle unsuccessful uploads
+                Toast.makeText(CaptureActivity.this,exception.getMessage(),Toast.LENGTH_LONG).show();
+            }).addOnSuccessListener(taskSnapshot -> {
 
-                    riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            Log.e("Tuts+", "uri: " + uri.toString());
-                            PatientDetailsAbstractClass.PhotoPath=uri.toString();
-                            //Handle whatever you're going to do with the URL here
-                        }
-                    });
+                riversRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    Log.e("Tuts+", "uri: " + uri.toString());
+                    PatientDetailsAbstractClass.PhotoPath = uri.toString();
+                    //Handle whatever you're going to do with the URL here
+                });
 //                Toast.makeText(getApplicationContext(),taskSnapshot.getMetadata().toString(),Toast.LENGTH_LONG).show();
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
 
-                }
             });
             mivPhoto.setImageURI(selectedImageURI);
         }
@@ -323,25 +315,16 @@ public class CaptureActivity extends AppCompatActivity {
 
         riversRef = imagesRef.child(imagesRef.getPath());
         uploadTask = riversRef.putBytes(data);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Log.e("Tuts+", "uri: " + uri.toString());
-                        PatientDetailsAbstractClass.PhotoPath=uri.toString();
-                        //Handle whatever you're going to do with the URL here
-                    }
-                });
-              //  Toast.makeText(getApplicationContext(),taskSnapshot.getMetadata().toString(),Toast.LENGTH_LONG).show();
+        uploadTask.addOnFailureListener(exception -> {
+            // Handle unsuccessful uploads
+        }).addOnSuccessListener(taskSnapshot -> {
+            riversRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                Log.e("Tuts+", "uri: " + uri.toString());
+                PatientDetailsAbstractClass.PhotoPath = uri.toString();
+                //Handle whatever you're going to do with the URL here
+            });
+          //  Toast.makeText(getApplicationContext(),taskSnapshot.getMetadata().toString(),Toast.LENGTH_LONG).show();
 
-            }
         });
 
         //  Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
