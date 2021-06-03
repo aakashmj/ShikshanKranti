@@ -79,8 +79,8 @@ public class AddressActivity extends AppCompatActivity {
             }
             if (awesomeValidation.validate()) {
                 PatientDetailsAbstractClass.Address = mETPermAddress.getText().toString();
-                PatientDetailsAbstractClass.District = mETDistrict.getText().toString().trim();
-                PatientDetailsAbstractClass.Taluka = mETTaluka.getText().toString().trim();
+                PatientDetailsAbstractClass.District = mETDistrict.getText().toString();
+                PatientDetailsAbstractClass.Taluka = mETTaluka.getText().toString();
                 PatientDetailsAbstractClass.PinCode = mETPinCode.getText().toString();
 
                 Intent i = new Intent(AddressActivity.this, CaptureActivity.class);

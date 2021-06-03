@@ -8,8 +8,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
 import android.view.KeyEvent;
 import android.view.View;
@@ -22,11 +25,14 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import static android.Manifest.permission.ACCESS_MEDIA_LOCATION;
+import static android.os.Build.VERSION.SDK_INT;
 import static android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION;
 
 public class Select_language extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
@@ -54,7 +60,7 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
         setContentView(R.layout.activity_selectlanguage);
         checkAndRequestPermissions();
 
-        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key),Context.MODE_PRIVATE);
         String authstatus = sharedPref.getString("deviceauthstatus", "no");
         Configuration config = getBaseContext().getResources().getConfiguration();
 
@@ -72,7 +78,6 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
         sharedPreferences = getSharedPreferences(Locale_Preference, Activity.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         editor.apply();
-        editor.clear();
         final Locale loc = new Locale("hin", "IND");
         tts = new TextToSpeech(getApplicationContext(), status -> {
             if (status != TextToSpeech.ERROR) {
@@ -95,11 +100,12 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             String lang1 = "en";//Default Language
             switch (view.getId()) {
                 case R.id.english:
-                    if (authstatus.contains("verified")) {
-                        Intent i = new Intent(Select_language.this, RegisterForm.class);
+                    if(authstatus.contains("verified")){
+                        lang1 = "en";
+                        langselected = 0;
+                        Intent i = new Intent(Select_language.this, ReportActivity.class);
                         startActivity(i);
-
-                    } else {
+                    }else {
                         if (tts != null && tts.isSpeaking()) {
                             tts.stop();
                         }
@@ -107,16 +113,17 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
                         Intent i = new Intent(Select_language.this, TermsActivity.class);
                         langselected = 0;
                         startActivity(i);
-
                     }
                     finish();
 
                     break;
                 case R.id.hindi:
-                    if (authstatus.contains("verified")) {
-                        Intent i = new Intent(Select_language.this, RegisterForm.class);
+                    if(authstatus.contains("verified")){
+                        lang1 = "hi";
+                        langselected = 1;
+                        Intent i = new Intent(Select_language.this, ReportActivity.class);
                         startActivity(i);
-                    } else {
+                    }else {
                         if (tts != null && tts.isSpeaking()) {
                             tts.stop();
                         }
@@ -138,11 +145,12 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             String lang12 = "en";//Default Language
             switch (view.getId()) {
                 case R.id.english:
-                    if (authstatus.contains("verified")) {
-                        Intent i = new Intent(Select_language.this, RegisterForm.class);
+                    if(authstatus.contains("verified")){
+                        lang12 = "en";
+                        langselected = 0;
+                        Intent i = new Intent(Select_language.this, ReportActivity.class);
                         startActivity(i);
-
-                    } else {
+                    }else {
                         if (tts != null && tts.isSpeaking()) {
                             tts.stop();
                         }
@@ -155,18 +163,19 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
 
                     break;
                 case R.id.hindi:
-                    if (authstatus.contains("verified")) {
-                        Intent i = new Intent(Select_language.this, RegisterForm.class);
+                    if(authstatus.contains("verified")){
+                        lang12 = "hi";
+                        langselected = 1;
+                        Intent i = new Intent(Select_language.this, ReportActivity.class);
                         startActivity(i);
-                        finish();
-                    } else {
+                    }else {
                         if (tts != null && tts.isSpeaking()) {
                             tts.stop();
                         }
                         lang12 = "hi";
-                        Intent terms = new Intent(Select_language.this, TermsActivity.class);
+                        Intent j = new Intent(Select_language.this, TermsActivity.class);
                         langselected = 1;
-                        startActivity(terms);
+                        startActivity(j);
                     }
                     finish();
 
@@ -199,6 +208,18 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             alert.show();
         });
 
+
+
+       /* boolean net_status = checkInternetconn();
+
+        if(net_status) {
+
+            if (android.os.Build.VERSION.SDK_INT <= 26) {
+                Intent uploadintent = UploderService.newSvcIntent(Select_language.this
+                );
+                startService(uploadintent);
+            }
+        }*/
 
     }
 
@@ -260,8 +281,12 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
         int camera = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         int storage = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int managedstorage = 0;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
             managedstorage = ContextCompat.checkSelfPermission(this, ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+        }
+        int medialocation = 0;
+        if (SDK_INT >= Build.VERSION_CODES.Q) {
+            medialocation = ContextCompat.checkSelfPermission(this, ACCESS_MEDIA_LOCATION);
         }
 
         int readstorage = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -276,8 +301,15 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
         if (storage != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
+        if (medialocation != PackageManager.PERMISSION_GRANTED) {
+            if (SDK_INT >= Build.VERSION_CODES.Q) {
+                listPermissionsNeeded.add(ACCESS_MEDIA_LOCATION);
+            }
+        }
         if (managedstorage != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+            if (SDK_INT >= Build.VERSION_CODES.R) {
+                listPermissionsNeeded.add(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+            }
         }
 
         if (readstorage != PackageManager.PERMISSION_GRANTED) {
@@ -293,9 +325,27 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray
                     (new String[0]), REQUEST_ID_MULTIPLE_PERMISSIONS);
         }
-
+        String uriparse = Environment.getExternalStorageDirectory() + File.separator + "shikshankranti.jpg";
+        shareImage(Uri.parse(uriparse));
 
     }
 
+    private void shareImage(Uri imagePath) {
+        if (SDK_INT >= 30) {
+            if (!Environment.isExternalStorageManager()) {
+                try {
+                    Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri);
+                    startActivity(intent);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                startActivity(intent);
+            }
+        }
+
+    }
 
 }

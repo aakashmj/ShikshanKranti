@@ -72,7 +72,9 @@ public class RegisterForm extends AppCompatActivity {
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
-                } else tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                } else {
+                    tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                }
             }
         });
 
@@ -110,10 +112,10 @@ public class RegisterForm extends AppCompatActivity {
         ImageButton mCloseBtn = findViewById(R.id.closeBtn);
 
 
-    //    awesomeValidation.addValidation(this, R.id.etFirstName, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
-      //  awesomeValidation.addValidation(this, R.id.etMiddleName, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
-       // awesomeValidation.addValidation(this, R.id.etLastName, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
-      //  awesomeValidation.addValidation(this, R.id.etDOB, "^[+]?[0-9]{10,13}$", R.string.mobileerror);
+        //    awesomeValidation.addValidation(this, R.id.etFirstName, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
+        //  awesomeValidation.addValidation(this, R.id.etMiddleName, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
+        // awesomeValidation.addValidation(this, R.id.etLastName, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
+        //  awesomeValidation.addValidation(this, R.id.etDOB, "^[+]?[0-9]{10,13}$", R.string.mobileerror);
 
 
         mbtnNext.setOnClickListener(v -> {
@@ -121,9 +123,9 @@ public class RegisterForm extends AppCompatActivity {
                 tts.stop();
                 tts.shutdown();
             }
-            if(awesomeValidation.validate()) {
+            if (awesomeValidation.validate()) {
                 PatientDetailsAbstractClass.Name = metFirstName.getText().toString().trim() + " " + metMiddleName.getText().toString().trim() + " " + metLastName.getText().toString();
-                PatientDetailsAbstractClass.DOB = mETDOB.getText().toString();
+                PatientDetailsAbstractClass.DOB = mETDOB.getText().toString().trim();
                 Intent addressintent = new Intent(RegisterForm.this, AddressActivity.class);
                 startActivity(addressintent);
                 finish();

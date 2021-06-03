@@ -11,7 +11,7 @@ public class PatientDetailsAbstractClass {
 
 	public static String Name="Aakash Jagtap";
 	public static String Number="9960201203";
-	public static final String MemberID="SK12345";
+	public static String MemberID="SK12345";
 	public static String DOB="04/05/1989";
 	public static boolean Register;
 	public static String Address="Swami Villa";
@@ -19,8 +19,10 @@ public class PatientDetailsAbstractClass {
 	public static String Taluka="Shahapur";
 	public static String PinCode="421601";
 	public static Bitmap Photo=null ;
-	public static final Uri GalleryPhoto=null;
+	public static Uri GalleryPhoto=null;
 	public static String PhotoPath = "";
+	public static String GalleryPath="";
+
 	public static boolean Gallery = false;
 
 
@@ -39,5 +41,5 @@ public class PatientDetailsAbstractClass {
 		Gender = "Male";
 		Register = false;
 
-    }
+	}
 }

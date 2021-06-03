@@ -22,9 +22,9 @@
     <string name="profiledetails">PROFILE DETAILS</string>
     <string name="dob">Date Of Birth </string>
     <string name="photo_for_id_card">Photo For ID Card</string>
-    <string name="share_id_card">Share ID Card</string>
     <string name="change_details">Change Details</string>
-    <string name="welcome">Welcome</string>
-    <string name="mobile_number">Mobile Number</string>
+    <string name="id_no">ID No :</string>
+    <string name="member">Member</string>
+    <string name="mobile">Mobile Number</string>
 
 </resources>

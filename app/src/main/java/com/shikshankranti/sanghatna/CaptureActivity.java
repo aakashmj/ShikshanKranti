@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -21,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,6 +44,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import static android.os.Build.VERSION.SDK_INT;
 
 
 public class CaptureActivity extends AppCompatActivity {
@@ -100,25 +102,31 @@ public class CaptureActivity extends AppCompatActivity {
             }
         });
 
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
+       /* StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());*/
         ImageButton mCloseBtn = findViewById(R.id.closeBtn);
 
         mcapturePic = findViewById(R.id.btnCapture);
         mbtnNext = findViewById(R.id.btnNext);
         ImageView mGallery = findViewById(R.id.ivGallery);
+        LinearLayout mLinearBrose = findViewById(R.id.llbrowse);
         mivPhoto = findViewById(R.id.ivPhoto);
         // Get a non-default Storage bucket
         storage = FirebaseStorage.getInstance();
         // Create a storage reference from our app
-         storageRef = storage.getReference();
+        storageRef = storage.getReference();
         // Create a child reference
 // imagesRef now points to "images"
         imagesRef = storageRef.child("images");
 
 
         mcapturePic.setOnClickListener(view -> dispatchTakePictureIntent());
-        mGallery.setOnClickListener(view -> fetchImageFromGallery());
+        if (SDK_INT >= 30) {
+            mLinearBrose.setVisibility(View.GONE);
+            mGallery.setVisibility(View.GONE);
+        }else {
+            mGallery.setOnClickListener(view -> fetchImageFromGallery());
+        }
         mbtnNext.setOnClickListener(v -> {
             if (tts.isSpeaking() && tts != null) {
                 tts.stop();
@@ -189,23 +197,33 @@ public class CaptureActivity extends AppCompatActivity {
         if (requestCode == SELECT_PICTURE) {
             Uri selectedImageURI = data.getData();
             PatientDetailsAbstractClass.Gallery = true;
+            PatientDetailsAbstractClass.GalleryPhoto=selectedImageURI;
             riversRef = imagesRef.child(selectedImageURI.getLastPathSegment());
             uploadTask = riversRef.putFile(selectedImageURI);
 
 // Register observers to listen for when the download is done or if it fails
-            uploadTask.addOnFailureListener(exception -> {
-                // Handle unsuccessful uploads
-                Toast.makeText(CaptureActivity.this,exception.getMessage(),Toast.LENGTH_LONG).show();
-            }).addOnSuccessListener(taskSnapshot -> {
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                    Toast.makeText(CaptureActivity.this,exception.getMessage(),Toast.LENGTH_LONG).show();
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                riversRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    Log.e("Tuts+", "uri: " + uri.toString());
-                    PatientDetailsAbstractClass.PhotoPath = uri.toString();
-                    //Handle whatever you're going to do with the URL here
-                });
+                    riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Log.e("Tuts+", "uri: " + uri.toString());
+                            PatientDetailsAbstractClass.PhotoPath=uri.toString();
+                            //Handle whatever you're going to do with the URL here
+                        }
+                    });
 //                Toast.makeText(getApplicationContext(),taskSnapshot.getMetadata().toString(),Toast.LENGTH_LONG).show();
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
 
+                }
             });
             mivPhoto.setImageURI(selectedImageURI);
         }
@@ -270,6 +288,7 @@ public class CaptureActivity extends AppCompatActivity {
 
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
+        PatientDetailsAbstractClass.GalleryPath=currentPhotoPath;
         return image;
     }
 
@@ -315,20 +334,30 @@ public class CaptureActivity extends AppCompatActivity {
 
         riversRef = imagesRef.child(imagesRef.getPath());
         uploadTask = riversRef.putBytes(data);
-        uploadTask.addOnFailureListener(exception -> {
-            // Handle unsuccessful uploads
-        }).addOnSuccessListener(taskSnapshot -> {
-            riversRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                Log.e("Tuts+", "uri: " + uri.toString());
-                PatientDetailsAbstractClass.PhotoPath = uri.toString();
-                //Handle whatever you're going to do with the URL here
-            });
-          //  Toast.makeText(getApplicationContext(),taskSnapshot.getMetadata().toString(),Toast.LENGTH_LONG).show();
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Log.e("Tuts+", "uri: " + uri.toString());
+                        PatientDetailsAbstractClass.PhotoPath=uri.toString();
+                        //Handle whatever you're going to do with the URL here
+                    }
+                });
+                //  Toast.makeText(getApplicationContext(),taskSnapshot.getMetadata().toString(),Toast.LENGTH_LONG).show();
 
+            }
         });
 
         //  Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
         mivPhoto.setImageBitmap(rotatedbmp);
+        PatientDetailsAbstractClass.Photo=rotatedbmp;
     }
 
     @Override
@@ -385,7 +414,7 @@ public class CaptureActivity extends AppCompatActivity {
         // Continue only if the File was successfully created
         if (photoFile != null) {
             intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
 
         }

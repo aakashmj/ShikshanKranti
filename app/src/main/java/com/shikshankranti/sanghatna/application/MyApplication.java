@@ -1,8 +1,7 @@
 package com.shikshankranti.sanghatna.application;
 
-import android.app.Application;
-
 import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
 
 import com.shikshankranti.sanghatna.utils.CrashHandler;
 
@@ -12,7 +11,7 @@ import com.shikshankranti.sanghatna.utils.CrashHandler;
  * Created by jianddongguo on 2017/7/20.
  */
 
-public class MyApplication extends Application {
+public class MyApplication extends MultiDexApplication {
     // File Directory in sd card
     public static final String DIRECTORY_NAME = "USBCamera";
 
