@@ -25,7 +25,7 @@ public class VerificationActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
     private EditText editText;
-
+    String phonenumber;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +37,7 @@ public class VerificationActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressbar);
         editText = findViewById(R.id.editTextCode);
 
-        String phonenumber = getIntent().getStringExtra("phonenumber");
+         phonenumber = getIntent().getStringExtra("phonenumber");
         sendVerificationCode(phonenumber);
 
         findViewById(R.id.buttonSignIn).setOnClickListener(v -> {
@@ -105,6 +105,7 @@ public class VerificationActivity extends AppCompatActivity {
                 SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key),MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString("deviceauthstatus", "verified");
+                editor.putString("mobnumber",phonenumber);
                 editor.apply();
             }
         }

@@ -3,13 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
+    android:scrollbars="vertical"
     android:keepScreenOn="true"
     android:orientation="vertical">
-
-
-
-
-        <include
+     <include
             layout="@layout/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -22,17 +19,16 @@
             android:orientation="vertical">
 
 
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/nunitobold"
-                        android:gravity="center"
-                        android:text="@string/photo_for_id_card"
-                        android:textColor="#f4641d"
-                        android:textSize="35sp" />
+            <TextView
+                android:layout_width="309dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/nunitobold"
+                android:gravity="center"
+                android:text="@string/photo_for_id_card"
+                android:textColor="#f4641d"
+                android:textSize="35sp" />
 
 
                     <de.hdodenhof.circleimageview.CircleImageView
@@ -74,8 +70,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="20dp"
-                                android:layout_marginBottom="10dp"
+                                android:layout_margin="10dp"
                                 android:fontFamily="@font/nunitobold"
                                 android:gravity="center"
                                 android:text="Click to Capture"
@@ -107,8 +102,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="20dp"
-                                android:layout_marginBottom="10dp"
+                                android:layout_margin="10dp"
                                 android:fontFamily="@font/nunitobold"
                                 android:gravity="center"
                                 android:text="Browse Photo"

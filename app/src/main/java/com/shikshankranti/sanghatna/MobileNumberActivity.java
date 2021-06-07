@@ -22,9 +22,7 @@ public class MobileNumberActivity extends AppCompatActivity {
     MaterialButton mbtnSubmit;
     EditText mETMobile;
     private AwesomeValidation awesomeValidation;
-    private TextToSpeech tts;
-    private String toSpeak;
-    private FirebaseAuth mAuth;
+//    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,22 +30,6 @@ public class MobileNumberActivity extends AppCompatActivity {
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
         setContentView(R.layout.activity_mobile_number);
         final Locale loc = new Locale("hin", "IND");
-        tts = new TextToSpeech(getApplicationContext(), status -> {
-            if (status != TextToSpeech.ERROR) {
-                tts.setLanguage(loc);
-                if (Select_language.langselected == 0) {
-                    toSpeak = "Please Enter Mobile Number";
-                } else {
-                    toSpeak = "कृपया मोबाइल नंबर भरा";
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
-                } else {
-                    tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
-
-                }
-            }
-        });
         ImageButton mCloseBtn = findViewById(R.id.closeBtn);
         mCloseBtn.setOnClickListener(v -> {
 

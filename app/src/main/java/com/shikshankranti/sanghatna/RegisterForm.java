@@ -3,6 +3,7 @@ package com.shikshankranti.sanghatna;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -28,14 +29,15 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.District;
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Name;
+
 
 public class RegisterForm extends AppCompatActivity {
     private EditText metFirstName, metMiddleName, metLastName;
     MaterialButton mbtnNext;
     TextView mETDOB;
 
-    private TextToSpeech tts;
-    private String toSpeak;
     TextView mHeaderHeading;
     Locale loc;
     private AwesomeValidation awesomeValidation;
@@ -62,21 +64,6 @@ public class RegisterForm extends AppCompatActivity {
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
         final Locale loc = new Locale("hin", "IND");
 
-        tts = new TextToSpeech(getApplicationContext(), status -> {
-            if (status != TextToSpeech.ERROR) {
-                tts.setLanguage(loc);
-                if (Select_language.langselected == 0) {
-                    toSpeak = "Please Register the Form";
-                } else {
-                    toSpeak = "कृपया रजिस्टर फॉर्म भरा";
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
-                } else {
-                    tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
-                }
-            }
-        });
 
         metFirstName = findViewById(R.id.etFirstName);
         metMiddleName = findViewById(R.id.etMiddleName);
@@ -119,13 +106,14 @@ public class RegisterForm extends AppCompatActivity {
 
 
         mbtnNext.setOnClickListener(v -> {
-            if (tts.isSpeaking() && tts != null) {
-                tts.stop();
-                tts.shutdown();
-            }
             if (awesomeValidation.validate()) {
-                PatientDetailsAbstractClass.Name = metFirstName.getText().toString().trim() + " " + metMiddleName.getText().toString().trim() + " " + metLastName.getText().toString();
+                Name = metFirstName.getText().toString().trim() + " " + metMiddleName.getText().toString().trim() + " " + metLastName.getText().toString();
                 PatientDetailsAbstractClass.DOB = mETDOB.getText().toString().trim();
+                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key),MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("name", Name);
+                editor.putString("dob",PatientDetailsAbstractClass.DOB);
+                editor.apply();
                 Intent addressintent = new Intent(RegisterForm.this, AddressActivity.class);
                 startActivity(addressintent);
                 finish();
@@ -134,9 +122,6 @@ public class RegisterForm extends AppCompatActivity {
         });
         mCloseBtn.setOnClickListener(view -> {
 
-            if (tts.isSpeaking()) {
-                tts.stop();
-            }
             Intent i = new Intent(RegisterForm.this, FullscreenActivity.class);
             startActivity(i);
             finish();

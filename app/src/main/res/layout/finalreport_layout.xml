@@ -43,7 +43,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10dp"
+                    android:layout_margin="5dp"
                     android:background="@color/design_default_color_error">
 
                     <ImageView
@@ -157,7 +157,7 @@
                                 android:gravity="start"
                                 android:padding="5dp"
                                 android:fontFamily="@font/nunitobold"
-                                android:text="Name :"
+                                android:text="@string/name"
                                 android:textColor="@color/orange"
                                 android:textSize="20sp" />
 
@@ -183,7 +183,7 @@
                                 android:gravity="start"
                                 android:padding="5dp"
                                 android:fontFamily="@font/nunitobold"
-                                android:text="DOB :"
+                                android:text="@string/dob"
                                 android:textColor="@color/orange"
                                 android:textSize="20sp" />
 
@@ -210,7 +210,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Location :"
+                            android:text="@string/location"
                             android:padding="5dp"
                             android:textColor="@color/orange"
                             android:fontFamily="@font/nunitobold"
@@ -249,45 +249,35 @@
 
         </androidx.cardview.widget.CardView>
 
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:background="@drawable/shapebuttons"
-            android:fontFamily="@font/nunitobold"
-            android:padding="10dp"
-            android:text="Download ID Card"
-            android:textColor="#fff"
-            android:textSize="20sp" />
+            android:gravity="center"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnShareID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:background="@color/orange"
+                android:drawableStart="@drawable/ic_share"
+                android:fontFamily="@font/nunitobold"
+                android:padding="10dp"
+                android:textColor="#fff"
+                />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnShareID"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="20dp"
-            android:background="@color/orange"
-            android:drawableStart="@drawable/ic_share"
-            android:fontFamily="@font/nunitobold"
-            android:padding="10dp"
-            android:textColor="#fff"
-            android:textSize="20sp" />
-
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnChangeDetails"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="20dp"
-            android:background="@drawable/shapebuttons"
-            android:fontFamily="@font/nunitobold"
-            android:padding="10dp"
-            android:text="@string/change_details"
-            android:textColor="#fff"
-            android:textSize="20sp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnChangeDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:background="@drawable/shapebuttons"
+                android:fontFamily="@font/nunitobold"
+                android:padding="10dp"
+                android:text="@string/change_details"
+                android:textColor="#fff"
+                android:textSize="20sp" />
+        </LinearLayout>
 
 
     </LinearLayout>

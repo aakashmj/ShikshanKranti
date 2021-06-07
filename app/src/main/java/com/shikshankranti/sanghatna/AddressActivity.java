@@ -1,6 +1,7 @@
 package com.shikshankranti.sanghatna;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -18,14 +19,14 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.Locale;
 
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.District;
+
 
 public class AddressActivity extends AppCompatActivity {
 
     private EditText mETPermAddress, mETDistrict, mETTaluka, mETPinCode;
     MaterialButton mbtnNext;
     private AwesomeValidation awesomeValidation;
-    private TextToSpeech tts;
-    private String toSpeak;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,22 +44,6 @@ public class AddressActivity extends AppCompatActivity {
 
 
         final Locale loc = new Locale("hin", "IND");
-        tts = new TextToSpeech(getApplicationContext(), status -> {
-            if (status != TextToSpeech.ERROR) {
-                tts.setLanguage(loc);
-                if (Select_language.langselected == 0) {
-                    toSpeak = "Please Fill Address Details";
-                } else {
-                    toSpeak = "कृपया पत्ता तपशील भरा";
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
-                } else {
-                    tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
-
-                }
-            }
-        });
 
         mETPermAddress = findViewById(R.id.etPermAddress);
         mETDistrict = findViewById(R.id.etDistrict);
@@ -73,17 +58,17 @@ public class AddressActivity extends AppCompatActivity {
         //    awesomeValidation.addValidation(this, R.id.etPinCode, "^[+]?[0-9]{10,13}$", R.string.mobileerror);
 
         mbtnNext.setOnClickListener(v -> {
-            if (tts.isSpeaking() && tts != null) {
-                tts.stop();
-                tts.shutdown();
-            }
             if (awesomeValidation.validate()) {
                 PatientDetailsAbstractClass.Address = mETPermAddress.getText().toString();
-                PatientDetailsAbstractClass.District = mETDistrict.getText().toString();
+                District = mETDistrict.getText().toString();
                 PatientDetailsAbstractClass.Taluka = mETTaluka.getText().toString();
                 PatientDetailsAbstractClass.PinCode = mETPinCode.getText().toString();
-
-                Intent i = new Intent(AddressActivity.this, CaptureActivity.class);
+                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key),MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("district", District);
+                editor.putString("taluka",PatientDetailsAbstractClass.Taluka);
+                editor.apply();
+                Intent i = new Intent(AddressActivity.this, SangeetaCaptureActivity.class);
                 startActivity(i);
                 finish();
             }
@@ -92,10 +77,6 @@ public class AddressActivity extends AppCompatActivity {
 
 
         mCloseBtn.setOnClickListener(view -> {
-            if (tts.isSpeaking() && tts != null) {
-                tts.stop();
-                tts.shutdown();
-            }
 
             Intent i = new Intent(AddressActivity.this, FullscreenActivity.class);
             startActivity(i);

@@ -132,6 +132,10 @@ public class CrashHandler implements UncaughtExceptionHandler {
 		}
 
 		File file = new File(Environment.getStorageDirectory()+"/" + MyApplication.DIRECTORY_NAME +"/log.txt");
+		if(!file.exists()) {
+			file.mkdir();
+
+		}
 		FileOutputStream fos = null;
 		try {
 			fos = new FileOutputStream(file);

@@ -20,14 +20,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_margin="20dp"
             android:background="@color/colorWhite"
             android:orientation="vertical"
             tools:ignore="UselessParent">
 
             <androidx.constraintlayout.utils.widget.ImageFilterView
                 android:id="@+id/img_logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_gravity="center"
                 android:src="@mipmap/ic_logo" />
 

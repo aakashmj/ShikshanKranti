@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
-import android.speech.tts.TextToSpeech;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -42,8 +41,6 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
     private static final String Locale_KeyValue = "Saved Locale";
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
-    private TextToSpeech tts;
-    private String toSpeak;
     private static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
 
     @Override
@@ -60,8 +57,9 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
         setContentView(R.layout.activity_selectlanguage);
         checkAndRequestPermissions();
 
-        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key),Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key), Context.MODE_PRIVATE);
         String authstatus = sharedPref.getString("deviceauthstatus", "no");
+
         Configuration config = getBaseContext().getResources().getConfiguration();
 
         String lang = sharedPref.getString("LANG", "");
@@ -79,36 +77,17 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
         editor = sharedPreferences.edit();
         editor.apply();
         final Locale loc = new Locale("hin", "IND");
-        tts = new TextToSpeech(getApplicationContext(), status -> {
-            if (status != TextToSpeech.ERROR) {
-                tts.setLanguage(loc);
-                if (Select_language.langselected == 0) {
-                    toSpeak = "Please Select Language";
-                } else {
-                    toSpeak = "कृपया भाषा चुनिए  ";
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
-                } else {
-                    tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
-
-                }
-            }
-        });
 
         menglish.setOnClickListener(view -> {
             String lang1 = "en";//Default Language
             switch (view.getId()) {
                 case R.id.english:
-                    if(authstatus.contains("verified")){
+                    if (authstatus.contains("verified")) {
                         lang1 = "en";
                         langselected = 0;
-                        Intent i = new Intent(Select_language.this, ReportActivity.class);
+                        Intent i = new Intent(Select_language.this, SangeetaReportActivity.class);
                         startActivity(i);
-                    }else {
-                        if (tts != null && tts.isSpeaking()) {
-                            tts.stop();
-                        }
+                    } else {
                         lang1 = "en";
                         Intent i = new Intent(Select_language.this, TermsActivity.class);
                         langselected = 0;
@@ -118,15 +97,12 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
 
                     break;
                 case R.id.hindi:
-                    if(authstatus.contains("verified")){
+                    if (authstatus.contains("verified")) {
                         lang1 = "hi";
                         langselected = 1;
-                        Intent i = new Intent(Select_language.this, ReportActivity.class);
+                        Intent i = new Intent(Select_language.this, SangeetaReportActivity.class);
                         startActivity(i);
-                    }else {
-                        if (tts != null && tts.isSpeaking()) {
-                            tts.stop();
-                        }
+                    } else {
                         lang1 = "hi";
                         Intent j = new Intent(Select_language.this, TermsActivity.class);
                         langselected = 1;
@@ -145,15 +121,12 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             String lang12 = "en";//Default Language
             switch (view.getId()) {
                 case R.id.english:
-                    if(authstatus.contains("verified")){
+                    if (authstatus.contains("verified")) {
                         lang12 = "en";
                         langselected = 0;
-                        Intent i = new Intent(Select_language.this, ReportActivity.class);
+                        Intent i = new Intent(Select_language.this, SangeetaReportActivity.class);
                         startActivity(i);
-                    }else {
-                        if (tts != null && tts.isSpeaking()) {
-                            tts.stop();
-                        }
+                    } else {
                         lang12 = "en";
                         Intent i = new Intent(Select_language.this, TermsActivity.class);
                         langselected = 0;
@@ -163,15 +136,12 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
 
                     break;
                 case R.id.hindi:
-                    if(authstatus.contains("verified")){
+                    if (authstatus.contains("verified")) {
                         lang12 = "hi";
                         langselected = 1;
-                        Intent i = new Intent(Select_language.this, ReportActivity.class);
+                        Intent i = new Intent(Select_language.this, SangeetaReportActivity.class);
                         startActivity(i);
-                    }else {
-                        if (tts != null && tts.isSpeaking()) {
-                            tts.stop();
-                        }
+                    } else {
                         lang12 = "hi";
                         Intent j = new Intent(Select_language.this, TermsActivity.class);
                         langselected = 1;
@@ -325,8 +295,8 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray
                     (new String[0]), REQUEST_ID_MULTIPLE_PERMISSIONS);
         }
-        String uriparse = Environment.getExternalStorageDirectory() + File.separator + "shikshankranti.jpg";
-        shareImage(Uri.parse(uriparse));
+        //String uriparse = Environment.getExternalStorageDirectory() + File.separator + "shikshankranti.jpg";
+        //shareImage(Uri.parse(uriparse));
 
     }
 

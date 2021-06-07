@@ -21,6 +21,7 @@
     <string name="change_details">तपशील बदला</string>
     <string name="id_no">रजि क्र :</string>
     <string name="member">सदस्य</string>
-    <string name="mobile">Mobile Number</string>
+    <string name="name">नाव :</string>
+    <string name="location">ठिकाण :</string>
 
 </resources>

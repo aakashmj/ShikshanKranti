@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
@@ -20,8 +21,8 @@ import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintJob;
 import android.print.PrintManager;
+import android.provider.MediaStore;
 import android.provider.Settings;
-import android.speech.tts.TextToSpeech;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -47,6 +48,8 @@ import com.google.zxing.WriterException;
 import com.shikshankranti.sanghatna.database.UsersDetails;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -67,15 +70,13 @@ import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.PinCode;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Taluka;
 
 public class ReportActivity extends AppCompatActivity {
-    private TextToSpeech tts;
-    private String toSpeak;
 
     public static int langselected = 0;
     private static final String Locale_Preference = "Locale Preference";
     private static final String Locale_KeyValue = "Saved Locale";
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
-
+    public String reportFileName = "report.jpg";
     Locale loc;
     ImageView mIVQrCode;
     CircleImageView mIVPhoto;
@@ -83,6 +84,9 @@ public class ReportActivity extends AppCompatActivity {
     MaterialButton mbtnChangeDetails;
     AppCompatButton mbtnShareID;
     DatabaseReference mDatabase;
+    public String photoFileName = "photo.jpg";
+    File photoFile;
+    Uri takenPhotoUri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,15 +108,19 @@ public class ReportActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(Locale_Preference, Activity.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         editor.apply();
+       // photoFile = getPhotoFileUri(photoFileName);
+         takenPhotoUri = Uri.fromFile(getPhotoFileUri(photoFileName));
+        MemberID = getDeviceId(ReportActivity.this);//task.getResult();
+        mTvMemberID.setText(MemberID.substring(0, 8).toUpperCase());
 
         try {
             mDatabase = FirebaseDatabase.getInstance().getReference();
-            writeNewUser(PatientDetailsAbstractClass.Number,MemberID,Name,PatientDetailsAbstractClass.Number,Address,DOB,District,Taluka,PinCode,PhotoPath);
+            writeNewUser(PatientDetailsAbstractClass.Number, MemberID, Name, PatientDetailsAbstractClass.Number, Address, DOB, District, Taluka, PinCode, PhotoPath);
             FirebaseInstallations.getInstance().getId()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             MemberID = getDeviceId(ReportActivity.this);//task.getResult();
-                            mTvMemberID.setText( MemberID.substring(0,8).toUpperCase());
+                            mTvMemberID.setText(MemberID.substring(0, 8).toUpperCase());
 
                             Log.d("Installations", "Installation ID: " + task.getResult());
                         } else {
@@ -120,7 +128,7 @@ public class ReportActivity extends AppCompatActivity {
                         }
                     });
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -130,7 +138,7 @@ public class ReportActivity extends AppCompatActivity {
         mbtnShareID.setOnClickListener(v -> {
             // Share image
             loadView(cardView);
-            shareImage(Uri.parse(Environment.getExternalStorageState() + "/shikshankranti.jpg"));
+            shareImage(Uri.parse(getPhotoFileUri(reportFileName).getPath()));
         });
     /*    mbtnDownloadIDCard.setOnClickListener(v -> {
             loadView(cardView);
@@ -141,12 +149,12 @@ public class ReportActivity extends AppCompatActivity {
             ReportActivity.this.finish();
         });
         mTVLocation.setText(PatientDetailsAbstractClass.District.toUpperCase().trim() + "," + PatientDetailsAbstractClass.Taluka.toUpperCase().trim());
-        if (PatientDetailsAbstractClass.Gallery) {
-            mIVPhoto.setImageURI(PatientDetailsAbstractClass.GalleryPhoto);
+       /* if (PatientDetailsAbstractClass.Gallery) {
+            mIVPhoto.setImageURI(takenPhotoUri);
         } else {
-            mIVPhoto.setImageBitmap(PatientDetailsAbstractClass.Photo);
+            mIVPhoto.setImageURI(takenPhotoUri);
 
-        }
+        }*/
 
 
         String fileName = Environment.getExternalStorageDirectory()
@@ -155,29 +163,12 @@ public class ReportActivity extends AppCompatActivity {
         if (!f.exists())
             f.mkdir();
         final Locale loc = new Locale("hin", "IND");
-        tts = new TextToSpeech(getApplicationContext(), status -> {
-            if (status != TextToSpeech.ERROR) {
-                tts.setLanguage(loc);
-                if (Select_language.langselected == 0) {
-                    toSpeak = "Please View or Share ID Card";
-                } else {
-                    toSpeak = "कृपया ओळखपत्र पहा किंवा डाउनलोड करा";
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
-                } else {
-                    tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
-                }
-            }
-        });
 
         TextView mNameTextView = findViewById(R.id.tvMemberName);
         TextView mTVDob = findViewById(R.id.tvDob);
         mNameTextView.setText(Name);
         mTVDob.setText(PatientDetailsAbstractClass.DOB);
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss", Locale.US);
-
-
         ImageButton mCloseBtn = findViewById(R.id.closeBtn);
         mCloseBtn.setEnabled(true);
         String gender = "";
@@ -188,10 +179,6 @@ public class ReportActivity extends AppCompatActivity {
         }
         mCloseBtn.setOnClickListener(v -> {
             mCloseBtn.setEnabled(false);
-            if (tts.isSpeaking() && tts != null) {
-                tts.stop();
-                tts.shutdown();
-            }
 
             Intent i = new Intent(ReportActivity.this, FullscreenActivity.class);
             ReportActivity.this.startActivity(i);
@@ -207,7 +194,7 @@ public class ReportActivity extends AppCompatActivity {
         v.measure(View.MeasureSpec.makeMeasureSpec(dm.widthPixels, View.MeasureSpec.EXACTLY),
                 View.MeasureSpec.makeMeasureSpec(dm.heightPixels, View.MeasureSpec.EXACTLY));
         v.layout(0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
-        int height = v.getMeasuredWidth()+300;
+        int height = v.getMeasuredWidth() + 300;
         Bitmap returnedBitmap = Bitmap.createBitmap(v.getMeasuredWidth(),
                 height, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(returnedBitmap);
@@ -221,9 +208,8 @@ public class ReportActivity extends AppCompatActivity {
             cardView.setDrawingCacheEnabled(true);
             Bitmap bitmap = loadBitmapFromView(cardView);
             cardView.setDrawingCacheEnabled(false);
-            String mPath =
-                    Environment.getExternalStorageDirectory().toString() + "/shikshankranti.jpg";
-            File imageFile = new File(mPath);
+            File mPath = getPhotoFileUri(reportFileName);
+            File imageFile = getPhotoFileUri(reportFileName);
             FileOutputStream outputStream = new
                     FileOutputStream(imageFile);
             int quality = 100;
@@ -235,29 +221,52 @@ public class ReportActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    public File getPhotoFileUri(String fileName) {
+        // Get safe storage directory for photos
+        // Use `getExternalFilesDir` on Context to access package-specific directories.
+        // This way, we don't need to request external read/write runtime permissions.
+        File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "CAPTURE_TAG");
 
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
+            Log.d("CAPTURE_TAG", "failed to create directory");
+        }
+
+        // Return the file target for the photo based on filename
+        File file = new File(mediaStorageDir.getPath() + File.separator + fileName);
+
+        return file;
+    }
 
     private void shareImage(Uri imagePath) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        shareIntent.setType("image/*");
+        shareIntent.setType("image/jpeg");
 //set your message
-        shareIntent.putExtra(Intent.EXTRA_TEXT, imagePath);
+    //    shareIntent.putExtra(Intent.EXTRA_TEXT, imagePath);
 
-        String imgpath = Environment.getExternalStorageDirectory() + File.separator + "shikshankranti.jpg";
+      //  String imgpath = Environment.getExternalStorageDirectory() + File.separator + "shikshankranti.jpg";
 
-        File imageFileToShare = new File(imgpath);
+      //  File imageFileToShare = new File(imagePath.getPath());
 
-        Uri uri = Uri.fromFile(imageFileToShare);
 
-        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        //Uri uri = Uri.fromFile(imageFileToShare);
+        try {
+            File f=new File(imagePath.getPath());
+            Uri yourUri = Uri.fromFile(f);
 
-        try { // should you to check Whatsapp is installed or not
+            Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(f));
+            shareIntent.putExtra(Intent.EXTRA_STREAM, yourUri);
             startActivity(shareIntent);
+
         }
-        catch (android.content.ActivityNotFoundException exception) {
-            exception.printStackTrace();
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
         }
+
+
     }
 
     Bitmap bitmap;
@@ -293,7 +302,7 @@ public class ReportActivity extends AppCompatActivity {
             // view using .setimagebitmap method.
             mIVQrCode.setImageBitmap(bitmap);
             mDatabase = FirebaseDatabase.getInstance().getReference();
-            writeNewUser(PatientDetailsAbstractClass.Number,MemberID,Name,PatientDetailsAbstractClass.Number,Address,DOB,District,Taluka,PinCode,PhotoPath);
+            writeNewUser(PatientDetailsAbstractClass.Number, MemberID, Name, PatientDetailsAbstractClass.Number, Address, DOB, District, Taluka, PinCode, PhotoPath);
 
         } catch (WriterException e) {
             // this method is called for
@@ -388,11 +397,13 @@ public class ReportActivity extends AppCompatActivity {
             hideSystemUI();
         }
     }
-    public void writeNewUser(String userId,String memberid,String name,String number, String Address,String dob,String dist,String tal,String pincode,String photopath) {
-        UsersDetails user = new UsersDetails(userId,memberid,name,number, Address,dob,  dist, tal, pincode, photopath);
+
+    public void writeNewUser(String userId, String memberid, String name, String number, String Address, String dob, String dist, String tal, String pincode, String photopath) {
+        UsersDetails user = new UsersDetails(userId, memberid, name, number, Address, dob, dist, tal, pincode, photopath);
 
         mDatabase.child("users").child(userId).setValue(user);
     }
+
     public String getDeviceId(Context context) {
 
         String deviceId;

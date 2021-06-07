@@ -23,7 +23,8 @@
     <string name="change_details">Change Details</string>
     <string name="id_no">ID No :</string>
     <string name="member">Member</string>
-    <string name="mobile">Mobile Number</string>
+    <string name="name">Name :</string>
+    <string name="location">Location :</string>
 
 
 </resources>
