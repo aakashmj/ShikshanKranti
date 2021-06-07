@@ -93,7 +93,7 @@
                             <ImageView
                                 android:id="@+id/ivqrcode"
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_gravity="end"
                                 android:layout_weight="0.4"
                                 android:background="@android:color/transparent"
@@ -258,25 +258,25 @@
                 android:id="@+id/btnShareID"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:background="@color/orange"
+                android:layout_margin="5dp"
+                android:background="@android:color/transparent"
                 android:drawableStart="@drawable/ic_share"
                 android:fontFamily="@font/nunitobold"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:textColor="#fff"
                 />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnChangeDetails"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:background="@drawable/shapebuttons"
                 android:fontFamily="@font/nunitobold"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:text="@string/change_details"
                 android:textColor="#fff"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
         </LinearLayout>
 
 

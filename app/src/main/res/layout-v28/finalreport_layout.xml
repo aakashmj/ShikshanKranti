@@ -258,21 +258,24 @@
             android:id="@+id/btnShareID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/orange"
+            android:layout_margin="5dp"
             android:drawableStart="@drawable/ic_share"
             android:fontFamily="@font/nunitobold"
+            android:padding="5dp"
             android:textColor="#fff"
            />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnChangeDetails"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:background="@drawable/shapebuttons"
             android:fontFamily="@font/nunitobold"
+            android:padding="5dp"
             android:text="@string/change_details"
             android:textColor="#fff"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
         </LinearLayout>
 
 
