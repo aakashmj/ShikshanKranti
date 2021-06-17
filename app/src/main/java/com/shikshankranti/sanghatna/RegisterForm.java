@@ -1,18 +1,16 @@
 package com.shikshankranti.sanghatna;
 
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -24,27 +22,20 @@ import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.google.android.material.button.MaterialButton;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.District;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Name;
 
 
 public class RegisterForm extends AppCompatActivity {
     private EditText metFirstName, metMiddleName, metLastName;
     MaterialButton mbtnNext;
-    TextView mETDOB;
+    EditText mETDOB;
 
     TextView mHeaderHeading;
-    Locale loc;
     private AwesomeValidation awesomeValidation;
-    int year;
-    int month;
-    int day;
-    Calendar myCalendar;
+
 
 
     @Override
@@ -63,41 +54,17 @@ public class RegisterForm extends AppCompatActivity {
         setContentView(R.layout.profiledetails_activity);
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
         final Locale loc = new Locale("hin", "IND");
-
-
         metFirstName = findViewById(R.id.etFirstName);
         metMiddleName = findViewById(R.id.etMiddleName);
         metLastName = findViewById(R.id.etLastName);
         mETDOB = findViewById(R.id.etDOB);
-
-        myCalendar = new GregorianCalendar();
-        DatePickerDialog.OnDateSetListener date = (view, year, monthOfYear, dayOfMonth) -> {
-            myCalendar.set(Calendar.YEAR, year);
-            myCalendar.set(Calendar.MONTH, monthOfYear);
-            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            this.year = year;
-            this.month = monthOfYear;
-            this.day = dayOfMonth;
-            updateLabel();
-        };
-
-        mETDOB.setOnClickListener(v -> {
-            new DatePickerDialog(RegisterForm.this, date, myCalendar
-                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-
-        });
+        new DateInputMask(mETDOB);
 
         mbtnNext = findViewById(R.id.btnNext);
         // mPreviousButton=findViewById(R.id.previousButton);
         mHeaderHeading = findViewById(R.id.headerheaeding);
         mHeaderHeading.setText(R.string.profiledetails);
-
-
         ImageButton mCloseBtn = findViewById(R.id.closeBtn);
-
 
         //    awesomeValidation.addValidation(this, R.id.etFirstName, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
         //  awesomeValidation.addValidation(this, R.id.etMiddleName, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
@@ -188,11 +155,75 @@ public class RegisterForm extends AppCompatActivity {
         return Integer.toString(ageInt);
     }
 
-    private void updateLabel() {
-        String myFormat = "dd/MM/yyyy"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
-        mETDOB.setText(sdf.format(myCalendar.getTime()));
+    public class DateInputMask implements TextWatcher {
+
+        private String current = "";
+        private String ddmmyyyy = "DDMMYYYY";
+        private Calendar cal = Calendar.getInstance();
+        private EditText input;
+
+        public DateInputMask(EditText input) {
+            this.input = input;
+            this.input.addTextChangedListener(this);
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (s.toString().equals(current)) {
+                return;
+            }
+
+            String clean = s.toString().replaceAll("[^\\d.]|\\.", "");
+            String cleanC = current.replaceAll("[^\\d.]|\\.", "");
+
+            int cl = clean.length();
+            int sel = cl;
+            for (int i = 2; i <= cl && i < 6; i += 2) {
+                sel++;
+            }
+            //Fix for pressing delete next to a forward slash
+            if (clean.equals(cleanC)) sel--;
+
+            if (clean.length() < 8){
+                clean = clean + ddmmyyyy.substring(clean.length());
+            }else{
+                //This part makes sure that when we finish entering numbers
+                //the date is correct, fixing it otherwise
+                int day  = Integer.parseInt(clean.substring(0,2));
+                int mon  = Integer.parseInt(clean.substring(2,4));
+                int year = Integer.parseInt(clean.substring(4,8));
+
+                mon = mon < 1 ? 1 : mon > 12 ? 12 : mon;
+                cal.set(Calendar.MONTH, mon-1);
+                year = (year<1900)?1900:(year>2100)?2100:year;
+                cal.set(Calendar.YEAR, year);
+                // ^ first set year for the line below to work correctly
+                //with leap years - otherwise, date e.g. 29/02/2012
+                //would be automatically corrected to 28/02/2012
+
+                day = (day > cal.getActualMaximum(Calendar.DATE))? cal.getActualMaximum(Calendar.DATE):day;
+                clean = String.format("%02d%02d%02d",day, mon, year);
+            }
+
+            clean = String.format("%s/%s/%s", clean.substring(0, 2),
+                    clean.substring(2, 4),
+                    clean.substring(4, 8));
+
+            sel = sel < 0 ? 0 : sel;
+            current = clean;
+            input.setText(current);
+            input.setSelection(sel < current.length() ? sel : current.length());
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
     }
-
 }

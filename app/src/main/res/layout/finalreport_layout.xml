@@ -259,11 +259,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="@android:color/transparent"
                 android:drawableStart="@drawable/ic_share"
                 android:fontFamily="@font/nunitobold"
                 android:padding="5dp"
-                android:textColor="#fff"
+                android:background="@drawable/transparent_background"
                 />
 
             <com.google.android.material.button.MaterialButton
@@ -273,10 +272,9 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/shapebuttons"
                 android:fontFamily="@font/nunitobold"
-                android:padding="5dp"
                 android:text="@string/change_details"
                 android:textColor="#fff"
-                android:textSize="15sp" />
+                android:textSize="20sp" />
         </LinearLayout>
 
 

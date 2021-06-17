@@ -13,7 +13,7 @@ import com.shikshankranti.sanghatna.utils.CrashHandler;
 
 public class MyApplication extends MultiDexApplication {
     // File Directory in sd card
-    public static final String DIRECTORY_NAME = "USBCamera";
+    public static final String DIRECTORY_NAME = "ShikshanKranti";
 
     @Override
     public void onCreate() {

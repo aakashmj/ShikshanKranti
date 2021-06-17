@@ -176,15 +176,15 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp">
 
-            <TextView
+            <EditText
                 android:id="@+id/etDOB"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/shapeform"
                 android:fontFamily="@font/nunitolight"
-                android:hint="Please Select Date"
-                android:textSize="30sp"
-
+                android:hint="Please Enter Date Of Birth"
+                android:inputType="date"
+                android:textSize="20sp"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 

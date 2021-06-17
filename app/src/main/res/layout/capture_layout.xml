@@ -3,128 +3,128 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:scrollbars="vertical"
     android:keepScreenOn="true"
-    android:orientation="vertical">
-     <include
-            layout="@layout/header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+    android:orientation="vertical"
+    android:scrollbars="vertical">
 
+    <include
+        layout="@layout/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="309dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:fontFamily="@font/nunitobold"
+            android:gravity="center"
+            android:text="@string/photo_for_id_card"
+            android:textColor="#f4641d"
+            android:textSize="35sp" />
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivPhoto"
+            android:layout_width="350dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center"
+            android:padding="10dp"
+            android:contentDescription="TODO"
+            android:src="@mipmap/ic_profile"
+            app:civ_border_color="@color/grey"
+            app:civ_border_width="1dp" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-
-            <TextView
-                android:layout_width="309dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="@font/nunitobold"
+                android:layout_marginTop="5dp"
                 android:gravity="center"
-                android:text="@string/photo_for_id_card"
-                android:textColor="#f4641d"
-                android:textSize="35sp" />
+                android:orientation="vertical">
 
+                <ImageView
+                    android:id="@+id/btnCapture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:fontFamily="@font/nunitobold"
+                    android:src="@drawable/ic_camera"
+                    android:text="Capture"
+                    android:textColor="#fff"
+                    android:textSize="20sp" />
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/ivPhoto"
-                        android:layout_width="400dp"
-                        android:layout_height="300dp"
-                        android:layout_gravity="center"
-                        app:civ_border_width="1dp"
-                        app:civ_border_color="@color/grey"
-                        android:contentDescription="TODO"
-                        android:src="@mipmap/ic_profile" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:fontFamily="@font/nunitobold"
+                    android:gravity="center"
+                    android:text="Click to Capture"
+                    android:textColor="#f4641d"
+                    android:textSize="20sp" />
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/btnCapture"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_margin="10dp"
-                                android:fontFamily="@font/nunitobold"
-                                android:src="@drawable/ic_camera"
-                                android:text="Capture"
-                                android:textColor="#fff"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
-                                android:fontFamily="@font/nunitobold"
-                                android:gravity="center"
-                                android:text="Click to Capture"
-                                android:textColor="#f4641d"
-                                android:textSize="20sp" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/llbrowse"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/ivGallery"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_margin="10dp"
-                                android:fontFamily="@font/nunitobold"
-                                android:src="@drawable/ic_photogallery"
-                                android:text="Gallery"
-                                android:textColor="#fff"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
-                                android:fontFamily="@font/nunitobold"
-                                android:gravity="center"
-                                android:text="Browse Photo"
-                                android:textColor="#f4641d"
-                                android:textSize="20sp" />
-
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnNext"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="30dp"
-                        android:fontFamily="@font/nunitobold"
-                        android:shadowColor="@color/colorPrimaryDark"
-                        android:text="@string/next"
-                        android:textColor="#fff"
-                        android:textSize="30sp" />
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/llbrowse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/ivGallery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:fontFamily="@font/nunitobold"
+                    android:src="@drawable/ic_photogallery"
+                    android:text="Gallery"
+                    android:textColor="#fff"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:fontFamily="@font/nunitobold"
+                    android:gravity="center"
+                    android:text="Browse Photo"
+                    android:textColor="#f4641d"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:fontFamily="@font/nunitobold"
+            android:shadowColor="@color/colorPrimaryDark"
+            android:text="@string/next"
+            android:textColor="#fff"
+            android:textSize="30sp" />
+    </LinearLayout>
 
 
 </LinearLayout>

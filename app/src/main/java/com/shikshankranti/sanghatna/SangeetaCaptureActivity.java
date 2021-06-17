@@ -1,5 +1,6 @@
 package com.shikshankranti.sanghatna;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.storage.FirebaseStorage;
@@ -40,8 +42,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Name;
 
 
 public class SangeetaCaptureActivity extends AppCompatActivity {
@@ -65,6 +65,7 @@ public class SangeetaCaptureActivity extends AppCompatActivity {
     FirebaseStorage storage;
     String currentPhotoPath;
     private Uri fileUri;
+    private ProgressDialog progessDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,8 @@ public class SangeetaCaptureActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         // Create a storage reference from our app
         storageRef = storage.getReference();
+        this.progessDialog = new ProgressDialog(this, ProgressDialog.THEME_HOLO_LIGHT);
+
         // Create a child reference
 // imagesRef now points to "images"
         imagesRef = storageRef.child("images");
@@ -184,6 +187,7 @@ public class SangeetaCaptureActivity extends AppCompatActivity {
                     editor.apply();
 
                     mbtnNext.setEnabled(true);
+                    progessDialog.dismiss();
                     //Handle whatever you're going to do with the URL here
                 });
 //                Toast.makeText(getApplicationContext(),taskSnapshot.getMetadata().toString(),Toast.LENGTH_LONG).show();
@@ -194,8 +198,17 @@ public class SangeetaCaptureActivity extends AppCompatActivity {
                         = (100.0
                         * snapshot.getBytesTransferred()
                         / snapshot.getTotalByteCount());
+                Log.i("Progress",String.valueOf(progress));
+                if (progessDialog != null && !progessDialog.isShowing()) {
+                    progessDialog.setMessage("Please Wait Image is Uploading");
+                    progessDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    progessDialog.setIndeterminate(true);
+                    progessDialog.setCancelable(false);
+                    progessDialog.show();
+                }
                 mbtnNext.setEnabled(false);
-               Toast.makeText(getApplicationContext(),"Please Wait..",Toast.LENGTH_SHORT).show();
+
+           //    Toast.makeText(getApplicationContext(),"Please Wait..",Toast.LENGTH_SHORT).show();
             });
             mivPhoto.setImageURI(selectedImageURI);
         }
@@ -213,7 +226,6 @@ public class SangeetaCaptureActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         // save file url in bundle as it will be null on scren orientation
         // changes
         outState.putParcelable("file_uri", fileUri);
@@ -295,7 +307,7 @@ public class SangeetaCaptureActivity extends AppCompatActivity {
 // Points to "images/space.jpg"
 // Note that you can use variables to create child values
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PatientDetailsAbstractClass.Photo.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+        PatientDetailsAbstractClass.Photo.compress(Bitmap.CompressFormat.JPEG, 60, baos);
         byte[] data = baos.toByteArray();
      //   CameraURI = getImageUri(this,rotatedbmp);
         riversRef = imagesRef.child(imagesRef.getPath());
@@ -311,6 +323,7 @@ public class SangeetaCaptureActivity extends AppCompatActivity {
                 editor.putString("fbphotopath", uri.toString());
                 editor.apply();
                 mbtnNext.setEnabled(true);
+                progessDialog.dismiss();
                 //Handle whatever you're going to do with the URL here
             });
             //  Toast.makeText(getApplicationContext(),taskSnapshot.getMetadata().toString(),Toast.LENGTH_LONG).show();
@@ -320,14 +333,22 @@ public class SangeetaCaptureActivity extends AppCompatActivity {
                     = (100.0
                     * snapshot.getBytesTransferred()
                     / snapshot.getTotalByteCount());
+            Log.i("Progress",String.valueOf(progress));
+            if (progessDialog != null && !progessDialog.isShowing()) {
+                progessDialog.setMessage("Please Wait Image is Uploading");
+                progessDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progessDialog.setIndeterminate(true);
+                progessDialog.setCancelable(false);
+                progessDialog.show();
+            }
             mbtnNext.setEnabled(false);
-            Toast.makeText(getApplicationContext(),"Please Wait..",Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(getApplicationContext(),"Please Wait..",Toast.LENGTH_SHORT).show();
         });
+
        /* SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key),MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("camerauri", String.valueOf(selectedImageURI));
         editor.apply();*/
-
         //  Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
         mivPhoto.setImageBitmap(rotatedbmp);
         PatientDetailsAbstractClass.Photo = rotatedbmp;
@@ -336,7 +357,6 @@ public class SangeetaCaptureActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-
         // get the file url
         fileUri = savedInstanceState.getParcelable("file_uri");
     }

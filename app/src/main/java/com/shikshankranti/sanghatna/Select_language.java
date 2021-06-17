@@ -2,7 +2,6 @@ package com.shikshankranti.sanghatna;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,15 +15,15 @@ import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.rey.material.app.Dialog;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -76,7 +75,6 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
         sharedPreferences = getSharedPreferences(Locale_Preference, Activity.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         editor.apply();
-        final Locale loc = new Locale("hin", "IND");
 
         menglish.setOnClickListener(view -> {
             String lang1 = "en";//Default Language
@@ -178,27 +176,26 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             alert.show();
         });
 
-
-
-       /* boolean net_status = checkInternetconn();
-
-        if(net_status) {
-
-            if (android.os.Build.VERSION.SDK_INT <= 26) {
-                Intent uploadintent = UploderService.newSvcIntent(Select_language.this
-                );
-                startService(uploadintent);
-            }
-        }*/
-
     }
 
 
     @Override
     public void onBackPressed() {
-        // super.onBackPressed(); commented this line in order to disable back press
+        super.onBackPressed(); //commented this line in order to disable back press
         //Write your code here
-        Toast.makeText(getApplicationContext(), "Back press disabled!", Toast.LENGTH_SHORT).show();
+        final Dialog dialog = new Dialog(this);
+        dialog.setTitle("Do You Want To Exit Application?");
+        dialog.cornerRadius(10);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.positiveAction("OK");
+        dialog.positiveActionClickListener(v -> finish());
+        dialog.negativeAction("CANCEL");
+        dialog.negativeActionClickListener(v -> dialog.dismiss());
+        if (!dialog.isShowing()) {
+            dialog.show();
+        }
+       // Toast.makeText(getApplicationContext(), "Back press disabled!", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -272,14 +269,10 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
         if (medialocation != PackageManager.PERMISSION_GRANTED) {
-            if (SDK_INT >= Build.VERSION_CODES.Q) {
-                listPermissionsNeeded.add(ACCESS_MEDIA_LOCATION);
-            }
+            listPermissionsNeeded.add(ACCESS_MEDIA_LOCATION);
         }
         if (managedstorage != PackageManager.PERMISSION_GRANTED) {
-            if (SDK_INT >= Build.VERSION_CODES.R) {
-                listPermissionsNeeded.add(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-            }
+            listPermissionsNeeded.add(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
         }
 
         if (readstorage != PackageManager.PERMISSION_GRANTED) {

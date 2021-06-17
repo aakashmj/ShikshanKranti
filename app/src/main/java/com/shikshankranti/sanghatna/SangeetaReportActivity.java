@@ -4,8 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Point;
@@ -16,10 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
-import android.print.PrintAttributes;
-import android.print.PrintDocumentAdapter;
-import android.print.PrintJob;
-import android.print.PrintManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
@@ -27,7 +21,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
-import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,15 +39,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.WriterException;
 import com.shikshankranti.sanghatna.database.UsersDetails;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.Objects;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
@@ -72,11 +65,12 @@ import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Taluka;
 public class SangeetaReportActivity extends AppCompatActivity {
     ImageView mIVQrCode;
     CircleImageView mIVPhoto;
-    TextView mTVLocation, mTvMemberID;
+    TextView mTVLocation, mTvMemberID,mNameTextView,mTVDob;
     MaterialButton mbtnChangeDetails;
     AppCompatButton mbtnShareID;
     DatabaseReference mDatabase;
     String smobilenumber, smemberid, sdistrict, staluka, sdob, sname,sphotopath;
+    private ProgressDialog progessDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +93,20 @@ public class SangeetaReportActivity extends AppCompatActivity {
         staluka = sharedPref.getString("taluka", Taluka);
         sdob = sharedPref.getString("dob", DOB);
         sphotopath = sharedPref.getString("fbphotopath", PhotoPath);
+        if(smobilenumber.length()<10){
+            Intent changedetails = new Intent(SangeetaReportActivity.this, MobileNumberActivity.class);
+            SangeetaReportActivity.this.startActivity(changedetails);
+            SangeetaReportActivity.this.finish();
+        }
+        this.progessDialog = new ProgressDialog(this, ProgressDialog.THEME_HOLO_LIGHT);
 
-
+        if (progessDialog != null && !progessDialog.isShowing()) {
+            progessDialog.setMessage("Generating ID Card...");
+            progessDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progessDialog.setIndeterminate(true);
+            progessDialog.setCancelable(true);
+            progessDialog.show();
+        }
 
        /* photouri = sharedPref.getString("photouri", String.valueOf(GalleryPhoto));
         camerauri = sharedPref.getString("cameraUri",String.valueOf(CameraURI));
@@ -110,15 +116,21 @@ public class SangeetaReportActivity extends AppCompatActivity {
         mIVPhoto = findViewById(R.id.ivPhoto);
         mTVLocation = findViewById(R.id.tvLocation);
         mTvMemberID = findViewById(R.id.tvMemberID);
+        mbtnChangeDetails = findViewById(R.id.btnChangeDetails);
+        mbtnShareID = findViewById(R.id.btnShareID);
+        mNameTextView  = findViewById(R.id.tvMemberName);
+         mTVDob = findViewById(R.id.tvDob);
+
         MemberID = getDeviceId(SangeetaReportActivity.this);//task.getResult();
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("memberid", MemberID);
         editor.apply();
         mTvMemberID.setText(MemberID.substring(0, 8).toUpperCase());
+        mNameTextView.setText(sname);
+        mTVDob.setText(sdob);
+        mTVLocation.setText(sdistrict.trim() + "," + staluka.toUpperCase().trim());
 
         //  mbtnDownloadIDCard = findViewById(R.id.btnDownloadIDCard);
-        mbtnChangeDetails = findViewById(R.id.btnChangeDetails);
-        mbtnShareID = findViewById(R.id.btnShareID);
         mbtnShareID.setOnClickListener(v -> {
             // Share image
             loadView(cardView);
@@ -138,7 +150,6 @@ public class SangeetaReportActivity extends AppCompatActivity {
             SangeetaReportActivity.this.startActivity(changedetails);
             SangeetaReportActivity.this.finish();
         });
-        mTVLocation.setText(sdistrict.trim() + "," + staluka.toUpperCase().trim());
        /* if (PatientDetailsAbstractClass.Gallery) {
             mIVPhoto.setImageURI(GalleryPhoto);
         } else {
@@ -146,14 +157,11 @@ public class SangeetaReportActivity extends AppCompatActivity {
         }*/
         // we will get the default FirebaseDatabase instance
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-
         // we will get a DatabaseReference for the database root node
         DatabaseReference databaseReference = firebaseDatabase.getReference();
-
         // Here "image" is the child node value we are getting
         // child node data in the getImage variable
         DatabaseReference getImage = databaseReference.child("image");
-
         // Adding listener for a single change
         // in the data at this location.
         // this listener will triggered once
@@ -164,10 +172,23 @@ public class SangeetaReportActivity extends AppCompatActivity {
                 // getting a DataSnapshot for the location at the specified
                 // relative path and getting in the link variable
                 String link = dataSnapshot.getValue(String.class);
-
                 // loading that data into rImage
                 // variable which is ImageView
-                Picasso.with(SangeetaReportActivity.this).load(sphotopath).into(mIVPhoto);
+             //   Picasso.with(SangeetaReportActivity.this).load(sphotopath).networkPolicy(NetworkPolicy.OFFLINE).into(mIVPhoto);
+
+               Picasso.with(SangeetaReportActivity.this).load(sphotopath).placeholder(R.drawable.ic_logo).into(mIVPhoto, new Callback() {
+                   @Override
+                   public void onSuccess() {
+                     progessDialog.dismiss();
+                   }
+
+                   @Override
+                   public void onError() {
+                       progessDialog.dismiss();
+                       Toast.makeText(SangeetaReportActivity.this,"Error in Showing Image",Toast.LENGTH_LONG).show();
+
+                   }
+               });
             }
 
             // this will called when any problem
@@ -180,19 +201,10 @@ public class SangeetaReportActivity extends AppCompatActivity {
         });
 
 
-    TextView mNameTextView = findViewById(R.id.tvMemberName);
-        TextView mTVDob = findViewById(R.id.tvDob);
-        mNameTextView.setText(sname);
-        mTVDob.setText(sdob);
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss", Locale.US);
         ImageButton mCloseBtn = findViewById(R.id.closeBtn);
         mCloseBtn.setEnabled(true);
-        String gender = "";
-        if (PatientDetailsAbstractClass.Gender.contains("F")) {
-            gender = "Female";
-        } else {
-            gender = "Male";
-        }
+
         mCloseBtn.setOnClickListener(v -> {
             mCloseBtn.setEnabled(false);
             Intent i = new Intent(SangeetaReportActivity.this, FullscreenActivity.class);
@@ -219,7 +231,6 @@ public class SangeetaReportActivity extends AppCompatActivity {
     }
 
     String phtopath = null;
-    File imageFile;
     File image;
     public void loadView(CardView cardView) {
         try {
@@ -251,31 +262,6 @@ public class SangeetaReportActivity extends AppCompatActivity {
 
         } catch (Throwable e) {
             e.printStackTrace();
-        }
-    }
-
-
-    private void shareImage(Uri imagePath) {
-        PackageManager pm = SangeetaReportActivity.this.getPackageManager();
-        try {
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        //    String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), bitmap, "Title", null);
-          //  Uri imageUri = Uri.parse(path);
-
-            @SuppressWarnings("unused")
-            PackageInfo info = pm.getPackageInfo(BuildConfig.APPLICATION_ID, PackageManager.GET_META_DATA);
-
-            Intent waIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            waIntent.setType("image/*");
-            waIntent.setPackage(BuildConfig.APPLICATION_ID);
-            waIntent.putExtra(android.content.Intent.EXTRA_STREAM, imagePath);
-            waIntent.putExtra(Intent.EXTRA_TEXT, BuildConfig.APPLICATION_ID);
-            waIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(Intent.createChooser(waIntent, "Share with"));
-        } catch (Exception e) {
-            Log.e("Error on sharing", e + " ");
-            Toast.makeText(getApplicationContext(), "App not Installed", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -342,52 +328,15 @@ public class SangeetaReportActivity extends AppCompatActivity {
             // exception handling.
             Log.e("Tag", e.toString());
         }
-/*
-        showWorkingDialog();
-        new Handler().postDelayed(() -> removeWorkingDialog(), 2000);
-*/
 
     }
 
-    private ProgressDialog working_dialog;
 
 
     @Override
     protected void onPause() {
         super.onPause();
-
-
         //unbindService(usbConnection);
-
-
-    }
-
-    private float weight;
-    private float height;
-
-
-    private void createWebPrintJob(WebView webView) {
-
-        // Get a PrintManager instance
-        PrintManager printManager;
-        printManager = (PrintManager) getBaseContext()
-                .getSystemService(Context.PRINT_SERVICE);
-
-        String jobName = getString(R.string.app_name) + " Document";
-
-        // Get a print adapter instance
-        PrintDocumentAdapter printAdapter = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            printAdapter = webView.createPrintDocumentAdapter(jobName);
-        }
-
-        // Create a print job with name and adapter instance
-        PrintJob printJob;
-        printJob = Objects.requireNonNull(printManager).print(jobName, Objects.requireNonNull(printAdapter),
-                new PrintAttributes.Builder().build());
-        printJob.restart();
-        // Save the job object for later status checking
-        //mPrintJobs.add(printJob);
     }
 
     final Calendar calendar = Calendar.getInstance();
