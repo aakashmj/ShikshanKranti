@@ -167,6 +167,7 @@ public class SangeetaCaptureActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString("photouri", String.valueOf(selectedImageURI));
             editor.apply();*/
+
             PatientDetailsAbstractClass.Gallery = true;
             PatientDetailsAbstractClass.GalleryPhoto = selectedImageURI;
             riversRef = imagesRef.child(selectedImageURI.getLastPathSegment());
@@ -218,8 +219,6 @@ public class SangeetaCaptureActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
-
     }
 
 
@@ -241,13 +240,12 @@ public class SangeetaCaptureActivity extends AppCompatActivity {
                 photoFile = createImageFile();
 
                 // Continue only if the File was successfully created
-                if (photoFile != null) {
-                    Uri photoURI = FileProvider.getUriForFile(this,
-                            "com.shikshankranti.sanghatna.fileprovider",
-                            photoFile);
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.shikshankranti.sanghatna.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
             } catch (IOException ex) {
                 // Error occurred while creating the File
                 ex.printStackTrace();
@@ -398,12 +396,10 @@ public class SangeetaCaptureActivity extends AppCompatActivity {
             photoFile = createImageFile();
 
             // Continue only if the File was successfully created
-            if (photoFile != null) {
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
 
-            }
         } catch (IOException ex) {
             // Error occurred while creating the File
             ex.printStackTrace();

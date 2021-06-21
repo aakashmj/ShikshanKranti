@@ -17,7 +17,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
-    <color name="grey">#E0E0E0</color>
     <color name="orange">#F44336</color>
 
 </resources>

@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -27,10 +28,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.cardview.widget.CardView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,16 +45,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.WriterException;
-import com.shikshankranti.sanghatna.database.UsersDetails;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
+import com.rey.material.app.Dialog;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
@@ -65,12 +68,16 @@ import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Taluka;
 public class SangeetaReportActivity extends AppCompatActivity {
     ImageView mIVQrCode;
     CircleImageView mIVPhoto;
-    TextView mTVLocation, mTvMemberID,mNameTextView,mTVDob;
+    TextView mTVLocation, mTvMemberID, mNameTextView, mTVDob;
     MaterialButton mbtnChangeDetails;
     AppCompatButton mbtnShareID;
     DatabaseReference mDatabase;
-    String smobilenumber, smemberid, sdistrict, staluka, sdob, sname,sphotopath;
+
+    String smobilenumber, smemberid, sdistrict, saddress, staluka, sdob, sname, sphotopath, spincode;
     private ProgressDialog progessDialog;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,19 +95,20 @@ public class SangeetaReportActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key), Context.MODE_PRIVATE);
         sname = sharedPref.getString("name", Name);
         smobilenumber = sharedPref.getString("mobnumber", PatientDetailsAbstractClass.Number);
-        smemberid = sharedPref.getString("memberid", MemberID);
         sdistrict = sharedPref.getString("district", District);
+        saddress = sharedPref.getString("address", Address);
         staluka = sharedPref.getString("taluka", Taluka);
+        spincode = sharedPref.getString("pincode", PinCode);
         sdob = sharedPref.getString("dob", DOB);
         sphotopath = sharedPref.getString("fbphotopath", PhotoPath);
-        if(smobilenumber.length()<10){
+        if (smobilenumber.length() < 10) {
             Intent changedetails = new Intent(SangeetaReportActivity.this, MobileNumberActivity.class);
             SangeetaReportActivity.this.startActivity(changedetails);
             SangeetaReportActivity.this.finish();
         }
         this.progessDialog = new ProgressDialog(this, ProgressDialog.THEME_HOLO_LIGHT);
 
-        if (progessDialog != null && !progessDialog.isShowing()) {
+        if (!progessDialog.isShowing()) {
             progessDialog.setMessage("Generating ID Card...");
             progessDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progessDialog.setIndeterminate(true);
@@ -118,8 +126,8 @@ public class SangeetaReportActivity extends AppCompatActivity {
         mTvMemberID = findViewById(R.id.tvMemberID);
         mbtnChangeDetails = findViewById(R.id.btnChangeDetails);
         mbtnShareID = findViewById(R.id.btnShareID);
-        mNameTextView  = findViewById(R.id.tvMemberName);
-         mTVDob = findViewById(R.id.tvDob);
+        mNameTextView = findViewById(R.id.tvMemberName);
+        mTVDob = findViewById(R.id.tvDob);
 
         MemberID = getDeviceId(SangeetaReportActivity.this);//task.getResult();
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -138,7 +146,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
                 galleryAddPic(image.getAbsolutePath());
             }
             assert image != null;
-            shareImageReport(Uri.parse(image.getAbsolutePath()));
+            shareImageReport(android.net.Uri.parse(image.getAbsolutePath()));
             //       shareImage(Uri.parse(image.getAbsolutePath()));
         });
     /*    mbtnDownloadIDCard.setOnClickListener(v -> {
@@ -151,57 +159,67 @@ public class SangeetaReportActivity extends AppCompatActivity {
             SangeetaReportActivity.this.finish();
         });
        /* if (PatientDetailsAbstractClass.Gallery) {
-            mIVPhoto.setImageURI(GalleryPhoto);
+            if(GalleryPhoto!=null)
+                Glide.with(getApplicationContext()).load(GalleryPhoto);
+          //  mIVPhoto.setImageURI(GalleryPhoto);
         } else {
-            mIVPhoto.setImageBitmap(Photo);
+            if(Photo!=null)
+            //mIVPhoto.setImageBitmap(Photo);
+            Glide.with(getApplicationContext()).load(Photo);
         }*/
-        // we will get the default FirebaseDatabase instance
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        // we will get a DatabaseReference for the database root node
-        DatabaseReference databaseReference = firebaseDatabase.getReference();
-        // Here "image" is the child node value we are getting
-        // child node data in the getImage variable
-        DatabaseReference getImage = databaseReference.child("image");
-        // Adding listener for a single change
-        // in the data at this location.
-        // this listener will triggered once
-        // with the value of the data at the location
-        getImage.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // getting a DataSnapshot for the location at the specified
-                // relative path and getting in the link variable
-                String link = dataSnapshot.getValue(String.class);
-                // loading that data into rImage
-                // variable which is ImageView
-             //   Picasso.with(SangeetaReportActivity.this).load(sphotopath).networkPolicy(NetworkPolicy.OFFLINE).into(mIVPhoto);
+        if (isOnline()) {
+            FirebaseDatabase.getInstance().getReference().child("image").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    // getting a DataSnapshot for the location at the specified
+                    // relative path and getting in the link variable
+                    //      String link = dataSnapshot.getValue(String.class);
+                    // loading that data into rImage
+                    // variable which is ImageView
+                    Glide.with(getApplicationContext()).load(sphotopath).listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable @org.jetbrains.annotations.Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            progessDialog.dismiss();
+                            assert e != null;
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(SangeetaReportActivity.this, FullscreenActivity.class);
+                            SangeetaReportActivity.this.startActivity(i);
+                            SangeetaReportActivity.this.finish();
 
-               Picasso.with(SangeetaReportActivity.this).load(sphotopath).placeholder(R.drawable.ic_logo).into(mIVPhoto, new Callback() {
-                   @Override
-                   public void onSuccess() {
-                     progessDialog.dismiss();
-                   }
+                            return false;
+                        }
 
-                   @Override
-                   public void onError() {
-                       progessDialog.dismiss();
-                       Toast.makeText(SangeetaReportActivity.this,"Error in Showing Image",Toast.LENGTH_LONG).show();
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            progessDialog.dismiss();
 
-                   }
-               });
-            }
+                            return false;
+                        }
+                    }).into(mIVPhoto);
 
-            // this will called when any problem
-            // occurs in getting data
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // we are showing that error message in toast
-                Toast.makeText(SangeetaReportActivity.this, "Error Loading Image", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    //    Picasso.with(SangeetaReportActivity.this).load(sphotopath).into(mIVPhoto);
 
+                }
 
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss", Locale.US);
+                // this will called when any problem
+                // occurs in getting data
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // we are showing that error message in toast
+                    Toast.makeText(SangeetaReportActivity.this, "Error Loading Image", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            final Dialog dialog = new Dialog(this);
+            dialog.setTitle("Internet Unavailable ..Would you like to make it on ?");
+            dialog.cornerRadius(10);
+            dialog.positiveAction("OK");
+            dialog.positiveActionClickListener(v -> SangeetaReportActivity.this.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS)));
+            dialog.negativeAction("CANCEL");
+            dialog.negativeActionClickListener(v -> dialog.dismiss());
+            dialog.show();
+        }
+
         ImageButton mCloseBtn = findViewById(R.id.closeBtn);
         mCloseBtn.setEnabled(true);
 
@@ -221,6 +239,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
         v.measure(View.MeasureSpec.makeMeasureSpec(dm.widthPixels, View.MeasureSpec.EXACTLY),
                 View.MeasureSpec.makeMeasureSpec(dm.heightPixels, View.MeasureSpec.EXACTLY));
         v.layout(0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
+
         int height = v.getMeasuredWidth() + 300;
         Bitmap returnedBitmap = Bitmap.createBitmap(v.getMeasuredWidth(),
                 height, Bitmap.Config.ARGB_8888);
@@ -232,6 +251,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
 
     String phtopath = null;
     File image;
+
     public void loadView(CardView cardView) {
         try {
             cardView.setDrawingCacheEnabled(true);
@@ -247,7 +267,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/Camera/");
             if (!storageDir.exists())
                 storageDir.mkdirs();
-             image = File.createTempFile(
+            image = File.createTempFile(
                     timeStamp,                   /* prefix */
                     ".jpeg",                     /* suffix */
                     storageDir                   /* directory */
@@ -272,7 +292,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
 //set your message
         shareIntent.putExtra(Intent.EXTRA_TEXT, imagePath);
 
-    //    String imgpath = Environment.getExternalStorageDirectory() + File.separator + "shikshankranti.jpg";
+        //    String imgpath = Environment.getExternalStorageDirectory() + File.separator + "shikshankranti.jpg";
 
         File imageFileToShare = new File(imagePath.getPath());
 
@@ -313,7 +333,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
 
         // setting this dimensions inside our qr code
         // encoder to generate our qr code.
-        qrgEncoder = new QRGEncoder("Name " + Name + " DOB" + PatientDetailsAbstractClass.DOB, null, QRGContents.Type.TEXT, dimen);
+        qrgEncoder = new QRGEncoder("Member ID " + MemberID + "\n" + " Name " + sname + "\n" + " Mobile No " + smobilenumber + "\n" + " DOB " + sdob + "\n" + " Address " + saddress + "\n" + " Taluka " + staluka + "\n" + " District " + sdistrict + "\n" + " Pin Code " + spincode, null, QRGContents.Type.TEXT, dimen);
         try {
             // getting our qrcode in the form of bitmap.
             bitmap = qrgEncoder.encodeAsBitmap();
@@ -321,7 +341,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
             // view using .setimagebitmap method.
             mIVQrCode.setImageBitmap(bitmap);
             mDatabase = FirebaseDatabase.getInstance().getReference();
-            writeNewUser(smobilenumber, MemberID, Name, smobilenumber, Address, sdob, sdistrict, staluka, PinCode, sphotopath);
+            writeNewUser(smobilenumber, MemberID, sname, smobilenumber, saddress, sdob, sdistrict, staluka, spincode, sphotopath);
 
         } catch (WriterException e) {
             // this method is called for
@@ -332,29 +352,25 @@ public class SangeetaReportActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onPause() {
         super.onPause();
         //unbindService(usbConnection);
     }
 
-    final Calendar calendar = Calendar.getInstance();
-    final SimpleDateFormat mdformat = new SimpleDateFormat("yyyy / MM / dd ");
-    final String strDate = mdformat.format(calendar.getTime());
 
-      @Override
+    @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
             hideSystemUI();
         }
     }
+    public void writeNewUser(String userId, String memberid, String name, String number, String address, String dob, String dist, String tal, String pincode, String photopath) {
+     //   UsersDetails user = new UsersDetails(userId, memberid, name, number, Address, dob, dist, tal, pincode, photopath);
+        UserDetails userDetails = new UserDetails(userId,memberid,name,number,address,dob,dist,tal,pincode,photopath);
+        mDatabase.child("users").child(userId).setValue(userDetails);
 
-    public void writeNewUser(String userId, String memberid, String name, String number, String Address, String dob, String dist, String tal, String pincode, String photopath) {
-        UsersDetails user = new UsersDetails(userId, memberid, name, number, Address, dob, dist, tal, pincode, photopath);
-
-        mDatabase.child("users").child(userId).setValue(user);
     }
 
     public String getDeviceId(Context context) {
@@ -400,21 +416,15 @@ public class SangeetaReportActivity extends AppCompatActivity {
         this.sendBroadcast(mediaScanIntent);
     }
 
-    public boolean checkInternetconn() {
+    public boolean isOnline() {
+        ConnectivityManager conMgr = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
 
-        ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        {
-            NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
-
-            if (netInfo == null) {
-
-                Toast.makeText(getApplicationContext(), "Internet Not Connected", Toast.LENGTH_SHORT).show();
-                return false;
-
-            } else {
-
-                return true;
-            }
+        if (netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()) {
+            Toast.makeText(getApplicationContext(), "No Internet connection!", Toast.LENGTH_LONG).show();
+            return false;
         }
+        return true;
     }
+
 }

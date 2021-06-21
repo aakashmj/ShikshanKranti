@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "163000272903",
+    "firebase_url": "https://shikshan-kranti-default-rtdb.firebaseio.com",
     "project_id": "shikshan-kranti",
     "storage_bucket": "shikshan-kranti.appspot.com"
   },
@@ -14,11 +15,27 @@
       },
       "oauth_client": [
         {
-          "client_id": "163000272903-d0v1ld93ng1tu7uno3silmj90rev1qoo.apps.googleusercontent.com",
+          "client_id": "163000272903-64o3dnri3epa18svo43b2dt1ghptqnm8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.shikshankranti.sanghatna",
             "certificate_hash": "4e280bd65ea0348769eff5e72efd7006a5acdfcb"
+          }
+        },
+        {
+          "client_id": "163000272903-nbrguqo1onrjd4qoecqmsl4981c1sssg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shikshankranti.sanghatna",
+            "certificate_hash": "4180577370b123f95b009b8a424022749144e5b6"
+          }
+        },
+        {
+          "client_id": "163000272903-spig42rb5mnp1oct17hqnp71aedc7uic.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shikshankranti.sanghatna",
+            "certificate_hash": "6b76e56958b8f717e61ddee79ccb48209249c4a3"
           }
         },
         {

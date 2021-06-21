@@ -2,9 +2,7 @@ package com.shikshankranti.sanghatna;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -20,6 +18,7 @@ import com.google.android.material.button.MaterialButton;
 import java.util.Locale;
 
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.District;
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.PinCode;
 
 
 public class AddressActivity extends AppCompatActivity {
@@ -65,8 +64,10 @@ public class AddressActivity extends AppCompatActivity {
                 PatientDetailsAbstractClass.PinCode = mETPinCode.getText().toString();
                 SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key),MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("address",PatientDetailsAbstractClass.Address);
                 editor.putString("district", District);
                 editor.putString("taluka",PatientDetailsAbstractClass.Taluka);
+                editor.putString("pincode",PinCode);
                 editor.apply();
                 Intent i = new Intent(AddressActivity.this, SangeetaCaptureActivity.class);
                 startActivity(i);

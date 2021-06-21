@@ -25,7 +25,7 @@ public class BitmapScaler
     {
         float factorH = height / (float) b.getWidth();
         float factorW = width / (float) b.getWidth();
-        float factorToUse = (factorH > factorW) ? factorW : factorH;
+        float factorToUse = Math.min(factorH, factorW);
         return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factorToUse),
                 (int) (b.getHeight() * factorToUse), true);
     }
