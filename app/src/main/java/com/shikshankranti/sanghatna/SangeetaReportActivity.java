@@ -45,12 +45,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.WriterException;
-import com.rey.material.app.Dialog;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
@@ -71,9 +69,9 @@ public class SangeetaReportActivity extends AppCompatActivity {
     TextView mTVLocation, mTvMemberID, mNameTextView, mTVDob;
     MaterialButton mbtnChangeDetails;
     AppCompatButton mbtnShareID;
-    DatabaseReference mDatabase;
+    DatabaseReference mDatabase,gDatabase;
 
-    String smobilenumber, smemberid, sdistrict, saddress, staluka, sdob, sname, sphotopath, spincode;
+    String smobilenumber, sdistrict, saddress, staluka, sdob, sname, sphotopath, spincode;
     private ProgressDialog progessDialog;
 
 
@@ -136,7 +134,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
         mTvMemberID.setText(MemberID.substring(0, 8).toUpperCase());
         mNameTextView.setText(sname);
         mTVDob.setText(sdob);
-        mTVLocation.setText(sdistrict.trim() + "," + staluka.toUpperCase().trim());
+        mTVLocation.setText(String.format("%s,%s", sdistrict.trim(), staluka.toUpperCase().trim()));
 
         //  mbtnDownloadIDCard = findViewById(R.id.btnDownloadIDCard);
         mbtnShareID.setOnClickListener(v -> {
@@ -167,58 +165,6 @@ public class SangeetaReportActivity extends AppCompatActivity {
             //mIVPhoto.setImageBitmap(Photo);
             Glide.with(getApplicationContext()).load(Photo);
         }*/
-        if (isOnline()) {
-            FirebaseDatabase.getInstance().getReference().child("image").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    // getting a DataSnapshot for the location at the specified
-                    // relative path and getting in the link variable
-                    //      String link = dataSnapshot.getValue(String.class);
-                    // loading that data into rImage
-                    // variable which is ImageView
-                    Glide.with(getApplicationContext()).load(sphotopath).listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable @org.jetbrains.annotations.Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            progessDialog.dismiss();
-                            assert e != null;
-                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(SangeetaReportActivity.this, FullscreenActivity.class);
-                            SangeetaReportActivity.this.startActivity(i);
-                            SangeetaReportActivity.this.finish();
-
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            progessDialog.dismiss();
-
-                            return false;
-                        }
-                    }).into(mIVPhoto);
-
-                    //    Picasso.with(SangeetaReportActivity.this).load(sphotopath).into(mIVPhoto);
-
-                }
-
-                // this will called when any problem
-                // occurs in getting data
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    // we are showing that error message in toast
-                    Toast.makeText(SangeetaReportActivity.this, "Error Loading Image", Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else {
-            final Dialog dialog = new Dialog(this);
-            dialog.setTitle("Internet Unavailable ..Would you like to make it on ?");
-            dialog.cornerRadius(10);
-            dialog.positiveAction("OK");
-            dialog.positiveActionClickListener(v -> SangeetaReportActivity.this.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS)));
-            dialog.negativeAction("CANCEL");
-            dialog.negativeActionClickListener(v -> dialog.dismiss());
-            dialog.show();
-        }
 
         ImageButton mCloseBtn = findViewById(R.id.closeBtn);
         mCloseBtn.setEnabled(true);
@@ -340,8 +286,52 @@ public class SangeetaReportActivity extends AppCompatActivity {
             // the bitmap is set inside our image
             // view using .setimagebitmap method.
             mIVQrCode.setImageBitmap(bitmap);
-            mDatabase = FirebaseDatabase.getInstance().getReference();
+            FirebaseDatabase pdatabase = FirebaseDatabase.getInstance();
+            mDatabase = pdatabase.getReference();
+            gDatabase = pdatabase.getReference();
             writeNewUser(smobilenumber, MemberID, sname, smobilenumber, saddress, sdob, sdistrict, staluka, spincode, sphotopath);
+            gDatabase.child("image").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        // getting a DataSnapshot for the location at the specified
+                        // relative path and getting in the link variable
+                             String link = dataSnapshot.getValue(String.class);
+                        // loading that data into rImage
+                        // variable which is ImageView
+                        Glide.with(getApplicationContext()).load(sphotopath).listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable @org.jetbrains.annotations.Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                progessDialog.dismiss();
+                                assert e != null;
+                                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(SangeetaReportActivity.this, FullscreenActivity.class);
+                                SangeetaReportActivity.this.startActivity(i);
+                                SangeetaReportActivity.this.finish();
+
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                progessDialog.dismiss();
+
+                                return false;
+                            }
+                        }).into(mIVPhoto);
+
+                        //    Picasso.with(SangeetaReportActivity.this).load(sphotopath).into(mIVPhoto);
+
+                    }
+
+                    // this will called when any problem
+                    // occurs in getting data
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // we are showing that error message in toast
+                        Toast.makeText(SangeetaReportActivity.this, "Error Loading Image", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
 
         } catch (WriterException e) {
             // this method is called for

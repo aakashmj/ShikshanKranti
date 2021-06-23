@@ -23,6 +23,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.database.FirebaseDatabase;
 import com.rey.material.app.Dialog;
 
 import java.util.ArrayList;
@@ -95,7 +96,7 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             alert.show();
         });
 
-        if(isOnline()) {
+      //  if(isOnline()) {
             menglish.setOnClickListener(view -> {
                 String lang1 = "en";//Default Language
                 switch (view.getId()) {
@@ -174,8 +175,8 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
                 changeLocale(lang12);//Change Locale on selection basis
 
             });
-        }else{
-            final Dialog dialog = new Dialog(this);
+        //}else{
+          /*  final Dialog dialog = new Dialog(this);
             dialog.setTitle("Internet Unavailable ..Would you like to make it on ?");
             dialog.cornerRadius(10);
             dialog.positiveAction("OK");
@@ -183,7 +184,7 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             dialog.negativeAction("CANCEL");
             dialog.negativeActionClickListener(v -> dialog.dismiss());
             dialog.show();
-        }
+        }*/
 
 
     }

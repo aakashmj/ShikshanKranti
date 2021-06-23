@@ -3,6 +3,7 @@ package com.shikshankranti.sanghatna.application;
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
+import com.google.firebase.database.FirebaseDatabase;
 import com.shikshankranti.sanghatna.utils.CrashHandler;
 
 
@@ -20,6 +21,7 @@ public class MyApplication extends MultiDexApplication {
         super.onCreate();
         CrashHandler mCrashHandler = CrashHandler.getInstance();
         mCrashHandler.init(getApplicationContext(), getClass());
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         MultiDex.install(this);
     }
 }
