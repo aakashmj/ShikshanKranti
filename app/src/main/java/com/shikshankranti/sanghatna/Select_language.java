@@ -11,7 +11,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -23,7 +22,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.firebase.database.FirebaseDatabase;
 import com.rey.material.app.Dialog;
 
 import java.util.ArrayList;
@@ -43,6 +41,7 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
     private static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +59,7 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
 
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key), Context.MODE_PRIVATE);
         String authstatus = sharedPref.getString("deviceauthstatus", "no");
-
+        dialog = new Dialog(this);
         Configuration config = getBaseContext().getResources().getConfiguration();
 
         String lang = sharedPref.getString("LANG", "");
@@ -96,85 +95,85 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             alert.show();
         });
 
-      //  if(isOnline()) {
-            menglish.setOnClickListener(view -> {
-                String lang1 = "en";//Default Language
-                switch (view.getId()) {
-                    case R.id.english:
-                        if (authstatus.contains("verified")) {
-                            lang1 = "en";
-                            langselected = 0;
-                            Intent i = new Intent(Select_language.this, SangeetaReportActivity.class);
-                            startActivity(i);
-                        } else {
-                            lang1 = "en";
-                            Intent i = new Intent(Select_language.this, TermsActivity.class);
-                            langselected = 0;
-                            startActivity(i);
-                        }
-                        finish();
+        //  if(isOnline()) {
+        menglish.setOnClickListener(view -> {
+            String lang1 = "en";//Default Language
+            switch (view.getId()) {
+                case R.id.english:
+                    if (authstatus.contains("verified")) {
+                        lang1 = "en";
+                        langselected = 0;
+                        Intent i = new Intent(Select_language.this, SangeetaReportActivity.class);
+                        startActivity(i);
+                    } else {
+                        lang1 = "en";
+                        Intent i = new Intent(Select_language.this, TermsActivity.class);
+                        langselected = 0;
+                        startActivity(i);
+                    }
+                    finish();
 
-                        break;
-                    case R.id.hindi:
-                        if (authstatus.contains("verified")) {
-                            lang1 = "hi";
-                            langselected = 1;
-                            Intent i = new Intent(Select_language.this, SangeetaReportActivity.class);
-                            startActivity(i);
-                        } else {
-                            lang1 = "hi";
-                            Intent j = new Intent(Select_language.this, TermsActivity.class);
-                            langselected = 1;
-                            startActivity(j);
-                        }
-                        finish();
+                    break;
+                case R.id.hindi:
+                    if (authstatus.contains("verified")) {
+                        lang1 = "hi";
+                        langselected = 1;
+                        Intent i = new Intent(Select_language.this, SangeetaReportActivity.class);
+                        startActivity(i);
+                    } else {
+                        lang1 = "hi";
+                        Intent j = new Intent(Select_language.this, TermsActivity.class);
+                        langselected = 1;
+                        startActivity(j);
+                    }
+                    finish();
 
-                        break;
+                    break;
 
-                }
+            }
 
-                changeLocale(lang1);//Change Locale on selection basis
+            changeLocale(lang1);//Change Locale on selection basis
 
-            });
-            mhindi.setOnClickListener(view -> {
-                String lang12 = "en";//Default Language
-                switch (view.getId()) {
-                    case R.id.english:
-                        if (authstatus.contains("verified")) {
-                            lang12 = "en";
-                            langselected = 0;
-                            Intent i = new Intent(Select_language.this, SangeetaReportActivity.class);
-                            startActivity(i);
-                        } else {
-                            lang12 = "en";
-                            Intent i = new Intent(Select_language.this, TermsActivity.class);
-                            langselected = 0;
-                            startActivity(i);
-                        }
-                        finish();
+        });
+        mhindi.setOnClickListener(view -> {
+            String lang12 = "en";//Default Language
+            switch (view.getId()) {
+                case R.id.english:
+                    if (authstatus.contains("verified")) {
+                        lang12 = "en";
+                        langselected = 0;
+                        Intent i = new Intent(Select_language.this, SangeetaReportActivity.class);
+                        startActivity(i);
+                    } else {
+                        lang12 = "en";
+                        Intent i = new Intent(Select_language.this, TermsActivity.class);
+                        langselected = 0;
+                        startActivity(i);
+                    }
+                    finish();
 
-                        break;
-                    case R.id.hindi:
-                        if (authstatus.contains("verified")) {
-                            lang12 = "hi";
-                            langselected = 1;
-                            Intent i = new Intent(Select_language.this, SangeetaReportActivity.class);
-                            startActivity(i);
-                        } else {
-                            lang12 = "hi";
-                            Intent j = new Intent(Select_language.this, TermsActivity.class);
-                            langselected = 1;
-                            startActivity(j);
-                        }
-                        finish();
+                    break;
+                case R.id.hindi:
+                    if (authstatus.contains("verified")) {
+                        lang12 = "hi";
+                        langselected = 1;
+                        Intent i = new Intent(Select_language.this, SangeetaReportActivity.class);
+                        startActivity(i);
+                    } else {
+                        lang12 = "hi";
+                        Intent j = new Intent(Select_language.this, TermsActivity.class);
+                        langselected = 1;
+                        startActivity(j);
+                    }
+                    finish();
 
-                        break;
+                    break;
 
-                }
+            }
 
-                changeLocale(lang12);//Change Locale on selection basis
+            changeLocale(lang12);//Change Locale on selection basis
 
-            });
+        });
         //}else{
           /*  final Dialog dialog = new Dialog(this);
             dialog.setTitle("Internet Unavailable ..Would you like to make it on ?");
@@ -192,9 +191,8 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
 
     @Override
     public void onBackPressed() {
-     //   super.onBackPressed(); //commented this line in order to disable back press
+        //   super.onBackPressed(); //commented this line in order to disable back press
         //Write your code here
-        final Dialog dialog = new Dialog(this);
         dialog.setTitle("Do You Want To Exit Application?");
         dialog.cornerRadius(10);
         dialog.setCancelable(true);
@@ -206,9 +204,24 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
         if (!dialog.isShowing()) {
             dialog.show();
         }
-       // Toast.makeText(getApplicationContext(), "Back press disabled!", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(getApplicationContext(), "Back press disabled!", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
+    }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -280,10 +293,14 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
         if (medialocation != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(ACCESS_MEDIA_LOCATION);
+            if (SDK_INT >= Build.VERSION_CODES.Q) {
+                listPermissionsNeeded.add(ACCESS_MEDIA_LOCATION);
+            }
         }
         if (managedstorage != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+            if (SDK_INT >= Build.VERSION_CODES.R) {
+                listPermissionsNeeded.add(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+            }
         }
 
         if (readstorage != PackageManager.PERMISSION_GRANTED) {

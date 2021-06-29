@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -21,12 +22,13 @@ import java.util.concurrent.TimeUnit;
 
 public class VerificationActivity extends AppCompatActivity {
 
-
     private String verificationId;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
     private EditText editText;
     String phonenumber;
+    Button mSignIn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,17 +40,18 @@ public class VerificationActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressbar);
         editText = findViewById(R.id.editTextCode);
 
-         phonenumber = getIntent().getStringExtra("phonenumber");
+        phonenumber = getIntent().getStringExtra("phonenumber");
         sendVerificationCode(phonenumber);
+        mSignIn = findViewById(R.id.buttonSignIn);
 
-        findViewById(R.id.buttonSignIn).setOnClickListener(v -> {
-
+        mSignIn.setOnClickListener(v -> {
+            mSignIn.setEnabled(false);
             String code = editText.getText().toString().trim();
 
             if (code.isEmpty() || code.length() < 6) {
-
                 editText.setError("Enter code...");
                 editText.requestFocus();
+                mSignIn.setEnabled(true);
                 return;
             }
             verifyCode(code);
@@ -59,22 +62,24 @@ public class VerificationActivity extends AppCompatActivity {
     private void verifyCode(String code) {
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
         signInWithCredential(credential);
-         }
+    }
 
     private void signInWithCredential(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key),MODE_PRIVATE);
+
+                        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key), MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putString("deviceauthstatus", "verified");
-                        editor.putString("mobnumber",phonenumber);
+                        editor.putString("mobnumber", phonenumber);
                         editor.apply();
                         Intent intent = new Intent(VerificationActivity.this, RegisterForm.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
 
                     } else {
+                        mSignIn.setEnabled(true);
                         Toast.makeText(VerificationActivity.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
@@ -84,7 +89,7 @@ public class VerificationActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(mAuth)
-                        .setPhoneNumber("+91"+number) // Phone number to verify
+                        .setPhoneNumber("+91" + number) // Phone number to verify
                         .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
                         .setActivity(this)                 // Activity (for callback binding)
                         .setCallbacks(mCallBack)          // OnVerificationStateChangedCallbacks
@@ -108,10 +113,10 @@ public class VerificationActivity extends AppCompatActivity {
             if (code != null) {
                 editText.setText(code);
                 verifyCode(code);
-                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key),MODE_PRIVATE);
+                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key), MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString("deviceauthstatus", "verified");
-                editor.putString("mobnumber",phonenumber);
+                editor.putString("mobnumber", phonenumber);
                 editor.apply();
             }
         }

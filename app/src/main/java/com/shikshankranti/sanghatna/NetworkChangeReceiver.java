@@ -8,7 +8,7 @@ import android.util.Log;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
-    private NetworkChangeCallback callback;
+    private final NetworkChangeCallback callback;
 
     public NetworkChangeReceiver(NetworkChangeCallback callback) {
         this.callback = callback;
@@ -17,10 +17,11 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         boolean status = isNetworkAvailable(context);
-        showLog("" + status);
+        showLog("NetStatus" + status);
         if (callback != null) {
             callback.onNetworkChanged(status);
         }
+
     }
 
     private boolean isNetworkAvailable(Context context) {

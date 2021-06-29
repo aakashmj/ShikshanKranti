@@ -25,7 +25,10 @@ import com.google.android.material.button.MaterialButton;
 import java.util.Calendar;
 import java.util.Locale;
 
-import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Name;
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.DOB;
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.FName;
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.LName;
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.MName;
 
 
 public class RegisterForm extends AppCompatActivity {
@@ -35,7 +38,9 @@ public class RegisterForm extends AppCompatActivity {
 
     TextView mHeaderHeading;
     private AwesomeValidation awesomeValidation;
-
+    SharedPreferences sharedPref;
+    String sdob, sfname,smname,slname;
+    SharedPreferences.Editor editor ;
 
 
     @Override
@@ -53,19 +58,27 @@ public class RegisterForm extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         setContentView(R.layout.profiledetails_activity);
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
+        sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key), Context.MODE_PRIVATE);
+        sfname = sharedPref.getString("fname", FName);
+        smname = sharedPref.getString("mname", MName);
+        slname = sharedPref.getString("lname", LName);
+        sdob = sharedPref.getString("dob", DOB);
+
         final Locale loc = new Locale("hin", "IND");
         metFirstName = findViewById(R.id.etFirstName);
+        metFirstName.setText(sfname);
         metMiddleName = findViewById(R.id.etMiddleName);
+        metMiddleName.setText(smname);
         metLastName = findViewById(R.id.etLastName);
+        metLastName.setText(slname);
         mETDOB = findViewById(R.id.etDOB);
+        mETDOB.setText(sdob);
         new DateInputMask(mETDOB);
-
         mbtnNext = findViewById(R.id.btnNext);
         // mPreviousButton=findViewById(R.id.previousButton);
         mHeaderHeading = findViewById(R.id.headerheaeding);
         mHeaderHeading.setText(R.string.profiledetails);
         ImageButton mCloseBtn = findViewById(R.id.closeBtn);
-
         //    awesomeValidation.addValidation(this, R.id.etFirstName, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
         //  awesomeValidation.addValidation(this, R.id.etMiddleName, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
         // awesomeValidation.addValidation(this, R.id.etLastName, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.nameerror);
@@ -74,11 +87,15 @@ public class RegisterForm extends AppCompatActivity {
 
         mbtnNext.setOnClickListener(v -> {
             if (awesomeValidation.validate()) {
-                Name = metFirstName.getText().toString().trim() + " " + metMiddleName.getText().toString().trim() + " " + metLastName.getText().toString();
+                FName = metFirstName.getText().toString().trim();
+                MName = metMiddleName.getText().toString().trim();
+                LName = metLastName.getText().toString().trim();
+
                 PatientDetailsAbstractClass.DOB = mETDOB.getText().toString().trim();
-                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key),MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString("name", Name);
+                editor = sharedPref.edit();
+                editor.putString("fname", FName);
+                editor.putString("mname", MName);
+                editor.putString("lname", LName);
                 editor.putString("dob",PatientDetailsAbstractClass.DOB);
                 editor.apply();
                 Intent addressintent = new Intent(RegisterForm.this, AddressActivity.class);
@@ -156,7 +173,7 @@ public class RegisterForm extends AppCompatActivity {
     }
 
 
-    public class DateInputMask implements TextWatcher {
+    public static class DateInputMask implements TextWatcher {
 
         private String current = "";
         private final Calendar cal = Calendar.getInstance();

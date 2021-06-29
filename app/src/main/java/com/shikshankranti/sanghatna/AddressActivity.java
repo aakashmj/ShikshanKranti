@@ -1,5 +1,6 @@
 package com.shikshankranti.sanghatna;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,8 +18,10 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.Locale;
 
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Address;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.District;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.PinCode;
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Taluka;
 
 
 public class AddressActivity extends AppCompatActivity {
@@ -26,6 +29,9 @@ public class AddressActivity extends AppCompatActivity {
     private EditText mETPermAddress, mETDistrict, mETTaluka, mETPinCode;
     MaterialButton mbtnNext;
     private AwesomeValidation awesomeValidation;
+    SharedPreferences sharedPref;
+    String  sdistrict, saddress, staluka,spincode;
+    SharedPreferences.Editor editor ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +46,22 @@ public class AddressActivity extends AppCompatActivity {
         getWindow().setFlags(View.SYSTEM_UI_FLAG_LAYOUT_STABLE, View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         setContentView(R.layout.address_layout);
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
-
-
         final Locale loc = new Locale("hin", "IND");
+        sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+        saddress = sharedPref.getString("address", Address);
+        sdistrict = sharedPref.getString("district", District);
+        staluka = sharedPref.getString("taluka", Taluka);
+        spincode = sharedPref.getString("pincode", PinCode);
 
         mETPermAddress = findViewById(R.id.etPermAddress);
+        mETPermAddress.setText(saddress);
         mETDistrict = findViewById(R.id.etDistrict);
+        mETDistrict.setText(sdistrict);
         mETTaluka = findViewById(R.id.etTaluka);
+        mETTaluka.setText(staluka);
         mETPinCode = findViewById(R.id.etPinCode);
+        mETPinCode.setText(spincode);
         mbtnNext = findViewById(R.id.btnNext);
         ImageButton mCloseBtn = findViewById(R.id.closeBtn);
 
@@ -62,8 +76,7 @@ public class AddressActivity extends AppCompatActivity {
                 District = mETDistrict.getText().toString();
                 PatientDetailsAbstractClass.Taluka = mETTaluka.getText().toString();
                 PatientDetailsAbstractClass.PinCode = mETPinCode.getText().toString();
-                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key),MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
+                editor = sharedPref.edit();
                 editor.putString("address",PatientDetailsAbstractClass.Address);
                 editor.putString("district", District);
                 editor.putString("taluka",PatientDetailsAbstractClass.Taluka);

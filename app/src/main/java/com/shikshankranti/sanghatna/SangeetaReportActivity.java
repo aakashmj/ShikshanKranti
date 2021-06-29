@@ -57,8 +57,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Address;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.DOB;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.District;
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.FName;
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.LName;
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.MName;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.MemberID;
-import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Name;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.PhotoPath;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.PinCode;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Taluka;
@@ -69,13 +71,10 @@ public class SangeetaReportActivity extends AppCompatActivity {
     TextView mTVLocation, mTvMemberID, mNameTextView, mTVDob;
     MaterialButton mbtnChangeDetails;
     AppCompatButton mbtnShareID;
-    DatabaseReference mDatabase,gDatabase;
+    DatabaseReference mDatabase, gDatabase;
 
-    String smobilenumber, sdistrict, saddress, staluka, sdob, sname, sphotopath, spincode;
+    String smobilenumber, sdistrict, saddress, staluka, sdob, sfname, smname, slname, sphotopath, spincode;
     private ProgressDialog progessDialog;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +90,10 @@ public class SangeetaReportActivity extends AppCompatActivity {
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key), Context.MODE_PRIVATE);
-        sname = sharedPref.getString("name", Name);
+        sfname = sharedPref.getString("fname", FName);
+        smname = sharedPref.getString("mname", MName);
+        slname = sharedPref.getString("lname", LName);
+
         smobilenumber = sharedPref.getString("mobnumber", PatientDetailsAbstractClass.Number);
         sdistrict = sharedPref.getString("district", District);
         saddress = sharedPref.getString("address", Address);
@@ -132,7 +134,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
         editor.putString("memberid", MemberID);
         editor.apply();
         mTvMemberID.setText(MemberID.substring(0, 8).toUpperCase());
-        mNameTextView.setText(sname);
+        mNameTextView.setText(sfname + " " + smname + " " + slname);
         mTVDob.setText(sdob);
         mTVLocation.setText(String.format("%s,%s", sdistrict.trim(), staluka.toUpperCase().trim()));
 
@@ -142,8 +144,10 @@ public class SangeetaReportActivity extends AppCompatActivity {
             loadView(cardView);
             if (image != null) {
                 galleryAddPic(image.getAbsolutePath());
+                assert image != null;
+            } else {
+                assert false;
             }
-            assert image != null;
             shareImageReport(android.net.Uri.parse(image.getAbsolutePath()));
             //       shareImage(Uri.parse(image.getAbsolutePath()));
         });
@@ -214,7 +218,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
             if (!storageDir.exists())
                 storageDir.mkdirs();
             image = File.createTempFile(
-                    timeStamp,                   /* prefix */
+                    "ShikshanKrantiIDCard",                   /* prefix */
                     ".jpeg",                     /* suffix */
                     storageDir                   /* directory */
             );
@@ -279,7 +283,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
 
         // setting this dimensions inside our qr code
         // encoder to generate our qr code.
-        qrgEncoder = new QRGEncoder("Member ID " + MemberID + "\n" + " Name " + sname + "\n" + " Mobile No " + smobilenumber + "\n" + " DOB " + sdob + "\n" + " Address " + saddress + "\n" + " Taluka " + staluka + "\n" + " District " + sdistrict + "\n" + " Pin Code " + spincode, null, QRGContents.Type.TEXT, dimen);
+        qrgEncoder = new QRGEncoder(new StringBuilder().append("Member ID ").append(MemberID.substring(0, 8)).append("\n").append(" Name ").append(sfname + " ").append(smname + " ").append(slname).append("\n").append(" Mobile No ").append(smobilenumber).append("\n").append(" DOB ").append(sdob).append("\n").append(" Address ").append(saddress).append("\n").append(" Taluka ").append(staluka).append("\n").append(" District ").append(sdistrict).append("\n").append(" Pin Code ").append(spincode).toString(), null, QRGContents.Type.TEXT, dimen);
         try {
             // getting our qrcode in the form of bitmap.
             bitmap = qrgEncoder.encodeAsBitmap();
@@ -289,48 +293,50 @@ public class SangeetaReportActivity extends AppCompatActivity {
             FirebaseDatabase pdatabase = FirebaseDatabase.getInstance();
             mDatabase = pdatabase.getReference();
             gDatabase = pdatabase.getReference();
-            writeNewUser(smobilenumber, MemberID, sname, smobilenumber, saddress, sdob, sdistrict, staluka, spincode, sphotopath);
+            mDatabase.keepSynced(true);
+            gDatabase.keepSynced(true);
+            writeNewUser(smobilenumber, MemberID, new StringBuilder().append(sfname + " ").append(smname + " ").append(slname).toString(), smobilenumber, saddress, sdob, sdistrict, staluka, spincode, sphotopath);
             gDatabase.child("image").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        // getting a DataSnapshot for the location at the specified
-                        // relative path and getting in the link variable
-                             String link = dataSnapshot.getValue(String.class);
-                        // loading that data into rImage
-                        // variable which is ImageView
-                        Glide.with(getApplicationContext()).load(sphotopath).listener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable @org.jetbrains.annotations.Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                progessDialog.dismiss();
-                                assert e != null;
-                                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                                Intent i = new Intent(SangeetaReportActivity.this, FullscreenActivity.class);
-                                SangeetaReportActivity.this.startActivity(i);
-                                SangeetaReportActivity.this.finish();
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    // getting a DataSnapshot for the location at the specified
+                    // relative path and getting in the link variable
+                    String link = dataSnapshot.getValue(String.class);
+                    // loading that data into rImage
+                    // variable which is ImageView
+                    Glide.with(getApplicationContext()).load(sphotopath).listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable @org.jetbrains.annotations.Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            progessDialog.dismiss();
+                            assert e != null;
+                          //  Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(SangeetaReportActivity.this, FullscreenActivity.class);
+                            SangeetaReportActivity.this.startActivity(i);
+                            SangeetaReportActivity.this.finish();
 
-                                return false;
-                            }
+                            return false;
+                        }
 
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                progessDialog.dismiss();
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            progessDialog.dismiss();
 
-                                return false;
-                            }
-                        }).into(mIVPhoto);
+                            return false;
+                        }
+                    }).into(mIVPhoto);
 
-                        //    Picasso.with(SangeetaReportActivity.this).load(sphotopath).into(mIVPhoto);
+                    //    Picasso.with(SangeetaReportActivity.this).load(sphotopath).into(mIVPhoto);
 
-                    }
+                }
 
-                    // this will called when any problem
-                    // occurs in getting data
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        // we are showing that error message in toast
-                        Toast.makeText(SangeetaReportActivity.this, "Error Loading Image", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                // this will called when any problem
+                // occurs in getting data
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // we are showing that error message in toast
+                    Toast.makeText(SangeetaReportActivity.this, "Error Loading Image", Toast.LENGTH_SHORT).show();
+                }
+            });
 
 
         } catch (WriterException e) {
@@ -356,9 +362,10 @@ public class SangeetaReportActivity extends AppCompatActivity {
             hideSystemUI();
         }
     }
+
     public void writeNewUser(String userId, String memberid, String name, String number, String address, String dob, String dist, String tal, String pincode, String photopath) {
-     //   UsersDetails user = new UsersDetails(userId, memberid, name, number, Address, dob, dist, tal, pincode, photopath);
-        UserDetails userDetails = new UserDetails(userId,memberid,name,number,address,dob,dist,tal,pincode,photopath);
+        //   UsersDetails user = new UsersDetails(userId, memberid, name, number, Address, dob, dist, tal, pincode, photopath);
+        UserDetails userDetails = new UserDetails(userId, memberid, name, number, address, dob, dist, tal, pincode, photopath);
         mDatabase.child("users").child(userId).setValue(userDetails);
 
     }

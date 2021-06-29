@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -28,10 +29,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -47,6 +54,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.PhotoPath;
 
 
 public class SangeetaCaptureActivity extends AppCompatActivity implements NetworkChangeCallback {
@@ -72,6 +81,9 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
     private Uri fileUri;
     private ProgressDialog progessDialog;
     private BroadcastReceiver mNetworkReceiver;
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editor;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,34 +99,32 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
         setContentView(R.layout.capture_layout);
         final Locale loc = new Locale("hin", "IND");
         mNetworkReceiver = new NetworkChangeReceiver(this);
-        registerNetworkBroadcastForNougat();
-
+        // registerNetworkBroadcastForNougat();
+        sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key), MODE_PRIVATE);
+        editor = sharedPref.edit();
+        dialog = new Dialog(this);
         ImageButton mCloseBtn = findViewById(R.id.closeBtn);
         mcapturePic = findViewById(R.id.btnCapture);
         mbtnNext = findViewById(R.id.btnNext);
         mbtnNext.setEnabled(true);
         mGallery = findViewById(R.id.ivGallery);
 
-        if(isOnline()){
+        if (isOnline()) {
             mGallery.setEnabled(true);
             mcapturePic.setEnabled(true);
-        }else{
+        } else {
             mGallery.setEnabled(false);
             mcapturePic.setEnabled(false);
-            final Dialog dialog = new Dialog(this);
-            dialog.setTitle("No Internet!Update Photo Later");
+            dialog.setTitle("No Internet..Please Enable Internet");
             dialog.cornerRadius(10);
-            dialog.setCancelable(true);
-            dialog.setCanceledOnTouchOutside(true);
-            dialog.positiveAction("Next");
-            dialog.positiveActionClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent reportintent = new Intent(SangeetaCaptureActivity.this, SangeetaReportActivity.class);
-                  //  reportintent.putExtra("photopath", currentPhotoPath);
-                    startActivity(reportintent);
-                    finish();
-                }
+            dialog.setCancelable(false);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.positiveAction("SKIP");
+            dialog.positiveActionClickListener(v -> {
+                Intent reportintent = new Intent(SangeetaCaptureActivity.this, SangeetaReportActivity.class);
+                //  reportintent.putExtra("photopath", currentPhotoPath);
+                startActivity(reportintent);
+                finish();
             });
             dialog.negativeAction("CANCEL");
             dialog.negativeActionClickListener(v -> dialog.dismiss());
@@ -126,7 +136,24 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
         }
         LinearLayout mLinearBrose = findViewById(R.id.llbrowse);
         mivPhoto = findViewById(R.id.ivPhoto);
+        String sphotopath = sharedPref.getString("fbphotopath", PhotoPath);
+
         // Get a non-default Storage bucket
+        Glide.with(getApplicationContext()).load(sphotopath).placeholder(R.drawable.ic_profile).listener(new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable @org.jetbrains.annotations.Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                assert e != null;
+              //  Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+
+                return false;
+            }
+        }).into(mivPhoto);
 
         storage = FirebaseStorage.getInstance();
         // Create a storage reference from our app
@@ -203,58 +230,56 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
             if (data != null) {
                 selectedImageURI = data.getData();
             }
+            if (selectedImageURI != null) {
             /*SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key),MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString("photouri", String.valueOf(selected
             ImageURI));
             editor.apply();*/
-
-            PatientDetailsAbstractClass.Gallery = true;
-            PatientDetailsAbstractClass.GalleryPhoto = selectedImageURI;
-            riversRef = imagesRef.child(selectedImageURI.getLastPathSegment());
-            uploadTask = riversRef.putFile(selectedImageURI);
+                PatientDetailsAbstractClass.Gallery = true;
+                PatientDetailsAbstractClass.GalleryPhoto = selectedImageURI;
+                riversRef = imagesRef.child(selectedImageURI.getLastPathSegment());
+                uploadTask = riversRef.putFile(selectedImageURI);
 
 // Register observers to listen for when the download is done or if it fails
-            uploadTask.addOnFailureListener(exception -> {
-                // Handle unsuccessful uploads
-                Toast.makeText(SangeetaCaptureActivity.this, exception.getMessage(), Toast.LENGTH_LONG).show();
-            }).addOnSuccessListener(taskSnapshot -> {
+                uploadTask.addOnFailureListener(exception -> {
+                    // Handle unsuccessful uploads
+                    Toast.makeText(SangeetaCaptureActivity.this, exception.getMessage(), Toast.LENGTH_LONG).show();
+                }).addOnSuccessListener(taskSnapshot -> {
 
-                riversRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    Log.e("Tuts+", "uri: " + uri.toString());
-                    PatientDetailsAbstractClass.PhotoPath = uri.toString();
-                    SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key), MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putString("fbphotopath", uri.toString());
-                    editor.apply();
+                    riversRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        Log.e("Tuts+", "uri: " + uri.toString());
+                        PatientDetailsAbstractClass.PhotoPath = uri.toString();
+                        editor.putString("fbphotopath", uri.toString());
+                        editor.apply();
 
-                    mbtnNext.setEnabled(true);
-                    progessDialog.dismiss();
-                    //Handle whatever you're going to do with the URL here
-                });
+                        mbtnNext.setEnabled(true);
+                        progessDialog.dismiss();
+                        //Handle whatever you're going to do with the URL here
+                    });
 //                Toast.makeText(getApplicationContext(),taskSnapshot.getMetadata().toString(),Toast.LENGTH_LONG).show();
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
 
-            }).addOnProgressListener(snapshot -> {
-                double progress
-                        = (100.0
-                        * snapshot.getBytesTransferred()
-                        / snapshot.getTotalByteCount());
-                Log.i("Progress", String.valueOf(progress));
-                if (progessDialog != null && !progessDialog.isShowing()) {
-                    progessDialog.setMessage("Please Wait Image is Uploading");
-                    progessDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                    progessDialog.setIndeterminate(true);
-                    progessDialog.setCancelable(true);
-                    progessDialog.show();
-                }
-                mbtnNext.setEnabled(true);
+                }).addOnProgressListener(snapshot -> {
+                    double progress
+                            = (100.0
+                            * snapshot.getBytesTransferred()
+                            / snapshot.getTotalByteCount());
+                    Log.i("Progress", String.valueOf(progress));
+                    if (progessDialog != null && !progessDialog.isShowing()) {
+                        progessDialog.setMessage("Please Wait Image is Uploading");
+                        progessDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                        progessDialog.setIndeterminate(true);
+                        progessDialog.setCancelable(false);
+                        progessDialog.show();
+                    }
+                    mbtnNext.setEnabled(true);
 
-                //    Toast.makeText(getApplicationContext(),"Please Wait..",Toast.LENGTH_SHORT).show();
-            });
-            mivPhoto.setImageURI(selectedImageURI);
+                    //    Toast.makeText(getApplicationContext(),"Please Wait..",Toast.LENGTH_SHORT).show();
+                });
+                mivPhoto.setImageURI(selectedImageURI);
+            }
         }
-
     }
 
     @Override
@@ -359,8 +384,6 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
             riversRef.getDownloadUrl().addOnSuccessListener(uri -> {
                 Log.e("Tuts+", "uri: " + uri.toString());
                 PatientDetailsAbstractClass.PhotoPath = uri.toString();
-                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key), MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString("fbphotopath", uri.toString());
                 editor.apply();
                 mbtnNext.setEnabled(true);
@@ -441,9 +464,8 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
 
         Intent intent = new Intent();
         // Create the File where the photo should go
-        File photoFile;
         try {
-            photoFile = createImageFile();
+            createImageFile();
 
             // Continue only if the File was successfully created
             intent.setType("image/*");
@@ -462,32 +484,23 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
         if (status) {
             mGallery.setEnabled(true);
             mcapturePic.setEnabled(true);
-            Toast.makeText(this,"Internet Available...Update Photo",Toast.LENGTH_LONG).show();
+            mGallery.setAlpha(1f);
+            mcapturePic.setAlpha(1f);
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+                Toast.makeText(this, "Internet Available...Update Photo", Toast.LENGTH_SHORT).show();
+            }
+
         } else {
             mGallery.setEnabled(false);
             mcapturePic.setEnabled(false);
-
-            final Dialog dialog = new Dialog(this);
-            dialog.setTitle("No Internet,Skip Photo");
-            dialog.cornerRadius(10);
-            dialog.setCancelable(true);
-            dialog.setCanceledOnTouchOutside(true);
-            dialog.positiveAction("SKIP");
-            dialog.positiveActionClickListener(v -> {
-                Intent reportintent = new Intent(SangeetaCaptureActivity.this, SangeetaReportActivity.class);
-               // reportintent.putExtra("photopath", currentPhotoPath);
-                startActivity(reportintent);
-                finish();
-            });
-            dialog.negativeAction("CANCEL");
-            dialog.negativeActionClickListener(v -> dialog.dismiss());
-            if (!dialog.isShowing()) {
-                dialog.show();
-            }
+            mGallery.setAlpha(0.5f);
+            mcapturePic.setAlpha(0.5f);
 
         }
 
     }
+
 
     public static class CustomViewGroup extends ViewGroup {
         public CustomViewGroup(Context context) {
@@ -534,7 +547,7 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
         NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
 
         if (netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()) {
-            Toast.makeText(getApplicationContext(), "No Internet connection!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "No Internet !", Toast.LENGTH_LONG).show();
             return false;
         }
         return true;
