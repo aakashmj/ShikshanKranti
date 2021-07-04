@@ -11,6 +11,9 @@ public class PatientDetailsAbstractClass {
 	public static String MName="";
 	public static String LName="";
 	public static String FullName="";
+	public static String Designation="";
+	public static String School="";
+	public static String Education="";
 	public static String Number="";
 	public static String MemberID="";
 	public static String DOB="";

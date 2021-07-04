@@ -14,13 +14,16 @@ public class UserDetails {
     public String Tal;
     public String PinCode;
     public String Photopath;
+    public String Education;
+    public String School;
+    public String Designation;
 
 
     public UserDetails() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public UserDetails(String userid, String memberid,String name,String number,String address,String dob,String dist,String tal,String pincode,String photopth) {
+    public UserDetails(String userid, String memberid,String name,String number,String address,String dob,String dist,String tal,String pincode,String education,String school,String designation,String photopth) {
         this.UserID = userid;
         this.MemberID = memberid;
         this.Name=name;
@@ -31,6 +34,9 @@ public class UserDetails {
         this.Tal=tal;
         this.PinCode=pincode;
         this.Photopath=photopth;
+        this.Education=education;
+        this.School=school;
+        this.Designation=designation;
 
     }
 

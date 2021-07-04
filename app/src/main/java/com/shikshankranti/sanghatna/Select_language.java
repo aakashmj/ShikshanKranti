@@ -293,14 +293,10 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
         if (medialocation != PackageManager.PERMISSION_GRANTED) {
-            if (SDK_INT >= Build.VERSION_CODES.Q) {
-                listPermissionsNeeded.add(ACCESS_MEDIA_LOCATION);
-            }
+            listPermissionsNeeded.add(ACCESS_MEDIA_LOCATION);
         }
         if (managedstorage != PackageManager.PERMISSION_GRANTED) {
-            if (SDK_INT >= Build.VERSION_CODES.R) {
-                listPermissionsNeeded.add(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-            }
+            listPermissionsNeeded.add(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
         }
 
         if (readstorage != PackageManager.PERMISSION_GRANTED) {

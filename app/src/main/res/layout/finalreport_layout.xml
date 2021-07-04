@@ -86,9 +86,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:contentDescription="Profile Photo"
-                                android:padding="10dp"
                                 android:layout_marginEnd="20dp"
-                                android:src="@drawable/ic_book"
+                                android:src="@drawable/ic_profile"
                                 app:civ_border_color="#3e3e3e"
                                 app:civ_border_width="1dp" />
 
@@ -216,6 +215,84 @@
                             android:fontFamily="@font/nunitobold"
                             android:gravity="start"
                             android:padding="5dp"
+                            android:text="@string/education"
+                            android:textColor="@color/orange"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/tvEducation"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunitobold"
+                            android:padding="5dp"
+                            android:text="--"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunitobold"
+                            android:gravity="start"
+                            android:padding="5dp"
+                            android:text="@string/schoolname"
+                            android:textColor="@color/orange"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/tvSchoolName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunitobold"
+                            android:padding="5dp"
+                            android:text="---"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunitobold"
+                            android:gravity="start"
+                            android:padding="5dp"
+                            android:text="@string/designation"
+                            android:textColor="@color/orange"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/tvDesignaion"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunitobold"
+                            android:padding="5dp"
+                            android:text="---"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunitobold"
+                            android:gravity="start"
+                            android:padding="5dp"
                             android:text="@string/location"
                             android:textColor="@color/orange"
                             android:textSize="20sp" />
@@ -229,6 +306,7 @@
                             android:text="Thane,Shahapur"
                             android:textSize="20sp" />
                     </LinearLayout>
+
 
                     <LinearLayout
                         android:layout_width="match_parent"

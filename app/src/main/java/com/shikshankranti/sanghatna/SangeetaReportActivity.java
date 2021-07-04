@@ -56,24 +56,27 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Address;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.DOB;
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Designation;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.District;
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Education;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.FName;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.LName;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.MName;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.MemberID;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.PhotoPath;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.PinCode;
+import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.School;
 import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Taluka;
 
 public class SangeetaReportActivity extends AppCompatActivity {
     ImageView mIVQrCode;
     CircleImageView mIVPhoto;
-    TextView mTVLocation, mTvMemberID, mNameTextView, mTVDob;
+    TextView mTVLocation, mTvMemberID, mNameTextView, mTVDob,mTVEducation,mTVSchoolName,mTVDesignation;
     MaterialButton mbtnChangeDetails;
     AppCompatButton mbtnShareID;
     DatabaseReference mDatabase, gDatabase;
 
-    String smobilenumber, sdistrict, saddress, staluka, sdob, sfname, smname, slname, sphotopath, spincode;
+    String smobilenumber, sdistrict, saddress, staluka, sdob, sfname, smname, slname, sphotopath, spincode,seducation,sschool,sdesignation;
     private ProgressDialog progessDialog;
 
     @Override
@@ -101,6 +104,9 @@ public class SangeetaReportActivity extends AppCompatActivity {
         spincode = sharedPref.getString("pincode", PinCode);
         sdob = sharedPref.getString("dob", DOB);
         sphotopath = sharedPref.getString("fbphotopath", PhotoPath);
+        seducation = sharedPref.getString("education",Education);
+        sschool = sharedPref.getString("school",School);
+        sdesignation = sharedPref.getString("designation",Designation);
         if (smobilenumber.length() < 10) {
             Intent changedetails = new Intent(SangeetaReportActivity.this, MobileNumberActivity.class);
             SangeetaReportActivity.this.startActivity(changedetails);
@@ -128,7 +134,9 @@ public class SangeetaReportActivity extends AppCompatActivity {
         mbtnShareID = findViewById(R.id.btnShareID);
         mNameTextView = findViewById(R.id.tvMemberName);
         mTVDob = findViewById(R.id.tvDob);
-
+        mTVEducation=findViewById(R.id.tvEducation);
+        mTVSchoolName=findViewById(R.id.tvSchoolName);
+        mTVDesignation=findViewById(R.id.tvDesignaion);
         MemberID = getDeviceId(SangeetaReportActivity.this);//task.getResult();
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("memberid", MemberID);
@@ -136,8 +144,12 @@ public class SangeetaReportActivity extends AppCompatActivity {
         mTvMemberID.setText(MemberID.substring(0, 8).toUpperCase());
         mNameTextView.setText(sfname + " " + smname + " " + slname);
         mTVDob.setText(sdob);
+        mTVEducation.setText(seducation);
+        mTVDesignation.setText(sdesignation);
+        mTVSchoolName.setText(sschool);
         mTVLocation.setText(String.format("%s,%s", sdistrict.trim(), staluka.toUpperCase().trim()));
-
+ /*       Bitmap bitmap = getIntent().getParcelableExtra("picture");
+        mIVPhoto.setImageBitmap(bitmap);*/
         //  mbtnDownloadIDCard = findViewById(R.id.btnDownloadIDCard);
         mbtnShareID.setOnClickListener(v -> {
             // Share image
@@ -283,7 +295,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
 
         // setting this dimensions inside our qr code
         // encoder to generate our qr code.
-        qrgEncoder = new QRGEncoder(new StringBuilder().append("Member ID ").append(MemberID.substring(0, 8)).append("\n").append(" Name ").append(sfname + " ").append(smname + " ").append(slname).append("\n").append(" Mobile No ").append(smobilenumber).append("\n").append(" DOB ").append(sdob).append("\n").append(" Address ").append(saddress).append("\n").append(" Taluka ").append(staluka).append("\n").append(" District ").append(sdistrict).append("\n").append(" Pin Code ").append(spincode).toString(), null, QRGContents.Type.TEXT, dimen);
+        qrgEncoder = new QRGEncoder(new StringBuilder().append("Member ID ").append(MemberID.substring(0, 8)).append("\n").append(" Name ").append(sfname + " ").append(smname + " ").append(slname).append("\n").append(" Mobile No ").append(smobilenumber).append("\n").append(" DOB ").append(sdob).append("\n").append(" Address ").append(saddress).append("\n").append(" Taluka ").append(staluka).append("\n").append(" District ").append(sdistrict).append("\n").append(" Pin Code ").append(spincode).append(" School ").append(sschool).append(" Education ").append(seducation).append(" Designation ").append(sdesignation).toString(), null, QRGContents.Type.TEXT, dimen);
         try {
             // getting our qrcode in the form of bitmap.
             bitmap = qrgEncoder.encodeAsBitmap();
@@ -295,7 +307,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
             gDatabase = pdatabase.getReference();
             mDatabase.keepSynced(true);
             gDatabase.keepSynced(true);
-            writeNewUser(smobilenumber, MemberID, new StringBuilder().append(sfname + " ").append(smname + " ").append(slname).toString(), smobilenumber, saddress, sdob, sdistrict, staluka, spincode, sphotopath);
+            writeNewUser(smobilenumber, MemberID, new StringBuilder().append(sfname + " ").append(smname + " ").append(slname).toString(), smobilenumber, saddress, sdob, sdistrict, staluka, spincode,seducation,sschool,sdesignation, sphotopath);
             gDatabase.child("image").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -323,7 +335,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
 
                             return false;
                         }
-                    }).into(mIVPhoto);
+                    }).dontAnimate().into(mIVPhoto);
 
                     //    Picasso.with(SangeetaReportActivity.this).load(sphotopath).into(mIVPhoto);
 
@@ -363,9 +375,9 @@ public class SangeetaReportActivity extends AppCompatActivity {
         }
     }
 
-    public void writeNewUser(String userId, String memberid, String name, String number, String address, String dob, String dist, String tal, String pincode, String photopath) {
+    public void writeNewUser(String userId, String memberid, String name, String number, String address, String dob, String dist, String tal, String pincode,String education,String school,String designation, String photopath) {
         //   UsersDetails user = new UsersDetails(userId, memberid, name, number, Address, dob, dist, tal, pincode, photopath);
-        UserDetails userDetails = new UserDetails(userId, memberid, name, number, address, dob, dist, tal, pincode, photopath);
+        UserDetails userDetails = new UserDetails(userId, memberid, name, number, address, dob, dist, tal, pincode,education,school,designation,photopath);
         mDatabase.child("users").child(userId).setValue(userDetails);
 
     }

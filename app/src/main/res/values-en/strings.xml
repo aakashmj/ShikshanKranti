@@ -4,21 +4,23 @@
     <string name="middlename">Middle Name</string>
     <string name="lastname">Last Name</string>
     <string name="language">E | English</string>
-    <string name="next">NEXT </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="mobileerror">Enter a valid mobile</string>
     <string name="address">Permanent Address </string>
     <string name="district">District </string>
     <string name="taluka">Taluka </string>
     <string name="membership">Primary Membership Form</string>
-    <string name="pincode">Pin Code</string>
-    <string name="profiledetails">PROFILE DETAILS</string>
     <string name="memyear">Primary Membership 2021 To 2023</string>
     <string name="agreecheckbox">I Agree</string>
     <string name="preference_file_key">skVerified</string>
-
-    <string name="terms">I would like to be a primary member of Maharashtra Rajya Shikshan Kranti Sanghatana. \nI will continue to support the agitations for the just rights of teachers and for the benefit of education. \nFor the two years 2021-2023, I am requesting to get the primary membership of the Maharashtra Rajya Shikshan Kranti Sanghatana.
+    <string name="pincode">Pin Code</string>
+    <string name="terms">I would like to be a primary member of Maharashtra State Education Revolutionary Organization. \nI will continue to support the agitations for the just rights of teachers and for the benefit of education. \nFor the two years 2021-2023, I am requesting to get the primary membership of the Maharashtra Rajya Shikshan Kranti Sanghatana.
 </string>
-    <string name="dob">Date Of Birth </string>
+    <string name="next">NEXT </string>
+    <string name="profiledetails">PROFILE DETAILS</string>
+    <string name="dob">Date Of Birth :</string>
     <string name="photo_for_id_card">Photo For ID Card</string>
     <string name="change_details">Change Details</string>
     <string name="id_no">ID No :</string>
@@ -27,14 +29,7 @@
     <string name="location">Location :</string>
 
 
-
-    <string name="quickstart_message">Click the SUBSCRIBE TO WEATHER button below to subscribe to the
-        weather topic. Messages sent to the weather topic will be received. The LOG TOKEN button logs the
-        FCM registration token to logcat.</string>
-    <string name="subscribe_to_weather">Subscribe To Weather</string>
-    <string name="log_token">Log Token</string>
-
-    <string name="msg_subscribed">Subscribed to weather topic</string>
+    <string name="msg_subscribed">Subscribed to Shikshan Kranti</string>
     <string name="msg_token_fmt" translatable="false">FCM registration Token: %s</string>
 
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
@@ -43,8 +38,14 @@
         It should describe the category of notifications that will be sent through this channel
      -->
     <!-- [START fcm_default_icon_string] -->
-    <string name="default_notification_channel_name" translatable="true">Meeting</string>
+    <string name="default_notification_channel_name" translatable="true">Weather</string>
     <!-- [END fcm_default_icon_string] -->
     <string name="msg_subscribe_failed">Failed to subscribe to weather topic</string>
     <string name="fcm_message">FCM Message</string>
+    <string name="designation">Designation :</string>
+    <string name="principal">Principal</string>
+    <string name="teacher">Teacher</string>
+    <string name="otherteacher">Other Staff</string>
+    <string name="schoolname">School Name :</string>
+    <string name="education">Education :</string>
 </resources>

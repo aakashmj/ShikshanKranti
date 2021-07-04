@@ -2,10 +2,12 @@ package com.shikshankranti.sanghatna;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -122,7 +124,7 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
             dialog.positiveAction("SKIP");
             dialog.positiveActionClickListener(v -> {
                 Intent reportintent = new Intent(SangeetaCaptureActivity.this, SangeetaReportActivity.class);
-                //  reportintent.putExtra("photopath", currentPhotoPath);
+               // reportintent.putExtra("picture", rotatedbmp);
                 startActivity(reportintent);
                 finish();
             });
@@ -168,6 +170,7 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
         mbtnNext.setOnClickListener(v -> {
             Intent reportintent = new Intent(SangeetaCaptureActivity.this, SangeetaReportActivity.class);
             reportintent.putExtra("photopath", currentPhotoPath);
+          //  reportintent.putExtra("picture", rotatedbmp);
             startActivity(reportintent);
             finish();
         });
@@ -230,6 +233,7 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
             if (data != null) {
                 selectedImageURI = data.getData();
             }
+
             if (selectedImageURI != null) {
             /*SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key),MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
@@ -345,7 +349,7 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
     }
-
+    Bitmap rotatedbmp;
     private void setPic() {
         // Get the dimensions of the View
         int targetW = mivPhoto.getWidth();
@@ -365,7 +369,7 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
-        Bitmap rotatedbmp = rotateBitmapOrientation(currentPhotoPath);
+        rotatedbmp = rotateBitmapOrientation(currentPhotoPath);
         if (rotatedbmp != null) {
             PatientDetailsAbstractClass.Photo = rotatedbmp;
         }
@@ -552,6 +556,7 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
         }
         return true;
     }
+
 
     /*private Uri getImageUri(Context context, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
