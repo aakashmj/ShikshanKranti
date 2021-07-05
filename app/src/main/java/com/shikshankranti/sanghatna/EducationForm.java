@@ -31,13 +31,13 @@ import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.School;
 
 
 public class EducationForm extends AppCompatActivity {
-    private EditText  metEducation, metSchoolname;
+    private EditText metEducation, metSchoolname;
     AppCompatSpinner mspDesignations;
     MaterialButton mbtnNext;
     TextView mHeaderHeading;
     private AwesomeValidation awesomeValidation;
     SharedPreferences sharedPref;
-    String sdesignation,sschool,seducation;
+    String sdesignation, sschool, seducation;
 
     SharedPreferences.Editor editor;
 
@@ -65,34 +65,16 @@ public class EducationForm extends AppCompatActivity {
         sharedPref = getApplicationContext().getSharedPreferences(String.valueOf(R.string.preference_file_key), Context.MODE_PRIVATE);
         seducation = sharedPref.getString("education", Education);
         sschool = sharedPref.getString("school", School);
-        sdesignation=sharedPref.getString("designation",Designation);
+        sdesignation = sharedPref.getString("designation", Designation);
 
         metEducation = findViewById(R.id.etEducation);
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(metEducation, InputMethodManager.SHOW_IMPLICIT);
         metEducation.setText(seducation);
-        metEducation.requestFocus();
         metSchoolname = findViewById(R.id.etSchoolName);
+        metSchoolname.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(metSchoolname, InputMethodManager.SHOW_IMPLICIT);
         metSchoolname.setText(sschool);
-         mspDesignations = findViewById(R.id.spDesignation);
-         mspDesignations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-             @Override
-             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                 if(position==0){
-                     sdesignation= String.valueOf(R.string.principal);
-                 }else if(position==1){
-                     sdesignation= String.valueOf(R.string.teacher);
-                 }else {
-                     sdesignation= String.valueOf(R.string.otherteacher);
-                 }
-             }
-
-             @Override
-             public void onNothingSelected(AdapterView<?> parent) {
-
-             }
-         });
+        mspDesignations = findViewById(R.id.spDesignation);
         // create list of customer
         ArrayList<String> customerList = getDesignationList();
 
@@ -101,6 +83,37 @@ public class EducationForm extends AppCompatActivity {
 
         //Set adapter
         mspDesignations.setAdapter(adapter);
+        if (sdesignation != null) {
+            int spinnerPosition = adapter.getPosition(sdesignation);
+            mspDesignations.setSelection(spinnerPosition);
+        }
+
+        /*if (sdesignation.contentEquals("मुख्याध्यापक")||sdesignation.contentEquals("Principal")) {
+            mspDesignations.setSelection(0);
+        } else if (sdesignation.contentEquals("शिक्षक")||sdesignation.contentEquals("Teacher")) {
+            mspDesignations.setSelection(1);
+
+        } else {
+            mspDesignations.setSelection(2);
+        }*/
+        mspDesignations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if (position == 0) {
+                    sdesignation = String.valueOf(R.string.principal);
+                } else if (position == 1) {
+                    sdesignation = String.valueOf(R.string.teacher);
+                } else {
+                    sdesignation = String.valueOf(R.string.otherteacher);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         //submit button click event registration
         mbtnNext = findViewById(R.id.btnNext);
         // mPreviousButton=findViewById(R.id.previousButton);
@@ -172,8 +185,7 @@ public class EducationForm extends AppCompatActivity {
 
     }
 
-    private ArrayList<String> getDesignationList()
-    {
+    private ArrayList<String> getDesignationList() {
         ArrayList<String> designations = new ArrayList<>();
         designations.add(getString(R.string.principal));
         designations.add(getString(R.string.teacher));

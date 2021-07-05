@@ -50,12 +50,10 @@ public class RegisterForm extends AppCompatActivity {
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setFlags(View.SYSTEM_UI_FLAG_LAYOUT_STABLE, View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         setContentView(R.layout.profiledetails_activity);
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
 
@@ -83,23 +81,27 @@ public class RegisterForm extends AppCompatActivity {
         mHeaderHeading = findViewById(R.id.headerheaeding);
         mHeaderHeading.setText(R.string.profiledetails);
         ImageButton mCloseBtn = findViewById(R.id.closeBtn);
-        mbtnNext.setOnClickListener(v -> {
-            if (awesomeValidation.validate()) {
-                FName = metFirstName.getText().toString().trim();
-                MName = metMiddleName.getText().toString().trim();
-                LName = metLastName.getText().toString().trim();
-                PatientDetailsAbstractClass.DOB = mETDOB.getText().toString().trim();
-                editor = sharedPref.edit();
-                editor.putString("fname", FName);
-                editor.putString("mname", MName);
-                editor.putString("lname", LName);
-                editor.putString("dob", PatientDetailsAbstractClass.DOB);
-                editor.apply();
-                Intent addressintent = new Intent(RegisterForm.this, EducationForm.class);
-                startActivity(addressintent);
-                finish();
-            }
+       // mbtnNext.requestFocus();
+        mbtnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (awesomeValidation.validate()) {
+                    FName = metFirstName.getText().toString().trim();
+                    MName = metMiddleName.getText().toString().trim();
+                    LName = metLastName.getText().toString().trim();
+                    PatientDetailsAbstractClass.DOB = mETDOB.getText().toString().trim();
+                    editor = sharedPref.edit();
+                    editor.putString("fname", FName);
+                    editor.putString("mname", MName);
+                    editor.putString("lname", LName);
+                    editor.putString("dob", PatientDetailsAbstractClass.DOB);
+                    editor.apply();
+                    Intent addressintent = new Intent(RegisterForm.this, EducationForm.class);
+                    startActivity(addressintent);
+                    finish();
+                }
 
+            }
         });
         mCloseBtn.setOnClickListener(view -> {
 

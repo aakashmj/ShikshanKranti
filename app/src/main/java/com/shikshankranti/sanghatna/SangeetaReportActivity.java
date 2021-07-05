@@ -295,7 +295,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
 
         // setting this dimensions inside our qr code
         // encoder to generate our qr code.
-        qrgEncoder = new QRGEncoder(new StringBuilder().append("Member ID ").append(MemberID.substring(0, 8)).append("\n").append(" Name ").append(sfname + " ").append(smname + " ").append(slname).append("\n").append(" Mobile No ").append(smobilenumber).append("\n").append(" DOB ").append(sdob).append("\n").append(" Address ").append(saddress).append("\n").append(" Taluka ").append(staluka).append("\n").append(" District ").append(sdistrict).append("\n").append(" Pin Code ").append(spincode).append(" School ").append(sschool).append(" Education ").append(seducation).append(" Designation ").append(sdesignation).toString(), null, QRGContents.Type.TEXT, dimen);
+        qrgEncoder = new QRGEncoder(new StringBuilder().append("Member ID ").append(MemberID.substring(0, 8)).append("\n").append(" Name ").append(sfname + " ").append(smname + " ").append(slname).append("\n").append(" Mobile No ").append(smobilenumber).append("\n").append(" DOB ").append(sdob).append("\n").append(" Address ").append(saddress).append("\n").append(" Taluka ").append(staluka).append("\n").append(" District ").append(sdistrict).append("\n").append(" Pin Code ").append(spincode).append("\n").append(" School ").append(sschool).append("\n").append(" Education ").append(seducation).append("\n").append(" Designation ").append(sdesignation).toString(), null, QRGContents.Type.TEXT, dimen);
         try {
             // getting our qrcode in the form of bitmap.
             bitmap = qrgEncoder.encodeAsBitmap();
@@ -335,7 +335,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
 
                             return false;
                         }
-                    }).dontAnimate().into(mIVPhoto);
+                    }).override(350,300).dontAnimate().into(mIVPhoto);
 
                     //    Picasso.with(SangeetaReportActivity.this).load(sphotopath).into(mIVPhoto);
 

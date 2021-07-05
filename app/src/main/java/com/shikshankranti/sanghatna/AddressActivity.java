@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -55,6 +56,9 @@ public class AddressActivity extends AppCompatActivity {
         spincode = sharedPref.getString("pincode", PinCode);
 
         mETPermAddress = findViewById(R.id.etPermAddress);
+        mETPermAddress.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(mETPermAddress, InputMethodManager.SHOW_IMPLICIT);
         mETPermAddress.setText(saddress);
         mETDistrict = findViewById(R.id.etDistrict);
         mETDistrict.setText(sdistrict);

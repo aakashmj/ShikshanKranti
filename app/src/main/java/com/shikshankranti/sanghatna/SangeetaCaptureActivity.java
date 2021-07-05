@@ -526,7 +526,9 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterNetworkChanges();
+        if (mNetworkReceiver != null) {
+            unregisterNetworkChanges();
+        }
     }
 
     private void registerNetworkBroadcastForNougat() {
