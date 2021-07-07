@@ -74,7 +74,8 @@
                     android:src="@drawable/ic_camera"
                     android:text="Capture"
                     android:textColor="#fff"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:contentDescription="TODO" />
 
                 <TextView
                     android:layout_width="wrap_content"

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -14,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
@@ -71,12 +73,17 @@ import static com.shikshankranti.sanghatna.PatientDetailsAbstractClass.Taluka;
 public class SangeetaReportActivity extends AppCompatActivity {
     ImageView mIVQrCode;
     CircleImageView mIVPhoto;
-    TextView mTVLocation, mTvMemberID, mNameTextView, mTVDob,mTVEducation,mTVSchoolName,mTVDesignation;
+    TextView mTVLocation, mTvMemberID, mNameTextView, mTVDob, mTVEducation, mTVSchoolName, mTVDesignation;
     MaterialButton mbtnChangeDetails;
     AppCompatButton mbtnShareID;
     DatabaseReference mDatabase, gDatabase;
 
-    String smobilenumber, sdistrict, saddress, staluka, sdob, sfname, smname, slname, sphotopath, spincode,seducation,sschool,sdesignation;
+    String smobilenumber, sdistrict, saddress, staluka, sdob, sfname, smname, slname, sphotopath, spincode, seducation, sschool, sdesignation;
+    Bitmap profilephotobmp;
+    String phtopath = null;
+    File image;
+    Bitmap bitmap;
+    QRGEncoder qrgEncoder;
     private ProgressDialog progessDialog;
 
     @Override
@@ -96,7 +103,6 @@ public class SangeetaReportActivity extends AppCompatActivity {
         sfname = sharedPref.getString("fname", FName);
         smname = sharedPref.getString("mname", MName);
         slname = sharedPref.getString("lname", LName);
-
         smobilenumber = sharedPref.getString("mobnumber", PatientDetailsAbstractClass.Number);
         sdistrict = sharedPref.getString("district", District);
         saddress = sharedPref.getString("address", Address);
@@ -104,9 +110,15 @@ public class SangeetaReportActivity extends AppCompatActivity {
         spincode = sharedPref.getString("pincode", PinCode);
         sdob = sharedPref.getString("dob", DOB);
         sphotopath = sharedPref.getString("fbphotopath", PhotoPath);
-        seducation = sharedPref.getString("education",Education);
-        sschool = sharedPref.getString("school",School);
-        sdesignation = sharedPref.getString("designation",Designation);
+        seducation = sharedPref.getString("education", Education);
+        sschool = sharedPref.getString("school", School);
+        sdesignation = sharedPref.getString("designation", Designation);
+
+/*        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            byte[] byteArray = extras.getByteArray("picture");
+            profilephotobmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        }*/
         if (smobilenumber.length() < 10) {
             Intent changedetails = new Intent(SangeetaReportActivity.this, MobileNumberActivity.class);
             SangeetaReportActivity.this.startActivity(changedetails);
@@ -134,9 +146,9 @@ public class SangeetaReportActivity extends AppCompatActivity {
         mbtnShareID = findViewById(R.id.btnShareID);
         mNameTextView = findViewById(R.id.tvMemberName);
         mTVDob = findViewById(R.id.tvDob);
-        mTVEducation=findViewById(R.id.tvEducation);
-        mTVSchoolName=findViewById(R.id.tvSchoolName);
-        mTVDesignation=findViewById(R.id.tvDesignaion);
+        mTVEducation = findViewById(R.id.tvEducation);
+        mTVSchoolName = findViewById(R.id.tvSchoolName);
+        mTVDesignation = findViewById(R.id.tvDesignaion);
         MemberID = getDeviceId(SangeetaReportActivity.this);//task.getResult();
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("memberid", MemberID);
@@ -211,9 +223,6 @@ public class SangeetaReportActivity extends AppCompatActivity {
         return returnedBitmap;
     }
 
-    String phtopath = null;
-    File image;
-
     public void loadView(CardView cardView) {
         try {
             cardView.setDrawingCacheEnabled(true);
@@ -269,10 +278,6 @@ public class SangeetaReportActivity extends AppCompatActivity {
         }
     }
 
-
-    Bitmap bitmap;
-    QRGEncoder qrgEncoder;
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -307,7 +312,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
             gDatabase = pdatabase.getReference();
             mDatabase.keepSynced(true);
             gDatabase.keepSynced(true);
-            writeNewUser(smobilenumber, MemberID, new StringBuilder().append(sfname + " ").append(smname + " ").append(slname).toString(), smobilenumber, saddress, sdob, sdistrict, staluka, spincode,seducation,sschool,sdesignation, sphotopath);
+            writeNewUser(smobilenumber, MemberID, new StringBuilder().append(sfname + " ").append(smname + " ").append(slname).toString(), smobilenumber, saddress, sdob, sdistrict, staluka, spincode, seducation, sschool, sdesignation, sphotopath);
             gDatabase.child("image").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -321,10 +326,17 @@ public class SangeetaReportActivity extends AppCompatActivity {
                         public boolean onLoadFailed(@Nullable @org.jetbrains.annotations.Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                             progessDialog.dismiss();
                             assert e != null;
-                          //  Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(SangeetaReportActivity.this, FullscreenActivity.class);
+                            //  Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Glide.with(getApplicationContext()).load(sphotopath).override(350, 300).dontAnimate().into(mIVPhoto);
+                                }
+                            }, 1000);
+                          /* Intent i = new Intent(SangeetaReportActivity.this, FullscreenActivity.class);
                             SangeetaReportActivity.this.startActivity(i);
-                            SangeetaReportActivity.this.finish();
+                            SangeetaReportActivity.this.finish();*/
 
                             return false;
                         }
@@ -335,7 +347,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
 
                             return false;
                         }
-                    }).override(350,300).dontAnimate().into(mIVPhoto);
+                    }).override(350, 300).dontAnimate().into(mIVPhoto);
 
                     //    Picasso.with(SangeetaReportActivity.this).load(sphotopath).into(mIVPhoto);
 
@@ -375,9 +387,9 @@ public class SangeetaReportActivity extends AppCompatActivity {
         }
     }
 
-    public void writeNewUser(String userId, String memberid, String name, String number, String address, String dob, String dist, String tal, String pincode,String education,String school,String designation, String photopath) {
+    public void writeNewUser(String userId, String memberid, String name, String number, String address, String dob, String dist, String tal, String pincode, String education, String school, String designation, String photopath) {
         //   UsersDetails user = new UsersDetails(userId, memberid, name, number, Address, dob, dist, tal, pincode, photopath);
-        UserDetails userDetails = new UserDetails(userId, memberid, name, number, address, dob, dist, tal, pincode,education,school,designation,photopath);
+        UserDetails userDetails = new UserDetails(userId, memberid, name, number, address, dob, dist, tal, pincode, education, school, designation, photopath);
         mDatabase.child("users").child(userId).setValue(userDetails);
 
     }

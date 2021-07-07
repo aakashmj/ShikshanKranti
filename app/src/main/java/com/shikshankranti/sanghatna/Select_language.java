@@ -83,8 +83,7 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
             builder.setMessage("Do you want to Close?");
             builder.setPositiveButton("Yes", (dialog, which) -> {
                 //if user pressed "yes", then he is allowed to exit from application
-                Intent i = new Intent(Select_language.this, FullscreenActivity.class);
-                startActivity(i);
+
                 finish();
             });
             builder.setNegativeButton("No", (dialog, which) -> {
@@ -266,7 +265,6 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
         String language = sharedPreferences.getString(Locale_KeyValue, "");
         changeLocale(language);
     }
-
 
     private void checkAndRequestPermissions() {
         int camera = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);

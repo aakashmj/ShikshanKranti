@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -50,6 +51,7 @@ import com.rey.material.app.Dialog;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,14 +66,6 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int SELECT_PICTURE = 2;
     private final List<Integer> blockedKeys = new ArrayList<>(Arrays.asList(KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP));
-    private final Handler mHandler = new Handler();
-    private final Runnable decor_view_settings = () -> getWindow().getDecorView().setSystemUiVisibility(
-            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     ImageView mcapturePic, mivPhoto, mGallery;
     MaterialButton mbtnNext;
     UploadTask uploadTask;
@@ -124,7 +118,7 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
             dialog.positiveAction("SKIP");
             dialog.positiveActionClickListener(v -> {
                 Intent reportintent = new Intent(SangeetaCaptureActivity.this, SangeetaReportActivity.class);
-               // reportintent.putExtra("picture", rotatedbmp);
+                // reportintent.putExtra("picture", rotatedbmp);
                 startActivity(reportintent);
                 finish();
             });
@@ -145,7 +139,8 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
             @Override
             public boolean onLoadFailed(@Nullable @org.jetbrains.annotations.Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 assert e != null;
-              //  Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                Glide.with(getApplicationContext()).load(sphotopath);
+                //  Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
 
                 return false;
             }
@@ -170,7 +165,8 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
         mbtnNext.setOnClickListener(v -> {
             Intent reportintent = new Intent(SangeetaCaptureActivity.this, SangeetaReportActivity.class);
             reportintent.putExtra("photopath", currentPhotoPath);
-          //  reportintent.putExtra("picture", rotatedbmp);
+         //   reportintent.putExtra("picture", byteArray);
+            //  reportintent.putExtra("picture", rotatedbmp);
             startActivity(reportintent);
             finish();
         });
@@ -183,16 +179,6 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
         });
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            finish();
-        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-            mHandler.postDelayed(decor_view_settings, 500);
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
 
     @Override
     public void onBackPressed() {
@@ -216,7 +202,8 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
     }
 
     Uri selectedImageURI;
-
+    Bitmap bitmap;
+    byte[] byteArray;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // if the result is capturing Image
@@ -242,8 +229,33 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
             editor.apply();*/
                 PatientDetailsAbstractClass.Gallery = true;
                 PatientDetailsAbstractClass.GalleryPhoto = selectedImageURI;
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        try {
+                            bitmap =    ImageDecoder.decodeBitmap(ImageDecoder.createSource(getApplicationContext().getContentResolver(), selectedImageURI));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+                         byteArray = stream.toByteArray();
+                         bitmap.recycle();
+                    }else {
+                        try {
+                            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageURI);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+                         byteArray = stream.toByteArray();
+                         bitmap.recycle();
+
+                    }
+
+
                 riversRef = imagesRef.child(selectedImageURI.getLastPathSegment());
-                uploadTask = riversRef.putFile(selectedImageURI);
+                uploadTask = riversRef.putBytes(byteArray);
 
 // Register observers to listen for when the download is done or if it fails
                 uploadTask.addOnFailureListener(exception -> {
