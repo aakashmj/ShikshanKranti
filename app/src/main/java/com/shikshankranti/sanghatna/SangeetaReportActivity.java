@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -79,7 +78,6 @@ public class SangeetaReportActivity extends AppCompatActivity {
     DatabaseReference mDatabase, gDatabase;
 
     String smobilenumber, sdistrict, saddress, staluka, sdob, sfname, smname, slname, sphotopath, spincode, seducation, sschool, sdesignation;
-    Bitmap profilephotobmp;
     String phtopath = null;
     File image;
     Bitmap bitmap;
@@ -160,9 +158,6 @@ public class SangeetaReportActivity extends AppCompatActivity {
         mTVDesignation.setText(sdesignation);
         mTVSchoolName.setText(sschool);
         mTVLocation.setText(String.format("%s,%s", sdistrict.trim(), staluka.toUpperCase().trim()));
- /*       Bitmap bitmap = getIntent().getParcelableExtra("picture");
-        mIVPhoto.setImageBitmap(bitmap);*/
-        //  mbtnDownloadIDCard = findViewById(R.id.btnDownloadIDCard);
         mbtnShareID.setOnClickListener(v -> {
             // Share image
             loadView(cardView);
@@ -175,25 +170,12 @@ public class SangeetaReportActivity extends AppCompatActivity {
             shareImageReport(android.net.Uri.parse(image.getAbsolutePath()));
             //       shareImage(Uri.parse(image.getAbsolutePath()));
         });
-    /*    mbtnDownloadIDCard.setOnClickListener(v -> {
-            loadView(cardView);
-        });*/
         mbtnChangeDetails.setOnClickListener(v -> {
             editor.clear();
             Intent changedetails = new Intent(SangeetaReportActivity.this, RegisterForm.class);
             SangeetaReportActivity.this.startActivity(changedetails);
             SangeetaReportActivity.this.finish();
         });
-       /* if (PatientDetailsAbstractClass.Gallery) {
-            if(GalleryPhoto!=null)
-                Glide.with(getApplicationContext()).load(GalleryPhoto);
-          //  mIVPhoto.setImageURI(GalleryPhoto);
-        } else {
-            if(Photo!=null)
-            //mIVPhoto.setImageBitmap(Photo);
-            Glide.with(getApplicationContext()).load(Photo);
-        }*/
-
         ImageButton mCloseBtn = findViewById(R.id.closeBtn);
         mCloseBtn.setEnabled(true);
 
@@ -214,7 +196,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
                 View.MeasureSpec.makeMeasureSpec(dm.heightPixels, View.MeasureSpec.EXACTLY));
         v.layout(0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
 
-        int height = v.getMeasuredWidth() + 300;
+        int height = v.getMeasuredWidth() + 330;
         Bitmap returnedBitmap = Bitmap.createBitmap(v.getMeasuredWidth(),
                 height, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(returnedBitmap);
@@ -300,7 +282,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
 
         // setting this dimensions inside our qr code
         // encoder to generate our qr code.
-        qrgEncoder = new QRGEncoder(new StringBuilder().append("Member ID ").append(MemberID.substring(0, 8)).append("\n").append(" Name ").append(sfname + " ").append(smname + " ").append(slname).append("\n").append(" Mobile No ").append(smobilenumber).append("\n").append(" DOB ").append(sdob).append("\n").append(" Address ").append(saddress).append("\n").append(" Taluka ").append(staluka).append("\n").append(" District ").append(sdistrict).append("\n").append(" Pin Code ").append(spincode).append("\n").append(" School ").append(sschool).append("\n").append(" Education ").append(seducation).append("\n").append(" Designation ").append(sdesignation).toString(), null, QRGContents.Type.TEXT, dimen);
+        qrgEncoder = new QRGEncoder("Member ID " + MemberID.substring(0, 8) + "\n" + " Name " + sfname + " " + smname + " " + slname + "\n" + " Mobile No " + smobilenumber + "\n" + " DOB " + sdob + "\n" + " Address " + saddress + "\n" + " Taluka " + staluka + "\n" + " District " + sdistrict + "\n" + " Pin Code " + spincode + "\n" + " School " + sschool + "\n" + " Education " + seducation + "\n" + " Designation " + sdesignation, null, QRGContents.Type.TEXT, dimen);
         try {
             // getting our qrcode in the form of bitmap.
             bitmap = qrgEncoder.encodeAsBitmap();
@@ -312,7 +294,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
             gDatabase = pdatabase.getReference();
             mDatabase.keepSynced(true);
             gDatabase.keepSynced(true);
-            writeNewUser(smobilenumber, MemberID, new StringBuilder().append(sfname + " ").append(smname + " ").append(slname).toString(), smobilenumber, saddress, sdob, sdistrict, staluka, spincode, seducation, sschool, sdesignation, sphotopath);
+            writeNewUser(smobilenumber, MemberID, sfname + " " + smname + " " + slname, smobilenumber, saddress, sdob, sdistrict, staluka, spincode, seducation, sschool, sdesignation, sphotopath);
             gDatabase.child("image").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -328,12 +310,7 @@ public class SangeetaReportActivity extends AppCompatActivity {
                             assert e != null;
                             //  Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
 
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Glide.with(getApplicationContext()).load(sphotopath).override(350, 300).dontAnimate().into(mIVPhoto);
-                                }
-                            }, 1000);
+                            new Handler().postDelayed(() -> Glide.with(getApplicationContext()).load(sphotopath).override(350, 300).dontAnimate().into(mIVPhoto), 1000);
                           /* Intent i = new Intent(SangeetaReportActivity.this, FullscreenActivity.class);
                             SangeetaReportActivity.this.startActivity(i);
                             SangeetaReportActivity.this.finish();*/

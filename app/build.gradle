@@ -31,8 +31,8 @@ android {
         applicationId "com.shikshankranti.sanghatna"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 11
-        versionName "1.10"
+        versionCode 12
+        versionName "1.11"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -42,7 +42,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             versionNameSuffix '1'
-            debuggable true
+            debuggable false
             jniDebuggable false
             renderscriptDebuggable false
             multiDexEnabled true
@@ -81,7 +81,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-database'
     implementation 'com.google.firebase:firebase-storage'
     implementation 'com.google.firebase:firebase-messaging'
-    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta01'
+    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta02'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.github.rey5137:material:1.3.1'
     implementation 'androidx.work:work-runtime:2.7.0-alpha04'

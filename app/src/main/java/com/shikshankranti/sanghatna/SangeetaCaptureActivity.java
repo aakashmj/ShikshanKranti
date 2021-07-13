@@ -2,12 +2,10 @@ package com.shikshankranti.sanghatna;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
@@ -19,7 +17,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -51,7 +48,6 @@ import com.rey.material.app.Dialog;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -165,7 +161,7 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
         mbtnNext.setOnClickListener(v -> {
             Intent reportintent = new Intent(SangeetaCaptureActivity.this, SangeetaReportActivity.class);
             reportintent.putExtra("photopath", currentPhotoPath);
-         //   reportintent.putExtra("picture", byteArray);
+            //   reportintent.putExtra("picture", byteArray);
             //  reportintent.putExtra("picture", rotatedbmp);
             startActivity(reportintent);
             finish();
@@ -204,6 +200,7 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
     Uri selectedImageURI;
     Bitmap bitmap;
     byte[] byteArray;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // if the result is capturing Image
@@ -230,30 +227,28 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
                 PatientDetailsAbstractClass.Gallery = true;
                 PatientDetailsAbstractClass.GalleryPhoto = selectedImageURI;
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        try {
-                            bitmap =    ImageDecoder.decodeBitmap(ImageDecoder.createSource(getApplicationContext().getContentResolver(), selectedImageURI));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-                         byteArray = stream.toByteArray();
-                         bitmap.recycle();
-                    }else {
-                        try {
-                            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageURI);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-                         byteArray = stream.toByteArray();
-                         bitmap.recycle();
-
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    try {
+                        bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(getApplicationContext().getContentResolver(), selectedImageURI));
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+                    byteArray = stream.toByteArray();
+                    bitmap.recycle();
+                } else {
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageURI);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+                    byteArray = stream.toByteArray();
+                    bitmap.recycle();
 
-
+                }
                 riversRef = imagesRef.child(selectedImageURI.getLastPathSegment());
                 uploadTask = riversRef.putBytes(byteArray);
 
@@ -262,7 +257,6 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
                     // Handle unsuccessful uploads
                     Toast.makeText(SangeetaCaptureActivity.this, exception.getMessage(), Toast.LENGTH_LONG).show();
                 }).addOnSuccessListener(taskSnapshot -> {
-
                     riversRef.getDownloadUrl().addOnSuccessListener(uri -> {
                         Log.e("Tuts+", "uri: " + uri.toString());
                         PatientDetailsAbstractClass.PhotoPath = uri.toString();
@@ -361,7 +355,9 @@ public class SangeetaCaptureActivity extends AppCompatActivity implements Networ
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
     }
+
     Bitmap rotatedbmp;
+
     private void setPic() {
         // Get the dimensions of the View
         int targetW = mivPhoto.getWidth();

@@ -268,6 +268,7 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
 
     private void checkAndRequestPermissions() {
         int camera = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        int phonestate = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
         int storage = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int managedstorage = 0;
         if (SDK_INT >= Build.VERSION_CODES.R) {
@@ -277,15 +278,15 @@ public class Select_language extends AppCompatActivity implements ActivityCompat
         if (SDK_INT >= Build.VERSION_CODES.Q) {
             medialocation = ContextCompat.checkSelfPermission(this, ACCESS_MEDIA_LOCATION);
         }
-
         int readstorage = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
         int loc = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
         int loc2 = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-
         List<String> listPermissionsNeeded = new ArrayList<>();
-
         if (camera != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.CAMERA);
+        }
+        if (phonestate != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.READ_PHONE_STATE);
         }
         if (storage != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);

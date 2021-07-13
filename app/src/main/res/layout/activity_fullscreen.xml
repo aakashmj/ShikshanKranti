@@ -15,32 +15,43 @@
          android:fitsSystemWindows. -->
 
 
-        <LinearLayout
-            style="@style/Widget.Theme.ShikshanKrantiSanghatna.ButtonBar.Fullscreen"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:background="@color/colorWhite"
-            android:orientation="vertical"
-            tools:ignore="UselessParent">
+    <LinearLayout
+        style="@style/Widget.Theme.ShikshanKrantiSanghatna.ButtonBar.Fullscreen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
-            <androidx.constraintlayout.utils.widget.ImageFilterView
-                android:id="@+id/img_logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_biglogo" />
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/img_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_biglogo" />
 
-            <TextView
-                android:id="@+id/tv_welcome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/nunitobold"
-                android:textSize="40sp"
-                android:layout_margin="20dp"
-                android:textColor="@color/design_default_color_error"
-                android:layout_gravity="center"
-                android:text="Welcome" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:fontFamily="@font/nunitobold"
+            android:text="Welcome"
+            android:textColor="@color/design_default_color_error"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/tv_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:fontFamily="@font/nunitobold"
+            android:text="Version-1.11"
+            android:textColor="@color/design_default_color_error"
+            android:textSize="10sp" />
+    </LinearLayout>
 
 </merge>
